@@ -1,71 +1,94 @@
 .navbar {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 15px 50px;
-  background-color: #fff;
-  border-bottom: 1px solid #ddd;
+  padding: 12px 40px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   font-family: Arial, sans-serif;
 }
 
+/* Logo */
 .navbar-logo img {
-  height: 35px;
-  margin-right: 30px;
+  height: 40px;
+  object-fit: contain;
 }
 
+/* Links */
 .navbar-links {
-  display: flex;
   list-style: none;
+  display: flex;
   gap: 25px;
   margin: 0;
   padding: 0;
 }
 
-.nav-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.nav-item a {
+.navbar-links li a {
   text-decoration: none;
   color: #333;
-  font-size: 15px;
-  font-weight: 400;
-  transition: color 0.2s;
+  font-weight: 500;
+  transition: 0.3s;
+  position: relative;
 }
 
-.nav-item a:hover {
-  color: #5392f9;
+/* hover đẹp */
+.navbar-links li a:hover {
+  color: #ff5a5f;
 }
 
-/* Style cho các cái nhãn Đặt gói / Mới */
-.badge {
+/* underline animation */
+.navbar-links li a::after {
+  content: "";
   position: absolute;
-  top: -18px;
   left: 0;
-  font-size: 10px;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: #ff5a5f;
+  transition: 0.3s;
+}
+
+.navbar-links li a:hover::after {
+  width: 100%;
+}
+
+/* dropdown arrow */
+.arrow {
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* buttons */
+.navbar-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-login {
+  padding: 8px 14px;
+  border: 1px solid #ff5a5f;
+  background: transparent;
+  color: #ff5a5f;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-login:hover {
+  background: #ff5a5f;
   color: white;
-  padding: 2px 6px;
-  border-radius: 3px;
-  white-space: nowrap;
-  font-weight: bold;
 }
 
-.badge.red {
-  background-color: #e12d2d;
-}
-.badge.orange {
-  background-color: #ff567d;
+.btn-signup {
+  padding: 8px 14px;
+  border: none;
+  background: #ff5a5f;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-/* Tạo mũi tên nhỏ cho menu phương tiện */
-.arrow-down {
-  border: solid #666;
-  border-width: 0 2px 2px 0;
-  display: inline-block;
-  padding: 2px;
-  transform: rotate(45deg);
-  margin-bottom: 3px;
-  margin-left: 5px;
+.btn-signup:hover {
+  background: #e14b50;
 }

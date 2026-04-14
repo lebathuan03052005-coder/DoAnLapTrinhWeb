@@ -4,35 +4,39 @@ import "./Navbar.css";
 const Navbar = () => {
   return (
     <nav className="navbar">
+      {/* Logo */}
       <div className="navbar-logo">
-        <img src="" alt="Logo" />
+        <img src="https://via.placeholder.com/120x40" alt="Logo" />
       </div>
 
+      {/* Links */}
       <ul className="navbar-links">
-        <li className="nav-item">
+        <li>
           <a href="#">Khách Sạn</a>
         </li>
-        <li className="nav-item">
+        <li>
           <a href="#">Homestay</a>
         </li>
-        <li className="nav-item">
+
+        <li className="dropdown">
           <a href="#">
-            <i className="arrow-down"></i>
+            Khác <span className="arrow">⌄</span>
           </a>
         </li>
-        <li className="nav-item">
-          <a href="#">Hoạt động</a>
-        </li>
-        <li className="nav-item">
-          <a href="#">Phiếu giảm giá và ưu đãi</a>
-        </li>
-        <li className="nav-item">
+
+        <li>
           <a href="#">Đặt Phòng</a>
         </li>
-        <li className="nav-item">
-          <a href="#">Tìm Kiếm Khách Sạn theo ý muốn</a>
+        <li>
+          <a href="#">Tìm Kiếm</a>
         </li>
       </ul>
+
+      {/* Button */}
+      <div className="navbar-actions">
+        <button className="btn-login">Đăng nhập</button>
+        <button className="btn-signup">Đăng ký</button>
+      </div>
     </nav>
   );
 };
