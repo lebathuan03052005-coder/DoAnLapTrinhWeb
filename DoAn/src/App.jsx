@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./page/login";
 import Admin from "./page/admin";
-import HomePage from "./page/home_page"; // Lưu ý viết hoa H và P
 import Navbar from "./components/Navbar";
 import "./App.css";
 
@@ -10,9 +9,11 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        {/* Route chính dẫn vào trang chủ */}
-        <Route path="/" element={<HomePage />} />
+        {/* Đường dẫn mặc định sẽ vào trang Login */}
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
+
+        {/* Đường dẫn vào trang Admin */}
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>

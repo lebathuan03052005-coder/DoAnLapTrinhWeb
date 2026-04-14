@@ -1,0 +1,317 @@
+
+.agoda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Đổ bóng nhẹ cho header */
+    position: relative;
+    z-index: 10;
+}
+
+/* Khối Logo */
+.header-left .logo-agoda {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+}
+
+.header-left .text {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    line-height: 1;
+    letter-spacing: -1px;
+    font-family: Arial, sans-serif;
+}
+
+.header-left .dots {
+    display: flex;
+    gap: 4px;
+    margin-top: 3px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.dot.red { background-color: #e53935; }
+.dot.yellow { background-color: #fbc02d; }
+.dot.green { background-color: #43a047; }
+.dot.purple { background-color: #8e24aa; }
+.dot.blue { background-color: #1e88e5; }
+
+/* Khối Menu giữa */
+.header-center {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.header-center a {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.header-center a:hover {
+    color: #5392f9; /* Đổi sang màu xanh Agoda khi di chuột */
+}
+
+.header-center i {
+    font-size: 12px;
+    margin-left: 5px;
+    color: #777;
+}
+
+/* Khối Nút bấm bên phải */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.currency {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.login-link {
+    text-decoration: none;
+    color: #5392f9;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.register-btn {
+    text-decoration: none;
+    color: #5392f9;
+    background-color: white;
+    border: 1px solid #cddcff;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.register-btn:hover {
+    background-color: #f0f5ff; /* Sáng màu nền khi di chuột */
+}
+/* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+} */
+
+/* Nền ảnh phía sau */
+.agoda-hero {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
+                url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop') no-repeat center center/cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px;
+}
+
+.hero-headline {
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+/* Khung trắng (Card) */
+.search-card {
+    background-color: white;
+    width: 100%;
+    max-width: 1000px;
+    border-radius: 24px;
+    padding: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    position: relative;
+    padding-bottom: 30px; 
+}
+
+
+.main-tabs {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0 20px;
+}
+
+.tab {
+    padding: 20px 10px;
+    font-size: 15px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 3px solid transparent;
+    font-weight: 500;
+}
+
+.tab.active {
+    color: #5392f9; /* Màu xanh đặc trưng Agoda */
+    border-bottom-color: #5392f9;
+}
+
+.tab:hover {
+    color: #5392f9;
+}
+
+/* Sub tabs (Qua đêm / Trong ngày) */
+.sub-tabs {
+    padding: 20px 30px 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.sub-tab-btn {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #333;
+}
+
+.sub-tab-btn.active {
+    border-color: #5392f9;
+    color: #5392f9;
+    font-weight: 500;
+}
+
+/* Form inputs */
+.search-form {
+    padding: 10px 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.input-group {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: white;
+    cursor: text;
+    transition: all 0.2s;
+}
+
+.input-group:hover {
+    border-color: #999;
+}
+
+.input-group .icon {
+    font-size: 20px;
+    color: #757575;
+    margin-right: 15px;
+    width: 24px;
+    text-align: center;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.input-row {
+    display: flex;
+    gap: 12px;
+}
+
+.half-width {
+    flex: 1;
+}
+
+.input-group input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    color: #333;
+    font-weight: 500;
+}
+
+.text-content {
+    flex: 1;
+}
+
+.main-text {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.sub-text {
+    font-size: 13px;
+    color: #757575;
+    margin-top: 2px;
+}
+
+.arrow-icon {
+    color: #757575;
+    font-size: 14px;
+}
+
+/* Nút bổ sung chuyến bay */
+.addon-link {
+    color: #5392f9;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 5px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.addon-link i {
+    margin-right: 5px;
+}
+
+/* Nút TÌM khổng lồ ở dưới */
+.search-btn {
+    position: absolute;
+    bottom: -25px; /* Kéo nút lồi xuống dưới viền card */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #5392f9;
+    color: white;
+    border: none;
+    padding: 15px 120px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(83, 146, 249, 0.4);
+    transition: background 0.3s;
+}
+
+.search-btn:hover {
+    background-color: #407ce6;
+}
