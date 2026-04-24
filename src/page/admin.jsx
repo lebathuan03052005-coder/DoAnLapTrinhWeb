@@ -8,19 +8,19 @@ const Admin = () => {
         <div className="admin-logo">ADMIN BOOKING</div>
         <ul className="admin-menu">
           <li className="active">
-            <i className="icon">📊</i> Dashboard
+            <i className="icon"></i> Dashboard
           </li>
           <li>
-            <i className="icon">🏨</i> Quản lý khách sạn
+            <i className="icon"></i> Quản lý khách sạn
           </li>
           <li>
-            <i className="icon">👤</i> Quản lý tài khoản
+            <i className="icon"></i> Quản lý tài khoản
           </li>
           <li>
-            <i className="icon">🔑</i> Đổi mật khẩu
+            <i className="icon"></i> Đổi mật khẩu
           </li>
           <li className="logout">
-            <i className="icon">🚪</i> Đăng xuất
+            <i className="icon"></i> Đăng xuất
           </li>
         </ul>
       </aside>

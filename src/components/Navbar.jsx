@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+// import Login from "../page/login"; // Xóa nếu không dùng trực tiếp trong Navbar
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -6,36 +8,42 @@ const Navbar = () => {
     <nav className="navbar">
       {/* Logo */}
       <div className="navbar-logo">
-        <img src="https://via.placeholder.com/120x40" alt="Logo" />
+        <Link to="/">
+          <img src="https://via.placeholder.com/120x40" alt="Logo" />
+        </Link>
       </div>
 
-      {/* Links */}
+      {/* Links - Đã chuyển sang Link để không bị load lại trang */}
       <ul className="navbar-links">
         <li>
-          <a href="#">Khách Sạn</a>
+          <Link to="/khach-san">Khách Sạn</Link>
         </li>
         <li>
-          <a href="#">Homestay</a>
+          <Link to="/homestay">Homestay</Link>
         </li>
 
         <li className="dropdown">
-          <a href="#">
+          <Link to="/khac">
             Khác <span className="arrow">⌄</span>
-          </a>
+          </Link>
         </li>
 
         <li>
-          <a href="#">Đặt Phòng</a>
+          <Link to="/booking">Đặt Phòng</Link>
         </li>
         <li>
-          <a href="#">Tìm Kiếm</a>
+          <Link to="/search">Tìm Kiếm</Link>
         </li>
       </ul>
 
-      {/* Button */}
+      {/* Button - Đã sửa lỗi viết hoa chữ Link */}
       <div className="navbar-actions">
-        <button className="btn-login">Đăng nhập</button>
-        <button className="btn-signup">Đăng ký</button>
+        <Link to="/login">
+          <button className="btn-login">Đăng nhập</button>
+        </Link>
+        <Link to="/register">
+          <button className="btn-signup">Đăng ký</button>
+        </Link>
       </div>
     </nav>
   );
