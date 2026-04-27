@@ -1,0 +1,124 @@
+/* =========================================
+   1. CÁC CLASS CƠ BẢN & BỐ CỤC CHUNG
+   ========================================= */
+.vnbk-loading { padding: 50px; text-align: center; }
+.vnbk-loading-text { color: #003580; }
+
+.vnbk-main-content { padding-top: 10px; max-width: 1100px; margin: 0 auto; }
+
+.vnbk-divider { border: none; border-top: 1px solid #eee; margin: 30px 0; }
+.vnbk-dashed-divider { border: none; border-top: 1px dashed #eee; margin: 15px 0; }
+.section-title { font-size: 22px; color: #003580; margin-bottom: 20px; }
+
+/* Breadcrumbs */
+.vnbk-breadcrumbs { margin-bottom: 20px; font-size: 13px; }
+.breadcrumb-link { cursor: pointer; color: #0057b8; font-weight: bold; }
+.breadcrumb-text.active { color: #333; font-weight: bold; }
+
+/* =========================================
+   2. TIÊU ĐỀ & GIÁ KHÁCH SẠN
+   ========================================= */
+.detail-booking-section { display: flex; justify-content: space-between; margin-top: 30px; }
+.hotel-tag { background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; }
+.hotel-main-title { color: #003580; font-size: 28px; margin: 10px 0; }
+.hotel-address-text { color: #555; margin-top: 0; }
+.hotel-price-container { text-align: right; }
+.hotel-price-highlight { color: #ef5b25; font-size: 24px; font-weight: bold; margin: 0; }
+.btn-book-now { background-color: #ef5b25; color: #fff; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: background 0.3s; }
+.btn-book-now:hover { background-color: #d14b1b; }
+
+/* =========================================
+   3. TIỆN NGHI KHÁCH SẠN
+   ========================================= */
+.hotel-amenities-section { margin-top: 30px; }
+.toggle-amenities-wrapper { text-align: center; margin-top: 30px; margin-bottom: 20px; }
+.toggle-amenities-btn { color: #0057b8; font-size: 16px; font-weight: bold; cursor: pointer; padding: 10px 20px; display: inline-block; }
+
+.detailed-amenities { margin-top: 20px; }
+.amenity-group { display: flex; margin-bottom: 20px; }
+.group-title { width: 250px; font-size: 18px; font-weight: bold; color: #333; }
+.group-content { flex: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+
+/* =========================================
+   4. CHÍNH SÁCH & THÔNG TIN QUAN TRỌNG
+   ========================================= */
+.hotel-policy-section { padding-bottom: 40px; }
+.accordion-list { display: flex; flex-direction: column; gap: 15px; }
+.policy-accordion-item { border: 1px solid #eee; border-radius: 8px; overflow: hidden; margin-bottom: 20px;}
+.policy-accordion-header { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #fcfcfc; font-weight: bold; font-size: 16px; }
+.policy-accordion-body { padding: 20px; border-top: 1px solid #eee; background: #fff; font-size: 15px; line-height: 1.8; }
+
+.info-row { display: flex; margin-bottom: 20px; }
+.info-label { width: 200px; font-weight: bold; color: #333; }
+.info-content { flex: 1; color: #555; }
+.info-content p { margin: 0 0 10px 0; }
+.info-note { margin: 0; font-size: 13px; font-style: italic; }
+
+/* =========================================
+   5. GIỚI THIỆU KHÁCH SẠN
+   ========================================= */
+.hotel-intro-section { margin-top: 30px; margin-bottom: 40px; }
+.intro-text-container { font-size: 15px; line-height: 1.8; color: #444; text-align: justify; position: relative; }
+.intro-text-expanded { display: block; margin: 0; }
+.intro-text-collapsed { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
+.intro-toggle-btn { color: #0057b8; cursor: pointer; font-weight: bold; margin-top: 5px; display: inline-block; }
+
+/* =========================================
+   6. NÚT BACK TO TOP
+   ========================================= */
+.back-to-top-btn { position: fixed; bottom: 30px; left: 30px; cursor: pointer; z-index: 100; text-align: center; }
+.back-to-top-btn img { width: 40px; }
+.back-to-top-text { font-size: 10px; color: #888; font-weight: bold; }
+
+/* =========================================
+   7. DANH SÁCH PHÒNG TRỐNG
+   ========================================= */
+.hotel-rooms-section { margin-top: 40px; margin-bottom: 40px; }
+.vnbk-room-card { border: 1px solid #e0e0e0; border-radius: 8px; background-color: #fff; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative;}
+.room-title { font-size: 20px; color: #003580; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+.room-card-body { display: flex; gap: 30px; }
+
+/* Cột trái */
+.room-info-col { width: 32%; }
+.room-info-col .room-img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 15px; }
+.room-specs p { margin: 10px 0; font-size: 14px; color: #555; display: flex; align-items: center; }
+.room-specs i { width: 25px; color: #888; text-align: center; }
+.more-amenities-link { color: #0057b8 !important; font-weight: bold; cursor: pointer; margin-top: 15px !important; }
+
+/* Cột phải */
+.room-offers-col { flex: 1; }
+.capacity-bar { display: flex; gap: 30px; background-color: #f8f9fa; padding: 12px 20px; border-radius: 6px; margin-bottom: 25px; font-size: 14px; color: #555; align-items: center; }
+.offers-title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 15px; }
+.offers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 30px; }
+
+.offer-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: #444; line-height: 1.5; }
+.offer-item i { margin-top: 3px; }
+
+.text-green { color: #28a745 !important; }
+.room-specs .text-green i { color: #28a745; }
+.fw-bold { font-weight: bold; }
+
+/* Footer đặt phòng */
+.room-booking-footer { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
+.policy-link { color: #0057b8; cursor: pointer; margin: 0 0 10px 0; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.warning-note { background-color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: bold; color: #333; display: inline-block; }
+.booking-action-area { display: flex; justify-content: space-between; align-items: center; position: relative; margin-top: 25px; }
+
+/* Tag Giảm giá 3D */
+.discount-tag {
+  position: relative; /* ❗ QUAN TRỌNG */
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.discount-triangle { position: absolute; bottom: -8px; left: 0; border-top: 8px solid #a03532; border-left: 8px solid transparent; }
+
+/* Giá và nút Đặt ngay */
+.price-and-btn { display: flex; justify-content: flex-end; align-items: center; gap: 30px; }
+.price-box { text-align: right; }
+.price-box .old-price { text-decoration: line-through; color: #999; font-size: 15px; margin: 0 0 5px 0; }
+.price-box .new-price { color: #f0ad4e; font-size: 26px; font-weight: bold; margin: 0; }
+.price-box .per-night { font-size: 14px; color: #777; font-weight: normal; }
+.btn-book-room { background-color: #f0ad4e; color: #fff; border: none; padding: 12px 30px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.3s; }
+.btn-book-room:hover { background-color: #e09b3d; }
+.tax-fee-note { background-color: #f1f3f5; padding: 10px; border-radius: 4px; font-size: 13px; color: #555; margin-top: 15px; text-align: center; font-weight: bold; }

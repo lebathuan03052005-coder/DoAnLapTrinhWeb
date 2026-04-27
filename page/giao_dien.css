@@ -1,0 +1,815 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css");
+.vnbk-page-container { background: #fff; min-height: 100vh; text-align: left !important; color: #333; }
+.text-muted { color: #888; }
+
+/* SEARCH BAR */
+.vnbk-search-bar-wrapper { background: #f8f9fa; padding: 20px 0; border-bottom: 1px solid #eee; }
+.vnbk-search-bar { display: flex; gap: 10px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.vnbk-input-group { flex: 1; display: flex; align-items: center; background: #f4f5f6; border: 1px solid #ddd; border-radius: 4px; padding: 10px; gap: 8px; }
+.vnbk-input-group input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; }
+.vnbk-btn-search { background: #ef5b25; color: #fff; border: none; border-radius: 4px; padding: 0 30px; font-weight: bold; cursor: pointer; }
+
+/* LAYOUT */
+.vnbk-main-content { max-width: 1200px; margin: 0 auto; padding: 20px; }
+.vnbk-layout { display: flex; gap: 30px; align-items: flex-start; }
+.vnbk-sidebar { width: 260px; flex-shrink: 0; }
+.vnbk-results { flex: 1; }
+
+/* HOTEL CARD */
+.vnbk-hotel-card { display: flex !important; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin-bottom: 20px; background: #fff; }
+.vnbk-image-wrapper { width: 240px !important; min-width: 240px; height: 200px; overflow: hidden; flex-shrink: 0; }
+.hotel-img { width: 100% !important; height: 100% !important; object-fit: cover; }
+.hotel-info { flex: 1; padding: 15px; }
+.hotel-info h3 { color: #0057b8; font-size: 18px; margin: 0 0 10px 0; }
+
+.rating-text strong { background: #0057b8; color: #fff; padding: 2px 6px; border-radius: 4px; margin-right: 5px; }
+
+/* AMENITIES ICONS (XANH NGỌC) */
+.vnbk-amenities-icons { display: flex; gap: 15px; margin: 12px 0; }
+.vnbk-amenities-icons span { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #2b8d81; font-weight: 500; }
+.amenity-more { background: #f1f5f9; color: #64748b !important; padding: 2px 8px; border-radius: 10px; font-size: 11px !important; }
+
+.hotel-amenities-text { margin-top: 10px; display: flex; gap: 15px; color: #28a745; font-size: 13px; font-weight: bold; }
+
+.hotel-price-box { width: 180px; padding: 15px; background: #fafafa; border-left: 1px solid #eee; text-align: right; display: flex; flex-direction: column; justify-content: flex-end; }
+.new-price { color: #ef5b25; font-size: 20px; font-weight: bold; margin-bottom: 10px; }
+.btn-book { background: #ef5b25; color: #fff; border: none; padding: 8px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+/* SIDEBAR FILTERS */
+.vnbk-filter-box { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+.filter-title { font-weight: bold; margin-bottom: 15px; font-size: 15px; }
+.vnbk-checkbox-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; cursor: pointer; font-size: 14px; }
+.vnbk-checkbox-item input { width: 18px; height: 18px; }
+.vnbk-show-all { color: #0057b8; font-weight: bold; text-decoration: none; font-size: 13px; }
+
+/* SKELETON */
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+.vnbk-skeleton-card { display: flex; gap: 20px; margin-bottom: 20px; animation: pulse 1.5s infinite; }
+.skel-image { width: 240px; height: 200px; background: #eee; }
+.skel-line { height: 20px; background: #eee; margin-bottom: 10px; width: 100%; }
+
+.vnbk-breadcrumbs { font-size: 12px; margin-bottom: 15px; font-weight: bold; }
+.vnbk-breadcrumbs a { color: #0057b8; text-decoration: none; }
+.vnbk-image-wrapper {
+  width: 240px !important;
+  min-width: 240px !important;
+  height: 200px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.hotel-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+/* =================================================== */
+/* CSS DÀNH RIÊNG CHO CARD KHÁCH SẠN (MALIBU, THÙY VÂN...) */
+/* =================================================== */
+
+/* 1. Khung tổng thể của mỗi khách sạn */
+.vnbk-hotel-card {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.vnbk-hotel-card:hover {
+  border-color: #ef5b25;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 2. Phần chứa ảnh bên trái */
+.vnbk-image-wrapper {
+  width: 240px !important;
+  min-width: 240px !important;
+  height: 200px;
+  flex-shrink: 0;
+  background-color: #ccc; /* Màu nền chờ nếu ảnh lỗi */
+}
+
+.hotel-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important; /* Giúp ảnh không bị méo */
+  display: block;
+}
+
+/* 3. Phần thông tin ở giữa (Tên, Địa chỉ, Icon) */
+.hotel-info {
+  flex: 1;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.hotel-info h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: #003580; /* Màu xanh đậm thương hiệu */
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Ngôi sao vàng */
+.hotel-info .stars {
+  color: #ffb700;
+  font-size: 14px;
+  margin-left: 8px;
+  letter-spacing: 2px;
+}
+
+.hotel-info p {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+/* Icon Map */
+.fa-location-dot {
+  color: #888;
+  margin-right: 5px;
+}
+
+/* 4. Hàng icon tiện ích (Wifi, Máy lạnh...) */
+.vnbk-amenities-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 12px;
+}
+
+.vnbk-amenities-icons span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #2b8d81; /* Màu xanh ngọc chuẩn ảnh mẫu */
+  font-weight: 500;
+}
+
+.vnbk-amenities-icons i {
+  font-size: 16px;
+  color: #666; /* Màu icon xám cho tinh tế */
+}
+
+/* Nút +48 hoặc +36 màu xám */
+.amenity-more {
+  background: #94a3b8;
+  color: white !important;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px !important;
+  font-weight: 700;
+}
+
+/* 5. Cột giá tiền bên phải */
+.hotel-price-box {
+  width: 200px;
+  padding: 20px;
+  background-color: #fdfdfd;
+  border-left: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.old-price {
+  font-size: 14px;
+  color: #888;
+  text-decoration: line-through;
+  margin-bottom: 4px;
+}
+
+.new-price {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ef5b25; /* Màu cam giá tiền rực rỡ */
+  margin-bottom: 12px;
+}
+
+/* Nút Chọn phòng */
+.btn-book {
+  background-color: #ef5b25;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-book:hover {
+  background-color: #d84b1b;
+}
+/* ========================================================
+   CSS CHO PHẦN GALLERY ẢNH CHI TIẾT
+   ======================================================== */
+.hotel-gallery-grid {
+  display: flex;
+  gap: 8px; /* Khoảng cách giữa các ảnh */
+  height: 450px; /* Chiều cao tổng của khu vực ảnh */
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.gallery-left {
+  flex: 1; /* Chiếm 50% chiều rộng */
+}
+
+.gallery-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-right {
+  flex: 1; /* Chiếm 50% chiều rộng còn lại */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gallery-right-top {
+  flex: 1; /* Nửa trên của phần bên phải */
+}
+
+.gallery-right-top img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-right-bottom {
+  flex: 1; /* Nửa dưới của phần bên phải */
+  display: flex;
+  gap: 8px;
+}
+
+.bottom-img-item {
+  flex: 1; /* Mỗi ảnh nhỏ chiếm 50% của nửa dưới */
+  position: relative;
+}
+
+.bottom-img-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Lớp phủ đen và chữ "Xem tất cả ảnh" */
+.more-photos .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Nền đen trong suốt */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.more-photos .overlay:hover {
+  background: rgba(0, 0, 0, 0.7); /* Đậm hơn khi hover */
+}
+/* ========================================================
+   CSS CHI TIẾT CHO PHẦN GALLERY ẢNH (BẮT BUỘC PHẢI CÓ)
+   ======================================================== */
+
+/* Khung tổng thể chứa toàn bộ ảnh (Ảnh to + 3 ảnh nhỏ) */
+.hotel-gallery-grid {
+  display: flex;
+  gap: 8px; /* Khoảng cách giữa các ảnh */
+  height: 450px; /* Chiều cao tổng của khu vực ảnh */
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Phần bên trái chứa 1 ảnh to */
+.gallery-left {
+  flex: 1; /* Chiếm 50% chiều rộng */
+}
+
+.gallery-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Giúp ảnh không bị méo */
+  border-radius: 8px 0 0 8px; /* Bo góc bên trái */
+}
+
+/* Phần bên phải chứa 3 ảnh nhỏ */
+.gallery-right {
+  flex: 1; /* Chiếm 50% chiều rộng */
+  display: grid; /* Sử dụng Grid để chia bố cục */
+  grid-template-columns: 1fr 1fr; /* Chia 2 cột đều nhau */
+  grid-template-rows: 1fr 1fr;    /* Chia 2 hàng đều nhau */
+  gap: 8px;
+}
+
+/* Ảnh đầu tiên bên phải sẽ chiếm trọn hàng trên cùng (Ảnh ngang) */
+.gallery-right .grid-item:first-child {
+  grid-column: 1 / 3; /* Trải dài từ cột 1 đến cột 3 */
+}
+
+/* Định dạng chung cho 3 ô chứa ảnh nhỏ bên phải */
+.gallery-right .grid-item {
+  position: relative; /* BẮT BUỘC: Để chữ "Xem tất cả ảnh" căn theo ô này */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Cài đặt cho bản thân 3 tấm ảnh nhỏ */
+.gallery-right .grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Không bị méo ảnh */
+  display: block;
+}
+
+/* Bo góc cho 2 ảnh nhỏ nằm ngoài cùng bên phải */
+.gallery-right .grid-item:first-child img {
+  border-radius: 0 8px 0 0; /* Bo góc trên bên phải */
+}
+.gallery-right .grid-item.more-photos img {
+  border-radius: 0 0 8px 0; /* Bo góc dưới bên phải */
+}
+
+/* LỚP PHỦ ĐEN VÀ CHỮ "XEM TẤT CẢ ẢNH" */
+.more-photos .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Nền đen trong suốt */
+  display: flex; /* Sử dụng flex để căn chữ ra giữa */
+  align-items: center;
+  justify-content: center;
+  color: #fff; /* Màu chữ trắng */
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  z-index: 10; /* Nổi lên trên ảnh */
+}
+
+/* Hiệu ứng khi di chuột vào chữ "Xem tất cả ảnh" */
+.more-photos .overlay:hover {
+  background: rgba(0, 0, 0, 0.7); /* Đậm hơn khi hover */
+}
+/* CSS cho phần tiện nghi chi tiết */
+.hotel-tag {
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Chia thành 4 cột */
+  gap: 20px;
+}
+
+.amenity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: #333;
+}
+
+.amenity-item i {
+  font-size: 18px;
+  color: #555;
+  width: 25px; /* Giữ các icon thẳng hàng dọc */
+}
+
+.btn-book-now:hover {
+  background-color: #d84b1b !important;
+}
+.amenity-group {
+    padding: 20px 0;
+}
+
+.group-title {
+    color: #1a202c; /* Màu chữ tiêu đề đậm hơn */
+    padding-right: 20px;
+}
+
+.amenity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: #4a5568; /* Màu chữ xám giống ảnh mẫu */
+    padding: 5px 0;
+}
+
+.amenity-item i {
+    width: 20px;
+    text-align: center;
+    color: #718096; /* Màu icon xám nhạt */
+}
+.policy-header:hover {
+  background-color: #f9f9f9 !important;
+}
+.policy-card {
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+/* =========================================
+   CSS CHO MODAL GALLERY (Dán vào cuối file)
+   ========================================= */
+
+/* 1. Lớp nền đen che toàn màn hình */
+.vnbk-gallery-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.95); /* Nền đen trong suốt */
+  z-index: 10000; /* Bắt buộc phải có để nổi lên trên cùng */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+/* 2. Khung chứa nội dung ở giữa */
+.vnbk-gallery-content {
+  position: relative;
+  width: 90%;
+  max-width: 1000px;
+  height: 85vh;
+  background-color: #222;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* 3. Nút X để đóng */
+.vnbk-close-gallery {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background: #fff;
+  color: #000;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10001;
+}
+.vnbk-close-gallery:hover {
+  background: #ff4d4f;
+  color: white;
+}
+
+/* 4. Chỗ hiển thị ảnh lớn */
+.vnbk-main-image-viewport {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+.vnbk-main-image-viewport img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Nút bấm Trái / Phải */
+.vnbk-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+}
+.vnbk-nav-btn:hover {
+  background: rgba(255,255,255,0.6);
+}
+.vnbk-prev { left: 10px; }
+.vnbk-next { right: 10px; }
+
+/* Dòng chữ đè lên ảnh */
+.vnbk-overlay-text-bottom {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  text-shadow: 1px 1px 3px black;
+}
+.vnbk-img-label {
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* 5. Thanh Tab */
+.vnbk-gallery-tabs {
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.vnbk-tab-item {
+  background: transparent;
+  color: #aaa;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+.vnbk-tab-item.active {
+  color: #fff;
+  font-weight: bold;
+  border-bottom: 2px solid #fff;
+}
+
+/* 6. Hàng ảnh nhỏ (Thumbnails) */
+.vnbk-thumbnail-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+.vnbk-thumb-box {
+  width: 100px;
+  height: 70px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  opacity: 0.6;
+}
+.vnbk-thumb-box.selected {
+  border-color: #007bff;
+  opacity: 1;
+}
+.vnbk-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* =========================================
+   CSS CHO KHUNG DANH SÁCH PHÒNG (ROOM CARD)
+   ========================================= */
+
+.vnbk-room-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.room-title {
+  font-size: 20px;
+  color: #003580; /* Màu xanh đen đậm */
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.room-card-body {
+  display: flex;
+  gap: 30px;
+}
+
+/* --- Cột trái: Thông tin phòng --- */
+.room-info-col {
+  width: 32%; /* Chiếm khoảng 1/3 không gian */
+}
+
+.room-info-col .room-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.room-specs p {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+.room-specs i {
+  width: 25px; /* Giúp các icon thẳng hàng với nhau */
+  color: #888;
+  text-align: center;
+}
+
+.more-amenities-link {
+  color: #0057b8 !important;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px !important;
+}
+
+/* --- Cột phải: Ưu đãi --- */
+.room-offers-col {
+  flex: 1; /* Chiếm toàn bộ không gian còn lại */
+}
+
+.capacity-bar {
+  display: flex;
+  gap: 30px;
+  background-color: #f8f9fa;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  font-size: 14px;
+  color: #555;
+  align-items: center;
+}
+
+.offers-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Chia làm 2 cột */
+  gap: 15px 30px; /* Khoảng cách hàng 15px, cột 30px */
+}
+
+.offer-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.offer-item i {
+  margin-top: 3px; /* Đẩy dấu tick xuống một chút cho vừa với dòng chữ */
+}
+
+/* Các class tiện ích chung (Màu sắc, in đậm) */
+.text-green { color: #28a745 !important; }
+.room-specs .text-green i { color: #28a745; }
+.fw-bold { font-weight: bold; }
+/* =========================================
+   CSS CHO PHẦN FOOTER ĐẶT PHÒNG VÀ TAG GIÁ
+   ========================================= */
+
+.room-booking-footer {
+  margin-top: 30px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.policy-link {
+  color: #0057b8;
+  cursor: pointer;
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.warning-note {
+  background-color: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+  display: inline-block;
+}
+
+.booking-action-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  margin-top: 25px;
+}
+
+/* Tag giảm giá màu đỏ lồi ra ngoài */
+.discount-tag {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  background-color: #d9534f;
+  color: #fff;
+  padding: 6px 15px;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.discount-triangle {
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  border-top: 8px solid #a03532;
+  border-left: 8px solid transparent;
+}
+
+/* Khu vực giá và nút bấm */
+.price-and-btn {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 30px;
+}
+
+.price-box {
+  text-align: right;
+}
+
+.price-box .old-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 15px;
+  margin: 0 0 5px 0;
+}
+
+.price-box .new-price {
+  color: #f0ad4e;
+  font-size: 26px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.price-box .per-night {
+  font-size: 14px;
+  color: #777;
+  font-weight: normal;
+}
+
+.btn-book-room {
+  background-color: #f0ad4e;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+}
+
+.btn-book-room:hover {
+  background-color: #e09b3d;
+}
+
+.tax-fee-note {
+  background-color: #f1f3f5;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #555;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}

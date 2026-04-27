@@ -1,0 +1,128 @@
+/* ========================================== */
+/* RESET VÀ CẤU HÌNH CHUNG                    */
+/* ========================================== */
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: white; 
+}
+
+/* ========================================== */
+/* PHẦN 1: HERO VÀ TÌM KIẾM                   */
+/* ========================================== */
+.agoda-hero {
+  background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 80vh; 
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-headline {
+  color: white; 
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+  text-align: center;
+}
+
+.search-container-v2 {
+  background-color: white;
+  width: 100%;
+  max-width: 1000px;
+  border-radius: 24px;
+  padding: 0 30px 40px 30px; 
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); 
+  position: relative; 
+  margin-bottom: 50px;
+  border: 1px solid #eaeaea; 
+}
+
+.main-tabs-v2 { display: flex; justify-content: space-between; border-bottom: 1px solid #e0e0e0; margin-bottom: 20px; }
+.tab-v2 { padding: 20px 10px; color: #555; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; border-bottom: 3px solid transparent; }
+.tab-v2:hover { color: #5392f9; }
+.tab-v2.active { color: #5392f9; border-bottom: 3px solid #5392f9; }
+
+.sub-tabs { display: flex; gap: 15px; margin-bottom: 20px; }
+.sub-tab-btn { padding: 8px 20px; border-radius: 20px; border: 1px solid #ccc; background: white; color: #555; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+.sub-tab-btn.active { border-color: #5392f9; color: #5392f9; background-color: #f0f7ff; }
+
+.search-form-v2 { display: flex; flex-direction: column; gap: 15px; }
+.input-row { display: flex; gap: 15px; }
+.input-box { transition: all 0.2s ease; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; padding: 12px 16px; background: white; gap: 15px; }
+.input-box.active-focus { border-color: #5392f9; box-shadow: inset 0 0 0 1px #5392f9, 0 0 0 4px rgba(83, 146, 249, 0.25); background-color: white; }
+.input-box.full-width { width: 100%; }
+.input-box.half-width { flex: 1; }
+.input-box.has-dropdown { justify-content: space-between; cursor: pointer; }
+.box-left { display: flex; align-items: center; gap: 15px; }
+.input-box .icon { color: #888; font-size: 20px; }
+.input-box .icon-arrow { color: #888; font-size: 14px; }
+.input-box input { border: none; outline: none; font-size: 16px; width: 100%; color: #333; }
+.input-box input::placeholder { color: #999; }
+.input-text { display: flex; flex-direction: column; }
+.main-text { font-size: 16px; color: #333; font-weight: 500; }
+.sub-text { font-size: 13px; color: #888; margin-top: 2px; }
+
+.search-submit-btn {
+  position: absolute;
+  bottom: -25px; 
+  left: 50%;
+  transform: translateX(-50%); 
+  background-color: #5392f9;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 15px 80px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(83, 146, 249, 0.4);
+  transition: background-color 0.3s;
+  z-index: 10; 
+}
+.search-submit-btn:hover { background-color: #3b7dec; }
+
+/* ========================================== */
+/* PHẦN 2: DANH SÁCH CHỖ NGHỈ NỔI BẬT         */
+/* ========================================== */
+.recommendation-section { max-width: 1200px; margin: 0 auto 80px auto; padding: 0 20px; }
+.rec-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eaeaea; margin-bottom: 25px; }
+.location-tabs { display: flex; gap: 30px; }
+.loc-tab { font-size: 16px; font-weight: 600; color: #666; padding: 15px 0; cursor: pointer; position: relative; transition: color 0.2s; }
+.loc-tab:hover, .loc-tab.active { color: #2b68c9; }
+.loc-tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background-color: #2b68c9; }
+.see-more { color: #2b68c9; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
+.see-more:hover { opacity: 0.8; }
+.see-more i { margin-left: 5px; font-size: 12px; }
+
+.property-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.property-card { background: #fff; border-radius: 12px; overflow: hidden; cursor: pointer; transition: box-shadow 0.3s ease, transform 0.2s ease; border: 1px solid #eaeaea; }
+.property-card:hover { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); transform: translateY(-5px); border-color: #ddd; }
+.card-image-wrapper { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; border-radius: 12px; }
+.card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+.property-card:hover .card-image-wrapper img { transform: scale(1.05); }
+
+.rating-badge { position: absolute; top: 10px; right: 10px; background-color: #3b7dec; color: white; font-weight: 700; font-size: 14px; padding: 4px 8px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 2; }
+.card-info { padding: 12px 10px; }
+.property-title { font-size: 15px; font-weight: 700; color: #333; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.property-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.stars i { color: #f5a623; font-size: 11px; }
+.location-link { color: #2b68c9; font-size: 13px; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.price-section { margin-top: 10px; }
+.price-note { font-size: 12px; color: #888; margin: 0 0 4px 0; }
+.price { font-size: 18px; font-weight: 700; color: #d32f2f; margin: 0; }
+
+/* Responsive */`
+@media (max-width: 992px) { .property-grid { grid-template-columns: repeat(2, 1fr); } .search-container-v2 { padding: 0 20px 40px 20px; } .agoda-hero { min-height: auto; } }
+@media (max-width: 768px) { .main-tabs-v2 { overflow-x: auto; white-space: nowrap; } .input-row { flex-direction: column; } .hero-headline { font-size: 26px; } }
+@media (max-width: 576px) { .property-grid { grid-template-columns: 1fr; } .rec-header { flex-direction: column; align-items: flex-start; gap: 15px; } .location-tabs { flex-wrap: wrap; gap: 15px; } .loc-tab { padding: 10px 0; } }
