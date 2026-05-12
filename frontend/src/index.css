@@ -1,0 +1,109 @@
+:root {
+  /* 1. Hệ thống màu sắc (Semantic Colors) */
+  --primary: #8b5cf6; /* Tím hiện đại hơn */
+  --primary-soft: rgba(139, 92, 246, 0.1);
+  --bg-app: #ffffff;
+  --surface: #fafafa;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --success: #10b981;
+
+  /* 2. Hiệu ứng chiều sâu (Elevations) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:
+    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* 3. Typography */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --radius: 12px;
+
+  /* Cấu hình hệ thống */
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  color: var(--text-main);
+  background-color: var(--bg-app);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 4. Chế độ Dark Mode chuyên sâu */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-app: #0f172a; /* Xanh đen Slate 950 */
+    --surface: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+  }
+}
+
+/* 5. Reset & Layout Cấp cứu lỗi thanh kéo */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden; /* Chặn kéo ngang tuyệt đối */
+}
+
+/* Thay thế #root bằng Container linh hoạt hơn cho Next.js */
+.app-wrapper {
+  width: 100%;
+  max-width: 1200px; /* Tăng từ 1126px lên 1200px cho chuẩn màn hình rộng */
+  margin: 0 auto;
+  min-height: 100vh;
+  border-inline: 1px solid var(--border-color);
+  background: var(--bg-app);
+}
+
+/* 6. Typography Styling */
+h1,
+h2,
+h3 {
+  color: var(--text-main);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 7. Components "Ăn tiền" (Nên thêm vào) */
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.1s,
+    filter 0.2s;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--surface);
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  font-size: 0.9em;
+  border: 1px solid var(--border-color);
+}
