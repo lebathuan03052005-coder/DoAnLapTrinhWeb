@@ -62,6 +62,7 @@
 .navbar-actions {
   display: flex;
   gap: 10px;
+  align-items: center; /* Giúp các nút và chữ luôn canh giữa theo chiều dọc */
 }
 
 .btn-login {
@@ -91,4 +92,52 @@
 
 .btn-signup:hover {
   background: #e14b50;
+}
+
+/* =========================================
+   PHẦN CSS THÊM CHO TRẠNG THÁI ĐÃ ĐĂNG NHẬP
+========================================= */
+.user-logged-in {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.welcome-text {
+  font-weight: 600;
+  color: #333;
+  font-size: 15px;
+}
+
+/* Nút Quản lý (Dành riêng cho Admin) */
+.btn-admin-dashboard {
+  padding: 8px 14px;
+  border: none;
+  background: #1e293b; /* Xanh đen sang trọng để phân biệt với nút thường */
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-admin-dashboard:hover {
+  background: #334155;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Nút Đăng xuất (Style viền giống nút Đăng nhập) */
+.btn-logout {
+  padding: 8px 14px;
+  border: 1px solid #ff5a5f;
+  background: transparent;
+  color: #ff5a5f;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-logout:hover {
+  background: #ff5a5f;
+  color: white;
 }

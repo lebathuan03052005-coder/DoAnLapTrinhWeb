@@ -8,18 +8,38 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleCustomerLogin = async (e) => {
     e.preventDefault();
-    // Giả lập kiểm tra đăng nhập
-    if (email === "admin@gmail.com" && password === "123456") {
-      navigate("/admin"); // Dùng useNavigate để điều hướng bằng code
-    } else {
-      alert(
-        "Tài khoản hoặc mật khẩu không đúng! (Thử: admin@gmail.com / 123456)",
-      );
+
+    try {
+      const response = await fetch("http://localhost:3000/customer-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem("isCustomerLoggedIn", "true");
+
+        localStorage.setItem("customerName", data.customer.fullname);
+
+        navigate("/homePage");
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+
+      alert("Không kết nối được server");
     }
   };
-
   return (
     <div className="login-wrapper">
       <div className="login-card">
@@ -28,7 +48,7 @@ const Login = () => {
           <p>Chào mừng bạn đến với BOOKING.Commm</p>
         </div>
 
-        <form className="login-form" onSubmit={handleLogin}>
+        <form className="login-form" onSubmit={handleCustomerLogin}>
           <div className="input-group">
             <label htmlFor="email">Email</label>
             <input
@@ -54,8 +74,8 @@ const Login = () => {
           </div>
 
           <div className="login-options">
-            <label>
-              <input type="checkbox" /> Ghi nhớ đăng nhập
+            <label className="remember-me">
+              <input type="checkbox" /> Ghi nhớ
             </label>
             {/* Thẻ Link này cần được import ở dòng 3 */}
             <Link to="/forgot-password">Quên mật khẩu?</Link>

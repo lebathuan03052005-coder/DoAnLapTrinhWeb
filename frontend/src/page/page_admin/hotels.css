@@ -1,0 +1,220 @@
+/* admin_hotels.css */
+
+.admin-hotels-container {
+  padding: 10px;
+}
+
+.admin-hotels-container h3 {
+  color: #1f2937;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* --- Khu vực Thanh tìm kiếm --- */
+.admin-hotels-search-box {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #ef5b25; /* Đổi màu viền cam khi click vào */
+}
+
+.btn-clear-search {
+  padding: 8px 15px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-clear-search:hover {
+  background: #dc2626;
+}
+
+/* --- Khu vực Bảng (Table) --- */
+.table-responsive {
+  margin-top: 25px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  overflow-x: auto; /* Cuộn ngang nếu màn hình quá nhỏ */
+}
+
+.admin-hotels-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-hotels-table th {
+  background-color: #1e293b; /* Xanh đen đồng bộ với Sidebar */
+  color: white;
+  text-align: left;
+  padding: 15px;
+  font-weight: 600;
+}
+
+.admin-hotels-table td {
+  padding: 15px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #4b5563;
+}
+
+.admin-hotels-table tr:hover {
+  background-color: #f9fafb; /* Đổi màu nền nhẹ khi di chuột qua hàng */
+}
+
+.hotel-name {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* --- Nút thao tác (Sửa/Xóa) --- */
+.btn-edit {
+  margin-right: 10px;
+  padding: 6px 12px;
+  background: #f59e0b; /* Màu vàng cam */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-edit:hover {
+  background: #d97706;
+}
+
+.btn-delete {
+  padding: 6px 12px;
+  background: #ef4444; /* Màu đỏ */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+.empty-state {
+  padding: 30px;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+}
+/* --- Khu vực Tìm kiếm & Bộ lọc (Đã thiết kế lại) --- */
+.admin-hotels-filter-section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Khoảng cách giữa ô tìm kiếm và hàng nút lọc */
+}
+
+/* Hàng 1: Search */
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-label,
+.filter-label {
+  font-weight: 600;
+  color: #374151;
+  min-width: 80px; /* Cố định chiều rộng để chữ thẳng hàng với nhau */
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #ef5b25;
+}
+
+.btn-clear-search {
+  padding: 8px 15px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-clear-search:hover {
+  background: #dc2626;
+}
+
+/* Hàng 2: Bộ lọc nhanh (Tags) */
+.quick-filters-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.filter-tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap; /* Tự rớt dòng nếu màn hình nhỏ */
+}
+
+.btn-quick-filter {
+  padding: 6px 16px;
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px; /* Bo tròn dạng viên thuốc (Pill shape) */
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-quick-filter:hover {
+  background: #e5e7eb;
+}
+
+/* Trạng thái nút đang được chọn */
+.btn-quick-filter.active {
+  background: #ef5b25; /* Cam chủ đạo */
+  color: white;
+  border-color: #ef5b25;
+  box-shadow: 0 2px 4px rgba(239, 91, 37, 0.2);
+}

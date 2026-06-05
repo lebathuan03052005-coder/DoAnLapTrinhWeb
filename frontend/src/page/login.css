@@ -60,7 +60,7 @@
   text-align: left; /* Căn trái cho chuẩn form hiện đại */
 }
 .input-group label {
-  display: block;
+  display: flex;
   text-align: left;
   margin-bottom: 5px;
   margin-left: 20px;
@@ -83,7 +83,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
+  font-size: 14px;
   color: #666;
 }
 
