@@ -4,18 +4,12 @@ import "./hotels.css";
 const Hotels = () => {
   const [hotels, setHotels] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [selectedHotel, setSelectedHotel] = useState(null);
   // State quản lý bộ lọc nhanh đang được chọn
   const [activeFilter, setActiveFilter] = useState("Tất cả");
 
   // Danh sách các bộ lọc nhanh
-  const quickFilters = [
-    "Tất cả",
-    "Khách sạn",
-    "Homestay",
-    "Đà Lạt",
-    "Vũng Tàu",
-  ];
+  const quickFilters = ["Tất cả", "Khách sạn", "Đà Lạt", "Vũng Tàu"];
 
   useEffect(() => {
     fetchHotels();
@@ -36,9 +30,12 @@ const Hotels = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa khách sạn này?")) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/hotels/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/admin/hotels/${id}`,
+        {
+          method: "DELETE",
+        },
+      );
       const data = await response.json();
       if (data.success) {
         fetchHotels();
@@ -48,25 +45,41 @@ const Hotels = () => {
     }
   };
 
+  const handleAccess = async (id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/admin/hotels/${id}/access`,
+        {
+          method: "PUT",
+        },
+      );
+      const data = await response.json();
+      if (data.success) {
+        fetchHotels();
+      } else {
+        alert("Lỗi khi cập nhật trạng thái truy cập");
+      }
+    } catch (error) {
+      alert("Lỗi khi kết nối để cập nhật trạng thái truy cập");
+    }
+  };
   // Logic lọc kết hợp cả "Ô tìm kiếm" VÀ "Bộ lọc nhanh"
   const filteredHotels = hotels.filter((hotel) => {
     // 1. Kiểm tra điều kiện nhập text
     const term = searchTerm.toLowerCase();
     const matchSearch =
       hotel.name.toLowerCase().includes(term) ||
-      hotel.location.toLowerCase().includes(term);
+      hotel.city.toLowerCase().includes(term);
 
     // 2. Kiểm tra điều kiện bấm nút lọc nhanh
     let matchQuickFilter = true;
     const nameLower = hotel.name.toLowerCase();
-    const locLower = hotel.location.toLowerCase();
+    const locLower = hotel.city.toLowerCase();
 
     if (activeFilter === "Khách sạn") {
       // Tìm chữ khách sạn hoặc hotel trong tên
       matchQuickFilter =
         nameLower.includes("khách sạn") || nameLower.includes("hotel");
-    } else if (activeFilter === "Homestay") {
-      matchQuickFilter = nameLower.includes("homestay");
     } else if (activeFilter === "Đà Lạt" || activeFilter === "Vũng Tàu") {
       matchQuickFilter = locLower.includes(activeFilter.toLowerCase());
     }
@@ -77,7 +90,7 @@ const Hotels = () => {
 
   return (
     <div className="admin-hotels-container">
-      <h3>Quản lý Khách sạn / Homestay</h3>
+      <h3>Quản lý Khách sạn </h3>
 
       {/* Khu vực Tìm kiếm & Bộ lọc */}
       <div className="admin-hotels-filter-section">
@@ -126,7 +139,7 @@ const Hotels = () => {
               <th>ID</th>
               <th>Tên Khách Sạn</th>
               <th>Vị trí</th>
-              <th>Giá/Đêm</th>
+              <th>Trạng thái</th>
               <th>Thao tác</th>
             </tr>
           </thead>
@@ -136,15 +149,21 @@ const Hotels = () => {
                 <tr key={hotel.id}>
                   <td>{hotel.id}</td>
                   <td className="hotel-name">{hotel.name}</td>
-                  <td>{hotel.location}</td>
-                  <td>{hotel.price?.toLocaleString("vi-VN")} VND</td>
+                  <td>{hotel.city}</td>
+                  <td>{hotel.status}</td>
                   <td>
-                    <button className="btn-edit">Sửa</button>
+                    <button className="btn-edit">Duyệt</button>
                     <button
                       className="btn-delete"
                       onClick={() => handleDelete(hotel.id)}
                     >
                       Xóa
+                    </button>
+                    <button
+                      className="btn-details"
+                      onClick={() => setSelectedHotel(hotel)}
+                    >
+                      Xem chi tiết
                     </button>
                   </td>
                 </tr>
@@ -159,6 +178,50 @@ const Hotels = () => {
           </tbody>
         </table>
       </div>
+      {selectedHotel && (
+        <div className="modal-overlay" onClick={() => setSelectedHotel(null)}>
+          <div className="hotel-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Chi tiết khách sạn</h2>
+
+            <div className="hotel-info">
+              <p>
+                <strong>ID: </strong> {selectedHotel.id}
+              </p>
+
+              <p>
+                <strong>Tên: </strong>
+                {selectedHotel.name}
+              </p>
+
+              <p>
+                <strong>Thành phố: </strong>
+                {selectedHotel.city}
+              </p>
+
+              <p>
+                <strong>Trạng thái: </strong>
+                {selectedHotel.status}
+              </p>
+
+              <p>
+                <strong>Mô tả: </strong>
+                {selectedHotel.description}
+              </p>
+              <p>
+                <strong>Địa chỉ: </strong>
+                {selectedHotel.address}
+              </p>
+            </div>
+
+            <button
+              className="close-btn"
+              onClick={() => setSelectedHotel(null)}
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

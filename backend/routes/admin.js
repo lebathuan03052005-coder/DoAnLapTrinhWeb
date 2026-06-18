@@ -12,7 +12,6 @@ router.post("/admin-login", async (req, res) => {
       .status(400)
       .json({ success: false, message: "Vui lòng nhập email và mật khẩu!" });
   }
-
   try {
     const pool = await connectDB();
     const request = pool.request();
@@ -61,7 +60,7 @@ router.get("/api/admin/hotels", async (req, res) => {
   try {
     const pool = await connectDB();
     const result = await pool.request().query(`
-      SELECT id, name, location, price
+      SELECT id, name, city, status, description, address
       FROM Hotels
     `);
     res.json(result.recordset);
@@ -71,35 +70,8 @@ router.get("/api/admin/hotels", async (req, res) => {
   }
 });
 
-// Thêm khách sạn
-router.post("/api/hotels", async (req, res) => {
-  const { name, location, price } = req.body;
-  if (!name || !location || !price) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Vui lòng nhập đầy đủ thông tin!" });
-  }
-
-  try {
-    const pool = await connectDB();
-    const request = pool.request();
-    request.input("name", sql.NVarChar, name);
-    request.input("location", sql.NVarChar, location);
-    request.input("price", sql.Decimal(18, 2), price);
-
-    await request.query(`
-      INSERT INTO Hotels (name, location, price)
-      VALUES (@name, @location, @price)
-    `);
-    res.json({ success: true, message: "Thêm khách sạn thành công!" });
-  } catch (error) {
-    console.error("Lỗi thêm khách sạn:", error);
-    res.status(500).json({ success: false, message: "Lỗi Server!" });
-  }
-});
-
 // Xóa khách sạn
-router.delete("/api/hotels/:id", async (req, res) => {
+router.delete("/api/admin/hotels/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const pool = await connectDB();

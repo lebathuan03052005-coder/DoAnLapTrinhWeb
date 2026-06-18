@@ -55,7 +55,7 @@ const Accounts = () => {
               <tr key={acc.id} style={{ borderBottom: "1px solid #eee" }}>
                 <td style={{ padding: "12px" }}>{acc.id}</td>
                 <td style={{ padding: "12px", fontWeight: "600" }}>
-                  {acc.fullname}
+                  {acc.full_name}
                 </td>
                 <td style={{ padding: "12px" }}>{acc.email}</td>
                 <td style={{ padding: "12px" }}>{acc.phone}</td>

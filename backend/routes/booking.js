@@ -1,6 +1,7 @@
 import express from "express";
 import sql from "mssql";
 import { connectDB } from "../database.js";
+import bcrypt from "bcryptjs";
 
 const router = express.Router();
 
@@ -181,35 +182,107 @@ router.get("/api/room-images/:roomTypeId", async (req, res) => {
 // API ĐĂNG NHẬP KHÁCH
 router.post("/customer-login", async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Vui lòng nhập email và mật khẩu!" });
-  }
 
   try {
     const pool = await connectDB();
-    const request = pool.request();
-    request.input("email", sql.VarChar, email);
-    request.input("password", sql.VarChar, password);
 
-    const result = await request.query(`
-      SELECT id, full_name, email, role
-      FROM Users
-      WHERE email = @email AND password_hash = @password AND role = 'customer'
-    `);
+    const result = await pool.request().input("email", sql.VarChar, email)
+      .query(`
+        SELECT
+          id,
+          full_name,
+          email,
+          phone,
+          role,
+          password_hash
+        FROM Users
+        WHERE email=@email
+        AND role='customer'
+      `);
 
-    if (result.recordset.length > 0) {
-      res.json({ success: true, customer: result.recordset[0] });
-    } else {
-      res.status(401).json({
+    if (result.recordset.length === 0) {
+      return res.status(401).json({
         success: false,
-        message: "Email hoặc mật khẩu không chính xác!",
+        message: "Sai tài khoản hoặc mật khẩu",
       });
     }
-  } catch (error) {
-    console.error("Lỗi đăng nhập Customer:", error);
-    res.status(500).json({ success: false, message: "Lỗi kết nối Server!" });
+
+    const user = result.recordset[0];
+
+    const match = await bcrypt.compare(password, user.password_hash);
+
+    if (!match) {
+      return res.status(401).json({
+        success: false,
+        message: "Sai tài khoản hoặc mật khẩu",
+      });
+    }
+
+    delete user.password_hash;
+
+    res.json({
+      success: true,
+
+      user,
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Lỗi server",
+    });
+  }
+});
+
+// API ĐĂNG KÝ TÀI KHOẢN KHÁCH HÀNG
+router.post("/api/register", async (req, res) => {
+  try {
+    const { full_name, email, phone, password } = req.body;
+    if (!full_name || !email || !phone || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Vui lòng nhập đầy đủ thông tin!" });
+    }
+
+    const pool = await connectDB();
+
+    // Kiểm tra email đã tồn tại
+    const checkReq = pool.request();
+    checkReq.input("email", sql.VarChar, email);
+    const checkResult = await checkReq.query(`
+      SELECT id FROM Users WHERE email = @email
+    `);
+
+    if (checkResult.recordset.length > 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email đã được sử dụng!" });
+    }
+
+    // Mã hóa mật khẩu
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Lưu user mới
+    const insertReq = pool.request();
+    insertReq.input("full_name", sql.NVarChar, full_name);
+    insertReq.input("email", sql.VarChar, email);
+    insertReq.input("phone", sql.VarChar, phone);
+    insertReq.input("password_hash", sql.VarChar, hashedPassword);
+
+    const insertResult = await insertReq.query(`
+      INSERT INTO Users (full_name, email, phone, password_hash, role, status, created_at)
+      OUTPUT INSERTED.id
+      VALUES (@full_name, @email, @phone, @password_hash, 'customer', 'ACTIVE', GETDATE())
+    `);
+
+    const userId = insertResult.recordset[0].id;
+
+    res.json({ success: true, message: "Đăng ký thành công!", userId });
+  } catch (err) {
+    console.error("Lỗi đăng ký:", err);
+    res.status(500).json({ success: false, message: "Lỗi server" });
   }
 });
 

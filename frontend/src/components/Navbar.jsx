@@ -1,35 +1,90 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   const [userType, setUserType] = useState(null);
   const [userName, setUserName] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
+  // Load dữ liệu đăng nhập
+  const loadUser = () => {
     const isAdmin = localStorage.getItem("isAdminLoggedIn") === "true";
+
     const isCustomer = localStorage.getItem("isCustomerLoggedIn") === "true";
+
+    const isHost = localStorage.getItem("isHostLoggedIn") === "true";
 
     if (isAdmin) {
       setUserType("admin");
-      // Admin không cần tên trên Navbar nữa nhưng cứ giữ state nếu sau này cần dùng việc khác
+
       setUserName(localStorage.getItem("adminName") || "Admin");
+    } else if (isHost) {
+      setUserType("host");
+
+      setUserName(localStorage.getItem("hostName") || "Host");
     } else if (isCustomer) {
       setUserType("customer");
+
       setUserName(localStorage.getItem("customerName") || "Khách");
+    } else {
+      setUserType(null);
+      setUserName("");
     }
+  };
+
+  useEffect(() => {
+    loadUser();
+
+    const refresh = () => {
+      loadUser();
+    };
+
+    window.addEventListener("userChanged", refresh);
+
+    return () => {
+      window.removeEventListener("userChanged", refresh);
+    };
   }, []);
+
+  // Đóng dropdown
+  useEffect(() => {
+    const outside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", outside);
+
+    return () => {
+      document.removeEventListener("mousedown", outside);
+    };
+  }, []);
+
+  const go = (path) => {
+    setMenuOpen(false);
+
+    navigate(path);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("isAdminLoggedIn");
+
     localStorage.removeItem("adminName");
+
     localStorage.removeItem("isCustomerLoggedIn");
+
     localStorage.removeItem("customerName");
 
-    setUserType(null);
-    setUserName("");
+    localStorage.removeItem("isHostLoggedIn");
+
+    localStorage.removeItem("hostName");
+
+    window.dispatchEvent(new Event("userChanged"));
 
     navigate("/");
   };
@@ -38,58 +93,78 @@ const Navbar = () => {
     <nav className="navbar">
       {/* Logo */}
       <div className="navbar-logo">
-        <Link to="/">
-          <img src="https://via.placeholder.com/120x40" alt="Logo" />
-        </Link>
+        <Link to="/">LOGO</Link>
       </div>
 
-      {/* Links */}
+      {/* Menu */}
       <ul className="navbar-links">
         <li>
           <Link to="/">Khách Sạn</Link>
         </li>
+
         <li>
           <Link to="/">Homestay</Link>
         </li>
-        <li className="dropdown">
-          <Link to="/khac">
-            Khác <span className="arrow">⌄</span>
-          </Link>
+
+        <li>
+          <Link to="/khac">Khác</Link>
         </li>
+
         <li>
           <Link to="/booking">Đặt Phòng</Link>
         </li>
+
         <li>
           <Link to="/search">Tìm Kiếm</Link>
         </li>
       </ul>
 
-      {/* Actions */}
+      {/* RIGHT */}
       <div className="navbar-actions">
-        {userType ? (
-          <div className="user-logged-in">
-            {/* CHỈ HIỂN THỊ LỜI CHÀO NẾU LÀ KHÁCH */}
-            {userType === "customer" && (
-              <span className="welcome-text">Chào, {userName}!</span>
-            )}
+        {/* ADMIN */}
+        {userType === "admin" && (
+          <Link to="/admin">
+            <button className="btn-admin-dashboard">Quản lý</button>
+          </Link>
+        )}
 
-            {/* NẾU LÀ ADMIN THÌ HIỂN THỊ NÚT QUẢN LÝ (KHÔNG CHÀO) */}
-            {userType === "admin" && (
-              <Link to="/admin">
-                <button className="btn-admin-dashboard">Quản lý</button>
-              </Link>
-            )}
-
-            <button className="btn-logout" onClick={handleLogout}>
-              Đăng xuất
+        {/* CUSTOMER + HOST */}
+        {(userType === "customer" || userType === "host") && (
+          <div className="account-dropdown" ref={dropdownRef}>
+            <button
+              className="account-trigger"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <span className="account-avatar">
+                {userName?.charAt(0).toUpperCase()}
+              </span>
+              <span>{userName}</span>▼
             </button>
+
+            {menuOpen && (
+              <div className="account-menu">
+                <button onClick={() => go("/")}>Trang chủ</button>
+
+                <button onClick={() => go("/profile")}>Hồ sơ</button>
+
+                {/* CUSTOMER */}
+                {userType === "customer" && (
+                  <button onClick={() => go("/host")}>Trở thành Host</button>
+                )}
+
+                <button onClick={handleLogout}>Đăng xuất</button>
+              </div>
+            )}
           </div>
-        ) : (
-          // KHI CHƯA ĐĂNG NHẬP
+        )}
+
+        {/* CHƯA LOGIN */}
+        {!userType && (
           <>
             <Link to="/login">
               <button className="btn-login">Đăng nhập</button>
             </Link>
+
             <Link to="/register">
               <button className="btn-signup">Đăng ký</button>
             </Link>

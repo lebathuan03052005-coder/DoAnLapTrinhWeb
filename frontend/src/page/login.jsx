@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/customer-login", {
+      const response = await fetch("http://localhost:5000/customer-login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,9 +28,11 @@ const Login = () => {
       if (data.success) {
         localStorage.setItem("isCustomerLoggedIn", "true");
 
-        localStorage.setItem("customerName", data.customer.fullname);
+        localStorage.setItem("customerName", data.user.full_name);
 
-        navigate("/homePage");
+        window.dispatchEvent(new Event("userChanged"));
+
+        navigate("/");
       } else {
         alert(data.message);
       }
@@ -50,7 +52,7 @@ const Login = () => {
 
         <form className="login-form" onSubmit={handleCustomerLogin}>
           <div className="input-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email của bạn</label>
             <input
               id="email"
               type="email"
@@ -74,14 +76,27 @@ const Login = () => {
           </div>
 
           <div className="login-options">
-            <label className="remember-me">
-              <input type="checkbox" /> Ghi nhớ
+            <label
+              className="remember-me"
+              style={{
+                display: "flex",
+                flexDirection: "row-reverse",
+                alignItems: "center",
+                gap: "8px",
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="checkbox"
+                style={{ width: "20px", height: "18px" }}
+              />
+              <span>Ghi nhớ</span>
             </label>
+
             {/* Thẻ Link này cần được import ở dòng 3 */}
             <Link to="/forgot-password">Quên mật khẩu?</Link>
             <Link to="/login_admin">Đăng nhập quản trị viên</Link>
           </div>
-
           <button type="submit" className="login-button">
             ĐĂNG NHẬP
           </button>

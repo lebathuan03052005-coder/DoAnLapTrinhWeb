@@ -1,3 +1,6 @@
+/* =========================================
+   CẤU TRÚC CHUNG CỦA NAVBAR
+========================================= */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -14,7 +17,7 @@
   object-fit: contain;
 }
 
-/* Links */
+/* Links (Menu chính) */
 .navbar-links {
   list-style: none;
   display: flex;
@@ -31,12 +34,11 @@
   position: relative;
 }
 
-/* hover đẹp */
+/* Hover hiệu ứng đường gạch chân */
 .navbar-links li a:hover {
   color: #ff5a5f;
 }
 
-/* underline animation */
 .navbar-links li a::after {
   content: "";
   position: absolute;
@@ -52,19 +54,23 @@
   width: 100%;
 }
 
-/* dropdown arrow */
+/* Dropdown arrow chung */
 .arrow {
   font-size: 12px;
   margin-left: 4px;
 }
 
-/* buttons */
+/* Khu vực điều hướng bên phải (Actions) */
 .navbar-actions {
   display: flex;
   gap: 10px;
   align-items: center; /* Giúp các nút và chữ luôn canh giữa theo chiều dọc */
+  position: relative;
 }
 
+/* =========================================
+   TRẠNG THÁI CHƯA ĐĂNG NHẬP (Nút Login / Signup)
+========================================= */
 .btn-login {
   padding: 8px 14px;
   border: 1px solid #ff5a5f;
@@ -95,7 +101,7 @@
 }
 
 /* =========================================
-   PHẦN CSS THÊM CHO TRẠNG THÁI ĐÃ ĐĂNG NHẬP
+   TRẠNG THÁI ĐÃ ĐĂNG NHẬP (User Info & Admin)
 ========================================= */
 .user-logged-in {
   display: flex;
@@ -126,7 +132,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Nút Đăng xuất (Style viền giống nút Đăng nhập) */
+/* Nút Đăng xuất dạng inline (nếu không bỏ vào dropdown) */
 .btn-logout {
   padding: 8px 14px;
   border: 1px solid #ff5a5f;
@@ -140,4 +146,87 @@
 .btn-logout:hover {
   background: #ff5a5f;
   color: white;
+}
+
+/* =========================================
+   MENU DROPDOWN TÀI KHOẢN (Account Dropdown)
+========================================= */
+.account-dropdown {
+  position: relative;
+}
+
+/* Khối bọc Avatar và Tên kích hoạt dropdown */
+.account-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* Vòng tròn Avatar */
+.account-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1fb7d6, #0f8fb5);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.account-label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.account-arrow {
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Bảng menu xổ xuống */
+.account-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 260px;
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+  padding: 10px 0;
+  z-index: 20;
+  overflow: hidden;
+}
+
+/* Các nút lệnh bên trong Menu Dropdown */
+.account-menu button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  background: transparent;
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 14px;
+  color: #334155;
+  cursor: pointer;
+}
+
+.account-menu button:hover {
+  background: #f5f7fb;
+}
+
+/* Đường gạch phân cách giữa các button trong menu xổ xuống */
+.account-menu button + button {
+  border-top: 1px solid #f1f5f9;
 }

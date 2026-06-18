@@ -33,7 +33,9 @@ const LoginAdmin = () => {
 
         localStorage.setItem("adminName", data.admin.full_name);
 
-        navigate("/admin");
+        window.dispatchEvent(new Event("userChanged"));
+
+        navigate("/");
       } else {
         alert(data.message);
       }
@@ -77,9 +79,21 @@ const LoginAdmin = () => {
             />
           </div>
           <div className="login-options">
-            <label>
-              <input type="checkbox" /> Ghi nhớ đăng nhập
+            <label
+              style={{
+                display: "flex",
+                flexDirection: "row-reverse",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <input
+                type="checkbox"
+                style={{ width: "16px", height: "16px" }}
+              />
+              <span>Ghi nhớ đăng nhập</span>
             </label>
+
             {/* Thẻ Link này cần được import ở dòng 3 */}
             <Link to="/forgot-password">Quên mật khẩu?</Link>
           </div>
