@@ -17,7 +17,7 @@ const Login = () => {
 
     try {
       // Dùng API_URL thay vì localhost cứng
-      const response = await fetch(`${API_URL}/customer-login`, {
+      const response = await fetch(`${API_URL}customer-login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
