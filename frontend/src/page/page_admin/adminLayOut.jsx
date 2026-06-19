@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import "./adminLayout.css";
+import "./adminLayOut.css";
 
 const AdminLayout = () => {
   const location = useLocation();
