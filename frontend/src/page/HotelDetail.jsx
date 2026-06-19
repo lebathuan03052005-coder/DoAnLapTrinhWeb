@@ -469,7 +469,11 @@ const HotelDetail = () => {
 
               <div className="room-card-body">
                 <div className="room-info-col">
-                  src={room.image ? room.image.split("\n")[0].trim() : img1}
+                  <img
+                    src={room.image ? room.image.split("\n")[0].trim() : img1}
+                    alt={room.name}
+                    className="room-thumbnail" // Bạn có thể thêm class này để style trong CSS
+                  />
                   <div className="room-specs">
                     <p>
                       <i className="fa-solid fa-users"></i> Sức chứa:{" "}
