@@ -6,6 +6,7 @@ const router = express.Router();
 // API ĐĂNG NHẬP ADMIN
 router.post("/admin-login", async (req, res) => {
   const { email, password } = req.body;
+  console.log("Dữ liệu nhận được từ Frontend:", { email, password });
   if (!email || !password) {
     return res
       .status(400)
@@ -18,23 +19,19 @@ router.post("/admin-login", async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Tài khoản hoặc mật khẩu Admin không đúng!",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Tài khoản hoặc mật khẩu Admin không đúng!",
+      });
     }
 
     const admin = result.rows[0];
     const match = await bcrypt.compare(password, admin.password_hash);
     if (!match) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Tài khoản hoặc mật khẩu Admin không đúng!",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Tài khoản hoặc mật khẩu Admin không đúng!",
+      });
     }
 
     delete admin.password_hash;
