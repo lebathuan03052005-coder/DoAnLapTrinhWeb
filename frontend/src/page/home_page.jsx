@@ -316,8 +316,8 @@ const HomePage = () => {
                 <div className="promo-badge">Tiết kiệm -{h.discount}%</div>
                 <div className="promo-img-wrapper">
                   <img
-                    src={`/src/assets/anhHotels/${item.image}`}
-                    alt={item.name}
+                    src={`/src/assets/anhHotels/${h.image}`} // <--- ĐÚNG: dùng biến 'h'
+                    alt={h.name} // <--- ĐÚNG: dùng biến 'h'
                   />
                 </div>
                 <div className="promo-info">
