@@ -4,14 +4,10 @@ import bcrypt from "bcryptjs";
 
 const router = express.Router();
 // API ĐĂNG NHẬP ADMIN
+// API ĐĂNG NHẬP ADMIN - KHÔNG MÃ HÓA
 router.post("/api/admin/admin-login", async (req, res) => {
   const { email, password } = req.body;
-  console.log("Dữ liệu nhận được từ Frontend:", { email, password });
-  if (!email || !password) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Vui lòng nhập email và mật khẩu!" });
-  }
+
   try {
     const result = await pool.query(
       `SELECT id, full_name, email, role, password_hash FROM users WHERE email = $1 AND role = $2`,
@@ -19,26 +15,23 @@ router.post("/api/admin/admin-login", async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.status(401).json({
-        success: false,
-        message: "Tài khoản hoặc mật khẩu Admin không đúng!",
-      });
+      return res
+        .status(401)
+        .json({ success: false, message: "Sai tài khoản!" });
     }
 
     const admin = result.rows[0];
-    const match = await bcrypt.compare(password, admin.password_hash);
-    if (!match) {
+    if (password !== admin.password_hash) {
       return res.status(401).json({
         success: false,
-        message: "Tài khoản hoặc mật khẩu Admin không đúng!",
+        message: "Sai tài khoản hoặc mật khẩu Admin!",
       });
     }
 
     delete admin.password_hash;
     res.json({ success: true, admin });
   } catch (error) {
-    console.error("Lỗi đăng nhập Admin:", error);
-    res.status(500).json({ success: false, message: "Lỗi kết nối Server!" });
+    res.status(500).json({ success: false, message: "Lỗi Server!" });
   }
 });
 

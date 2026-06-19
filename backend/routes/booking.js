@@ -170,8 +170,13 @@ router.post("/customer-login", async (req, res) => {
     }
 
     const user = result.rows[0];
+    console.log("--- DEBUG ĐĂNG NHẬP ---");
+    console.log("Email nhận được:", email);
+    console.log("Mật khẩu nhập vào (plaintext):", password);
+    console.log("Password hash lấy từ DB:", admin.password_hash);
 
-    const match = await bcrypt.compare(password, user.password_hash);
+    const match = await bcrypt.compare(password, admin.password_hash);
+    console.log("Kết quả so sánh (match):", match);
 
     if (!match) {
       return res.status(401).json({

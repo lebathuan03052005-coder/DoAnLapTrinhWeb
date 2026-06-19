@@ -12,7 +12,7 @@ const app = express();
 // 1. Cấu hình CORS duy nhất - CHỈ MỘT LẦN
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://doanlaptrinhweb-3.onrender.com", // Đã bỏ dấu / ở cuối
+  "https://doanlaptrinhweb-3.onrender.com",
 ];
 
 app.use(
