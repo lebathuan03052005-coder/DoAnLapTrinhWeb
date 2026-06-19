@@ -12,6 +12,14 @@
 
 body {
   background-color: white;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.homepage-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* ========================================== */
@@ -123,6 +131,55 @@ body {
     0 0 0 4px rgba(83, 146, 249, 0.25);
   background-color: white;
 }
+.search-field-content.guest-field-content {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.search-field-content.guest-field-content .search-field-label {
+  white-space: nowrap !important;
+  flex: 0 0 auto !important;
+  margin-right: 8px !important;
+}
+.search-field-content.guest-field-content .search-field-value {
+  white-space: nowrap !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.search-bar-horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 60px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 10px 10px 10px 24px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  overflow: visible;
+  position: relative;
+}
+
+.search-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 40px;
+  transition: background 0.2s;
+}
+
 .input-box.full-width {
   width: 100%;
 }
@@ -196,10 +253,12 @@ body {
 /* PHẦN 2: DANH SÁCH CHỖ NGHỈ NỔI BẬT         */
 /* ========================================== */
 .recommendation-section {
-  max-width: 1200px;
-  margin: 0 auto 80px auto;
-  padding: 0 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 60px auto;
+  padding: 0 40px;
 }
+
 .rec-header {
   display: flex;
   justify-content: space-between;
@@ -239,6 +298,7 @@ body {
   font-size: 14px;
   cursor: pointer;
   transition: opacity 0.2s;
+  white-space: nowrap;
 }
 .see-more:hover {
   opacity: 0.8;
@@ -345,48 +405,9 @@ body {
   margin: 0;
 }
 
-/* Responsive */
-@media (max-width: 992px) {
-  .property-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .search-container-v2 {
-    padding: 0 20px 40px 20px;
-  }
-  .agoda-hero {
-    min-height: auto;
-  }
-}
-@media (max-width: 768px) {
-  .main-tabs-v2 {
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  .input-row {
-    flex-direction: column;
-  }
-  .hero-headline {
-    font-size: 26px;
-  }
-}
-@media (max-width: 576px) {
-  .property-grid {
-    grid-template-columns: 1fr;
-  }
-  .rec-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-  }
-  .location-tabs {
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-  .loc-tab {
-    padding: 10px 0;
-  }
-}
-/* ===== GUEST PICKER ===== */
+/* ========================================== */
+/* GUEST PICKER                                */
+/* ========================================== */
 .guest-dropdown-panel {
   position: absolute;
   top: calc(100% + 4px);
@@ -459,4 +480,506 @@ body {
 }
 .guest-apply-btn:hover {
   opacity: 0.88;
+}
+
+/* ========================================== */
+/* PHẦN 3: KHÁCH SẠN KHUYẾN MÃI               */
+/* ========================================== */
+.promo-section {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 60px auto;
+  padding: 0 40px;
+}
+
+.promo-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #003580;
+  margin-bottom: 8px;
+}
+
+.promo-subtitle {
+  color: #555;
+  font-size: 15px;
+  margin-bottom: 28px;
+}
+
+.promo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+.promo-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  position: relative;
+  background: #fff;
+  min-width: 0;
+  border: 1px solid #eaeaea;
+}
+
+.promo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.promo-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: #e53935;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 4px;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.promo-img-wrapper {
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+}
+
+.promo-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.promo-card:hover .promo-img-wrapper img {
+  transform: scale(1.05);
+}
+
+.promo-info {
+  padding: 18px;
+}
+
+.promo-info h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.promo-stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.promo-address {
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.promo-price-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.promo-new-price {
+  color: #003580;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.promo-old-price {
+  color: #999;
+  font-size: 14px;
+  text-decoration: line-through;
+}
+
+/* ========================================== */
+/* RESPONSIVE                                  */
+/* ========================================== */
+@media (max-width: 1200px) {
+  .recommendation-section,
+  .promo-section {
+    padding: 0 24px;
+  }
+  .promo-img-wrapper {
+    height: 220px;
+  }
+}
+
+@media (max-width: 992px) {
+  .property-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .promo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .search-container-v2 {
+    padding: 0 20px 40px 20px;
+  }
+  .agoda-hero {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-tabs-v2 {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .input-row {
+    flex-direction: column;
+  }
+  .hero-headline {
+    font-size: 22px;
+  }
+  .recommendation-section,
+  .promo-section {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .property-grid {
+    grid-template-columns: 1fr;
+  }
+  .promo-grid {
+    grid-template-columns: 1fr;
+  }
+  .rec-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .location-tabs {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .loc-tab {
+    padding: 10px 0;
+  }
+}
+/* ========================================== */
+/* PHẦN 4: ĐIỂM ĐẾN NỔI BẬT                  */
+/* ========================================== */
+.destination-section {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 60px auto;
+  padding: 0 40px;
+}
+
+.destination-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #003580;
+  margin-bottom: 8px;
+}
+
+.destination-subtitle {
+  color: #555;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.destination-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 420px;
+}
+
+.destination-card {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.destination-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.destination-card:hover img {
+  transform: scale(1.08);
+}
+
+.destination-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+  color: white;
+}
+
+.destination-overlay h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.destination-overlay p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .destination-grid {
+    grid-template-columns: repeat(2, 1fr);
+    height: auto;
+  }
+  .destination-card {
+    height: 200px;
+  }
+}
+/* ========================================== */
+/* PHẦN 5: HƯỚNG DẪN ĐẶT PHÒNG               */
+/* ========================================== */
+.guide-section {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 60px auto;
+  padding: 0 40px;
+}
+
+.guide-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #003580;
+  margin-bottom: 8px;
+}
+
+.guide-subtitle {
+  color: #555;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.guide-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  height: 260px;
+}
+
+.guide-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  filter: brightness(0.55);
+}
+
+.guide-card:hover img {
+  transform: scale(1.06);
+  filter: brightness(0.4);
+}
+
+.guide-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 16px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 30, 100, 0.85) 0%,
+    transparent 100%
+  );
+  color: white;
+}
+
+.guide-overlay p {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.guide-overlay h3 {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+/* ========================================== */
+/* BỔ SUNG BIẾN MÀU & HIỆU ỨNG (VARIABLES)    */
+/* ========================================== */
+:root {
+  --primary: #2b68c9;
+  --accent: #ef5b25;
+  --text-main: #1a1a1a;
+  --text-sub: #666;
+  --bg-soft: #f8fafc;
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================== */
+/* HERO SECTION - TỐI ƯU HIỆU ỨNG MỜ           */
+/* ========================================== */
+.agoda-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.search-container-v2 {
+  background: rgba(255, 255, 255, 0.95); /* Glassmorphism nhẹ */
+  backdrop-filter: blur(10px);
+  border-radius: 28px;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: var(--transition);
+}
+
+.search-container-v2:hover {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.search-submit-btn {
+  background: var(--accent);
+  padding: 16px 90px;
+  border-radius: 50px;
+  font-size: 19px;
+  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.3);
+}
+
+.search-submit-btn:hover {
+  transform: translateX(-50%) scale(1.02);
+  filter: brightness(1.1);
+}
+
+/* ========================================== */
+/* PROPERTY CARD - TỐI ƯU HIỆU ỨNG CARD       */
+/* ========================================== */
+.property-card {
+  background: #fff;
+  border-radius: 20px; /* Bo góc mềm mại hơn */
+  padding: 8px;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+}
+
+.card-image-wrapper {
+  border-radius: 16px; /* Bo góc ảnh bên trong */
+  overflow: hidden;
+}
+
+.rating-badge {
+  background: var(--primary);
+  border-radius: 8px 0 8px 8px;
+  padding: 6px 12px;
+}
+
+/* ========================================== */
+/* DESTINATION & GUIDE - HIỆU ỨNG OVERLAY     */
+/* ========================================== */
+.destination-grid,
+.guide-grid {
+  gap: 20px;
+}
+
+.destination-card,
+.guide-card {
+  border-radius: 20px;
+  transition: var(--transition);
+}
+
+.destination-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+  padding: 24px;
+}
+
+/* Hiệu ứng Scale cho ảnh */
+.destination-card img,
+.guide-card img {
+  transition: transform 0.6s ease;
+}
+
+.destination-card:hover img,
+.guide-card:hover img {
+  transform: scale(1.1);
+}
+
+/* ========================================== */
+/* HOVER HIỆU ỨNG NÂNG CAO Cho Text          */
+/* ========================================== */
+.property-title:hover {
+  color: var(--primary);
+}
+
+.loc-tab.active {
+  color: var(--primary);
+}
+.loc-tab.active::after {
+  height: 4px;
+  border-radius: 2px 2px 0 0;
+}
+
+/* ========================================== */
+/* NÂNG CẤP RESPONSIVE (Mượt mà hơn)         */
+/* ========================================== */
+@media (max-width: 992px) {
+  .property-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .promo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .search-container-v2 {
+    border-radius: 16px;
+  }
+  .destination-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 992px) {
+  .guide-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+  .guide-section {
+    padding: 0 16px;
+  }
 }

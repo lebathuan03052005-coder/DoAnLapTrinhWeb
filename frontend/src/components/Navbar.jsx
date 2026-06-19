@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
@@ -10,25 +10,20 @@ const Navbar = () => {
   const [userName, setUserName] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Load dữ liệu đăng nhập
+  // --- LOGIC GIỮ NGUYÊN ---
   const loadUser = () => {
     const isAdmin = localStorage.getItem("isAdminLoggedIn") === "true";
-
     const isCustomer = localStorage.getItem("isCustomerLoggedIn") === "true";
-
     const isHost = localStorage.getItem("isHostLoggedIn") === "true";
 
     if (isAdmin) {
       setUserType("admin");
-
       setUserName(localStorage.getItem("adminName") || "Admin");
     } else if (isHost) {
       setUserType("host");
-
       setUserName(localStorage.getItem("hostName") || "Host");
     } else if (isCustomer) {
       setUserType("customer");
-
       setUserName(localStorage.getItem("customerName") || "Khách");
     } else {
       setUserType(null);
@@ -38,56 +33,32 @@ const Navbar = () => {
 
   useEffect(() => {
     loadUser();
-
-    const refresh = () => {
-      loadUser();
-    };
-
+    const refresh = () => loadUser();
     window.addEventListener("userChanged", refresh);
-
-    return () => {
-      window.removeEventListener("userChanged", refresh);
-    };
+    return () => window.removeEventListener("userChanged", refresh);
   }, []);
 
-  // Đóng dropdown
   useEffect(() => {
     const outside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setMenuOpen(false);
       }
     };
-
     document.addEventListener("mousedown", outside);
-
-    return () => {
-      document.removeEventListener("mousedown", outside);
-    };
+    return () => document.removeEventListener("mousedown", outside);
   }, []);
-
-  const go = (path) => {
-    setMenuOpen(false);
-
-    navigate(path);
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("isAdminLoggedIn");
-
     localStorage.removeItem("adminName");
-
     localStorage.removeItem("isCustomerLoggedIn");
-
     localStorage.removeItem("customerName");
-
     localStorage.removeItem("isHostLoggedIn");
-
     localStorage.removeItem("hostName");
-
     window.dispatchEvent(new Event("userChanged"));
-
     navigate("/");
   };
+  // -------------------------
 
   return (
     <nav className="navbar">
@@ -96,30 +67,26 @@ const Navbar = () => {
         <Link to="/">LOGO</Link>
       </div>
 
-      {/* Menu */}
+      {/* Links - Cập nhật theo yêu cầu */}
       <ul className="navbar-links">
         <li>
-          <Link to="/">Khách Sạn</Link>
+          <Link to="/">Trang Chủ</Link>
         </li>
-
         <li>
-          <Link to="/">Homestay</Link>
+          <Link to="/search">Khách Sạn</Link>
         </li>
-
         <li>
-          <Link to="/khac">Khác</Link>
+          <Link to="/guide/1">Hỗ Trợ</Link>
         </li>
-
-        <li>
-          <Link to="/booking">Đặt Phòng</Link>
-        </li>
-
-        <li>
-          <Link to="/search">Tìm Kiếm</Link>
-        </li>
+        {/* Bổ sung link Đặt phòng của tôi nếu đã login */}
+        {userType && (
+          <li>
+            <Link to="/my-bookings">Đặt Phòng Của Tôi</Link>
+          </li>
+        )}
       </ul>
 
-      {/* RIGHT */}
+      {/* RIGHT ACTIONS */}
       <div className="navbar-actions">
         {/* ADMIN */}
         {userType === "admin" && (
@@ -143,15 +110,9 @@ const Navbar = () => {
 
             {menuOpen && (
               <div className="account-menu">
-                <button onClick={() => go("/")}>Trang chủ</button>
-
-                <button onClick={() => go("/profile")}>Hồ sơ</button>
-
-                {/* CUSTOMER */}
-                {userType === "customer" && (
-                  <button onClick={() => go("/host")}>Trở thành Host</button>
-                )}
-
+                <Link to="/my-bookings">
+                  <button>Đặt phòng của tôi</button>
+                </Link>
                 <button onClick={handleLogout}>Đăng xuất</button>
               </div>
             )}
@@ -164,7 +125,6 @@ const Navbar = () => {
             <Link to="/login">
               <button className="btn-login">Đăng nhập</button>
             </Link>
-
             <Link to="/register">
               <button className="btn-signup">Đăng ký</button>
             </Link>

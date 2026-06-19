@@ -239,4 +239,74 @@ router.post("/api/register", async (req, res) => {
   }
 });
 
+// HOTELS (Sử dụng Postgres syntax)
+router.get("/hotels", async (req, res) => {
+  try {
+    const result = await pool.query(`
+            SELECT h.*, 
+            COALESCE((SELECT image_url FROM hotel_images hi WHERE hi.hotel_id = h.id LIMIT 1), 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800') AS image
+            FROM Hotels h
+        `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// SEARCH (Dùng $1, $2 cho Postgres)
+router.get("/search", async (req, res) => {
+  try {
+    const { city, minPrice, maxPrice } = req.query;
+    let query = `SELECT * FROM hotels WHERE 1=1`;
+    let params = [];
+    if (city) {
+      query += ` AND city ILIKE $1`;
+      params.push(`%${city}%`);
+    }
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// BOOKING (Sử dụng RETURNING id của Postgres)
+router.post("/bookings/create", async (req, res) => {
+  try {
+    const {
+      hotel_id,
+      user_id,
+      guest_name,
+      guest_phone,
+      guest_email,
+      room_type_id,
+      total_amount,
+      check_in_date,
+      check_out_date,
+    } = req.body;
+
+    const booking = await pool.query(
+      `INSERT INTO Bookings (hotel_id, user_id, guest_name, guest_phone, guest_email, total_amount, status) 
+             VALUES ($1, $2, $3, $4, $5, $6, 'pending') RETURNING id`,
+      [
+        hotel_id,
+        user_id || 1,
+        guest_name,
+        guest_phone,
+        guest_email,
+        total_amount,
+      ],
+    );
+
+    const booking_id = booking.rows[0].id;
+    await pool.query(
+      `INSERT INTO Booking_Details (booking_id, room_type_id, check_in_date, check_out_date) VALUES ($1, $2, $3, $4)`,
+      [booking_id, room_type_id, check_in_date, check_out_date],
+    );
+    res.json({ success: true, booking_id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;

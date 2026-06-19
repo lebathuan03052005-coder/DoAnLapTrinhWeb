@@ -9,12 +9,17 @@
   background: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   font-family: Arial, sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 /* Logo */
-.navbar-logo img {
-  height: 40px;
-  object-fit: contain;
+.navbar-logo a {
+  font-size: 24px;
+  font-weight: bold;
+  color: #003580;
+  text-decoration: none;
 }
 
 /* Links (Menu chính) */
@@ -34,7 +39,6 @@
   position: relative;
 }
 
-/* Hover hiệu ứng đường gạch chân */
 .navbar-links li a:hover {
   color: #ff5a5f;
 }
@@ -54,22 +58,16 @@
   width: 100%;
 }
 
-/* Dropdown arrow chung */
-.arrow {
-  font-size: 12px;
-  margin-left: 4px;
-}
-
 /* Khu vực điều hướng bên phải (Actions) */
 .navbar-actions {
   display: flex;
   gap: 10px;
-  align-items: center; /* Giúp các nút và chữ luôn canh giữa theo chiều dọc */
+  align-items: center;
   position: relative;
 }
 
 /* =========================================
-   TRẠNG THÁI CHƯA ĐĂNG NHẬP (Nút Login / Signup)
+   NÚT CHỨC NĂNG (Login / Register / Admin)
 ========================================= */
 .btn-login {
   padding: 8px 14px;
@@ -100,26 +98,10 @@
   background: #e14b50;
 }
 
-/* =========================================
-   TRẠNG THÁI ĐÃ ĐĂNG NHẬP (User Info & Admin)
-========================================= */
-.user-logged-in {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.welcome-text {
-  font-weight: 600;
-  color: #333;
-  font-size: 15px;
-}
-
-/* Nút Quản lý (Dành riêng cho Admin) */
 .btn-admin-dashboard {
   padding: 8px 14px;
   border: none;
-  background: #1e293b; /* Xanh đen sang trọng để phân biệt với nút thường */
+  background: #1e293b;
   color: white;
   border-radius: 6px;
   cursor: pointer;
@@ -129,49 +111,32 @@
 .btn-admin-dashboard:hover {
   background: #334155;
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Nút Đăng xuất dạng inline (nếu không bỏ vào dropdown) */
-.btn-logout {
-  padding: 8px 14px;
-  border: 1px solid #ff5a5f;
-  background: transparent;
-  color: #ff5a5f;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn-logout:hover {
-  background: #ff5a5f;
-  color: white;
 }
 
 /* =========================================
-   MENU DROPDOWN TÀI KHOẢN (Account Dropdown)
+   MENU DROPDOWN TÀI KHOẢN (Đã cập nhật class khớp với Navbar.jsx)
 ========================================= */
 .account-dropdown {
   position: relative;
 }
 
-/* Khối bọc Avatar và Tên kích hoạt dropdown */
+/* Nút kích hoạt dropdown (Dùng class .account-trigger từ code JSX) */
 .account-trigger {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 14px;
+  padding: 6px 14px;
   border: 1px solid #d9d9d9;
   background: #fff;
   border-radius: 999px;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  font-weight: 600;
 }
 
-/* Vòng tròn Avatar */
 .account-avatar {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: linear-gradient(135deg, #1fb7d6, #0f8fb5);
   color: #fff;
@@ -182,32 +147,19 @@
   font-size: 13px;
 }
 
-.account-label {
-  font-weight: 600;
-  color: #334155;
-}
-
-.account-arrow {
-  color: #64748b;
-  font-size: 16px;
-  line-height: 1;
-}
-
 /* Bảng menu xổ xuống */
 .account-menu {
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
-  width: 260px;
+  width: 220px;
   background: #ffffff;
-  border-radius: 22px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
-  padding: 10px 0;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
   z-index: 20;
-  overflow: hidden;
 }
 
-/* Các nút lệnh bên trong Menu Dropdown */
 .account-menu button {
   width: 100%;
   display: flex;
@@ -215,7 +167,7 @@
   gap: 12px;
   border: 0;
   background: transparent;
-  padding: 14px 18px;
+  padding: 12px 18px;
   text-align: left;
   font-size: 14px;
   color: #334155;
@@ -224,9 +176,5 @@
 
 .account-menu button:hover {
   background: #f5f7fb;
-}
-
-/* Đường gạch phân cách giữa các button trong menu xổ xuống */
-.account-menu button + button {
-  border-top: 1px solid #f1f5f9;
+  color: #003580;
 }

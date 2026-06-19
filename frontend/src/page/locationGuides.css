@@ -1,0 +1,143 @@
+/* ===== KHÁM PHÁ ĐIỂM ĐẾN - DẠNG DẢI XEN KẼ ===== */
+.location-guide-section {
+  margin-top: 40px;
+  padding: 30px 20px;
+  border-top: 1px solid #eee;
+  max-width: 1200px;
+}
+
+.location-guide-section h3 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 30px 0 15px 0;
+}
+
+.location-guide-section h4 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ef5b25;
+  margin: 30px 0 15px 0;
+}
+
+.location-guide-section > p {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.8;
+  margin-bottom: 15px;
+  padding: 0 16px;
+}
+
+/* Dải nền xen kẽ cho từng item (điểm tham quan, ẩm thực...) */
+.guide-item {
+  padding: 16px;
+  margin: 0;
+}
+
+.guide-item:nth-child(odd) {
+  background: #f5f5f5;
+}
+
+.guide-item:nth-child(even) {
+  background: #fff;
+}
+
+.guide-item strong {
+  display: block;
+  font-size: 17px;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.guide-item p {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* Tips dạng dải xen kẽ */
+.location-guide-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.8;
+}
+
+.location-guide-section li {
+  padding: 14px 16px;
+  margin: 0;
+}
+
+.location-guide-section li:nth-child(odd) {
+  background: #f5f5f5;
+}
+
+.location-guide-section li:nth-child(even) {
+  background: #fff;
+}
+
+/* ===== TOP KHÁCH SẠN NỔI BẬT ===== */
+.guide-hotel-block {
+  margin-bottom: 30px;
+  padding: 0 16px;
+}
+
+.guide-hotel-title {
+  color: #0057b8;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 30px 0 12px 0;
+}
+
+.guide-hotel-info-list {
+  list-style: disc;
+  padding-left: 22px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.8;
+  background: transparent;
+}
+
+.guide-hotel-info-list li {
+  margin-bottom: 6px;
+  padding: 0;
+  background: transparent;
+}
+
+.guide-hotel-paragraph {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.9;
+  margin-bottom: 16px;
+  text-align: justify;
+}
+
+.guide-hotel-name-inline {
+  color: #0057b8;
+  font-weight: 700;
+}
+
+/* Ảnh nhỏ hơn và căn giữa */
+.guide-hotel-figure {
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.guide-hotel-img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.guide-hotel-caption {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  text-align: center;
+}
