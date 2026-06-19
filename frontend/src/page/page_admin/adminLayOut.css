@@ -1,0 +1,152 @@
+/* admin_layout.css */
+
+/* Reset cơ bản cho toàn bộ layout Admin */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f4f7f6; /* Màu nền xám nhạt cho khu vực nội dung */
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================
+   1. KHU VỰC SIDEBAR (THANH ĐIỀU HƯỚNG)
+========================================= */
+.sidebar {
+  width: 260px;
+  background-color: #1e293b; /* Xanh đen navy đậm, sang trọng */
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Cố định sidebar không bị trượt khi cuộn trang */
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.sidebar-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid #334155;
+  margin-bottom: 10px;
+  /* Bạn có thể chèn Logo chữ vào khu vực này sau */
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 8px;
+  flex: 1; /* Đẩy nội dung còn lại xuống dưới */
+}
+
+.nav-item {
+  display: block;
+  padding: 12px 20px;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background-color: #334155;
+  color: #ffffff;
+  transform: translateX(5px); /* Hiệu ứng trượt nhẹ khi hover */
+}
+
+/* Trạng thái mục đang được chọn (Active) */
+.nav-item.active {
+  background-color: #ef5b25; /* Tone cam chủ đạo của ứng dụng */
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(239, 91, 37, 0.3);
+}
+
+/* Nút đăng xuất nằm ở cuối cùng */
+.logout-btn {
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: inherit;
+  width: 100%;
+  margin-top: auto; /* Tự động bị đẩy xuống sát đáy sidebar */
+  color: #ef4444; /* Màu đỏ cảnh báo */
+}
+
+.logout-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  transform: translateX(0); /* Nút này không trượt để phân biệt với menu thường */
+}
+
+
+/* =========================================
+   2. KHU VỰC NỘI DUNG CHÍNH (MAIN WRAPPER)
+========================================= */
+.main-wrapper {
+  flex: 1;
+  margin-left: 260px; /* Chừa đúng khoảng trống bằng chiều rộng của sidebar */
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Ngăn ngừa lỗi tràn layout theo chiều ngang */
+}
+
+/* --- TOP HEADER --- */
+.top-header {
+  height: 70px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.top-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.user-greeting {
+  font-size: 15px;
+  color: #475569;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* CSS tự động tạo một Avatar tròn kế bên tên Admin */
+.user-greeting::before {
+  content: "";
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-color: #e2e8f0;
+  border-radius: 50%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2364748b"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  border: 2px solid #ef5b25;
+}
+
+/* --- CONTENT AREA (NƠI RENDER CÁC COMPONENT CON) --- */
+.content-area {
+  padding: 30px;
+  flex: 1;
+  overflow-y: auto;
+}

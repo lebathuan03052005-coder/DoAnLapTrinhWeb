@@ -1,0 +1,147 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.form-container {
+  background: #f4f6f8;
+  padding: 40px;
+  min-height: 100vh;
+}
+
+/* LAYOUT */
+.main-layout {
+  display: flex;
+  gap: 30px;
+}
+
+.form-wrapper {
+  flex: 2;
+}
+
+.right-col {
+  flex: 1;
+}
+
+/* CARD */
+.form-card, .summary-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.form-title {
+  margin-bottom: 15px;
+}
+
+/* INPUT */
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+textarea {
+  margin-top: 20px;
+}
+
+/* ROW */
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.col {
+  flex: 1;
+}
+
+/* OPTIONS */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 20px 0;
+}
+
+/* BUTTON */
+.submit-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: #df583a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* RIGHT */
+.sum-header {
+  display: flex;
+  gap: 10px;
+}
+
+.sum-header img {
+  width: 80px;
+  border-radius: 6px;
+}
+
+.sum-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.sum-body {
+  margin-top: 15px;
+}
+
+.sum-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.sum-label {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.sum-label i {
+  margin-right: 6px;
+}
+
+.sum-value {
+  font-weight: 700;
+  font-size: 16px;
+  color: #111;
+}
+
+
+.thank-you-text {
+  margin-top: 20px;
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #374151;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  line-height: 1.6;
+}
+
+.main-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start; /* 🔥 QUAN TRỌNG */
+}

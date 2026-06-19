@@ -1,0 +1,70 @@
+.success-wrapper {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.success-icon {
+  font-size: 72px;
+}
+
+.success-title {
+  color: #003580;
+  font-size: 28px;
+  margin: 16px 0 8px;
+}
+
+.success-booking-id {
+  color: #555;
+  font-size: 16px;
+}
+
+.success-booking-id strong {
+  color: #ef5b25;
+}
+
+.success-card {
+  display: inline-block;
+  margin: 24px auto;
+  padding: 20px 32px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  text-align: left;
+  min-width: 300px;
+}
+
+.success-card .hotel-name {
+  margin: 0 0 8px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.success-card .hotel-address {
+  margin: 0 0 6px;
+  color: #666;
+}
+
+.success-card .room-info {
+  margin: 0 0 6px;
+  color: #666;
+}
+
+.success-note {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.success-btn {
+  padding: 14px 40px;
+  background: #ef5b25;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;    
+}
+
+.success-btn:hover {
+  background: #d44e1f;
+}

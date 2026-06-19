@@ -1,0 +1,105 @@
+/* ===== GUIDE DETAIL ===== */
+.guide-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 40px;
+}
+
+.guide-banner {
+  width: 100%;
+  height: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.guide-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.guide-back-btn {
+  background: none;
+  border: none;
+  color: #003580;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.guide-title {
+  color: #003580;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.guide-intro {
+  color: #444;
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  text-align: justify;
+}
+
+.guide-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 24px;
+}
+
+.guide-section-intro {
+  color: #444;
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.guide-step {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  align-items: center;
+}
+
+.guide-step.reverse {
+  flex-direction: row-reverse;
+}
+
+.guide-step-image {
+  width: 45%;
+  flex-shrink: 0;
+}
+
+.guide-step-image img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  height: 200px;
+}
+
+.guide-step-content {
+  flex: 1;
+}
+
+.guide-step-badge {
+  background: #003580;
+  color: white;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.guide-step-text {
+  color: #444;
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 0;
+}
