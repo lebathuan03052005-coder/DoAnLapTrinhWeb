@@ -1,6 +1,6 @@
 import express from "express";
 import pool from "../database.js";
-import bcrypt from "bcryptjs";
+// bcrypt removed: passwords will be stored/compared in plaintext per request
 
 const router = express.Router();
 
@@ -177,10 +177,10 @@ router.post("/customer-login", async (req, res) => {
     console.log("Mật khẩu nhập vào:", password);
     console.log("Password hash trong DB:", user.password_hash);
 
-    const match = await bcrypt.compare(password, user.password_hash);
-    console.log("Kết quả so sánh:", match);
+    // So sánh trực tiếp mật khẩu (không mã hóa)
+    console.log("Kết quả so sánh:", password === user.password_hash);
 
-    if (!match) {
+    if (password !== user.password_hash) {
       return res.status(401).json({
         success: false,
         message: "Sai tài khoản hoặc mật khẩu",
@@ -226,14 +226,10 @@ router.post("/api/register", async (req, res) => {
         .json({ success: false, message: "Email đã được sử dụng!" });
     }
 
-    // Mã hóa mật khẩu
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // Lưu user mới
+    // Lưu user mới (lưu mật khẩu trực tiếp, không mã hóa)
     const insertResult = await pool.query(
       `INSERT INTO users (full_name, email, phone, password_hash, role, status, created_at) VALUES ($1, $2, $3, $4, 'CUSTOMER', 'ACTIVE', NOW()) RETURNING id`,
-      [full_name, email, phone, hashedPassword],
+      [full_name, email, phone, password],
     );
 
     const userId = insertResult.rows[0].id;

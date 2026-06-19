@@ -1,6 +1,6 @@
 import express from "express";
 import pool from "../database.js";
-import bcrypt from "bcryptjs";
+// bcrypt removed: passwords will be stored/compared in plaintext per request
 import nodemailer from "nodemailer";
 
 const router = express.Router();
@@ -47,13 +47,11 @@ router.post("/verify-otp-register", async (req, res) => {
     return res.status(400).json({ message: "OTP sai hoặc hết hạn" });
   }
 
-  // tạo user
-  const hash = await bcrypt.hash(password, 10);
-
+  // tạo user (lưu mật khẩu trực tiếp, không mã hóa)
   await pool.query(
     `INSERT INTO users(full_name, email, phone, password_hash, role)
      VALUES ($1,$2,$3,$4,'CUSTOMER')`,
-    [full_name, email, phone, hash],
+    [full_name, email, phone, password],
   );
 
   otpStore.delete(email);
@@ -118,10 +116,9 @@ router.post("/reset-password", async (req, res) => {
       return res.status(400).json({ message: "OTP sai hoặc hết hạn" });
     }
 
-    const hash = await bcrypt.hash(newPassword, 10);
-
+    // Lưu mật khẩu mới trực tiếp (không mã hóa)
     await pool.query("UPDATE users SET password_hash = $1 WHERE email = $2", [
-      hash,
+      newPassword,
       email,
     ]);
 
@@ -299,17 +296,17 @@ router.post("/api/change-admin-password", async (req, res) => {
     }
 
     const user = check.rows[0];
-    const match = await bcrypt.compare(oldPassword, user.password_hash);
-    if (!match) {
+    // So sánh trực tiếp mật khẩu cũ
+    if (oldPassword !== user.password_hash) {
       return res
         .status(401)
         .json({ success: false, message: "Mật khẩu cũ không chính xác!" });
     }
 
-    const hashedNew = await bcrypt.hash(newPassword, 10);
+    // Lưu mật khẩu mới trực tiếp (không mã hóa)
     await pool.query(
       `UPDATE users SET password_hash = $1 WHERE email = $2 AND role = $3`,
-      [hashedNew, email, "ADMIN"],
+      [newPassword, email, "ADMIN"],
     );
     res.json({ success: true, message: "Đổi mật khẩu thành công!" });
   } catch (error) {
