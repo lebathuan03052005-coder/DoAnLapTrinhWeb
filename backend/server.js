@@ -13,7 +13,7 @@ const app = express();
 // Allow local Vite dev server and the deployed frontend on Render
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://doanlaptrinhweb-3.onrender.com",
+  "https://doanlaptrinhweb-1-utii.onrender.com/",
 ];
 
 app.use(

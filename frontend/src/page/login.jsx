@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
+
+// Sử dụng biến môi trường, fallback về localhost chỉ khi chạy ở máy local
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Login = () => {
@@ -11,6 +12,7 @@ const Login = () => {
 
   const handleCustomerLogin = async (e) => {
     e.preventDefault();
+    console.log("Đang gửi yêu cầu tới:", `${API_URL}/customer-login`); // Debug URL
 
     try {
       const response = await fetch(`${API_URL}/customer-login`, {
@@ -18,96 +20,40 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
-      if (data.success) {
+      if (response.ok && data.success) {
         localStorage.setItem("isCustomerLoggedIn", "true");
-
         localStorage.setItem("customerName", data.user.full_name);
-
         window.dispatchEvent(new Event("userChanged"));
-
         navigate("/");
       } else {
-        alert(data.message);
+        // Thông báo lỗi cụ thể từ Server
+        alert(
+          data.message ||
+            "Đăng nhập thất bại, vui lòng kiểm tra lại thông tin!",
+        );
       }
     } catch (error) {
-      console.log(error);
-
-      alert("Không kết nối được server");
+      console.error("Lỗi kết nối:", error);
+      alert("Không kết nối được server. Hãy kiểm tra tab Network trong F12.");
     }
   };
+
   return (
+    // ... giữ nguyên phần return bên dưới của bạn
     <div className="login-wrapper">
       <div className="login-card">
-        <div className="login-header">
-          <h2>BOOKING.Commm</h2>
-          <p>Chào mừng bạn đến với BOOKING.Commm</p>
-        </div>
-
+        {/* ... giữ nguyên nội dung form */}
         <form className="login-form" onSubmit={handleCustomerLogin}>
-          <div className="input-group">
-            <label htmlFor="email">Email của bạn</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Nhập email của bạn..."
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="password">Mật khẩu</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Nhập mật khẩu..."
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="login-options">
-            <label
-              className="remember-me"
-              style={{
-                display: "flex",
-                flexDirection: "row-reverse",
-                alignItems: "center",
-                gap: "8px",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="checkbox"
-                style={{ width: "20px", height: "18px" }}
-              />
-              <span>Ghi nhớ</span>
-            </label>
-
-            {/* Thẻ Link này cần được import ở dòng 3 */}
-            <Link to="/forgot-password">Quên mật khẩu?</Link>
-            <Link to="/login_admin">Đăng nhập quản trị viên</Link>
-          </div>
+          {/* ... các input email/password của bạn */}
           <button type="submit" className="login-button">
             ĐĂNG NHẬP
           </button>
         </form>
-
-        <div className="login-footer">
-          <p>
-            Bạn không có quyền truy cập? <Link to="/">Quay lại trang chủ</Link>
-          </p>
-        </div>
       </div>
     </div>
   );
