@@ -3,29 +3,29 @@ import cors from "cors";
 import pg from "pg";
 import "dotenv/config";
 
-// Import các routes (đảm bảo file routes không import 'mssql')
 import bookingRoutes from "./routes/booking.js";
 import adminRoutes from "./routes/admin.js";
 
 const { Pool } = pg;
 const app = express();
 
-// Allow local Vite dev server and the deployed frontend on Render
+// 1. Cấu hình CORS duy nhất - CHỈ MỘT LẦN
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://doanlaptrinhweb-1-utii.onrender.com/",
+  "https://doanlaptrinhweb-3.onrender.com", // Đã bỏ dấu / ở cuối
 ];
 
 app.use(
   cors({
     origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
 );
 
 app.use(express.json());
 
-// CHỈ SỬ DỤNG DATABASE_URL - KHÔNG DÙNG CÁC BIẾN DB_USER/DB_PASSWORD CŨ
+// 2. Cấu hình DB
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -33,11 +33,15 @@ const pool = new Pool({
   },
 });
 
-// Kiểm tra kết nối
 pool
   .connect()
   .then(() => console.log("Kết nối Database PostgreSQL thành công!"))
   .catch((err) => console.error("Lỗi kết nối Database:", err));
+
+// 3. Health check endpoint (Giúp bạn kiểm tra server sống hay chết)
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
+});
 
 app.get("/", (req, res) => {
   res.send("SERVER OK");
@@ -46,6 +50,7 @@ app.get("/", (req, res) => {
 app.use("/", bookingRoutes);
 app.use("/", adminRoutes);
 
+// 4. Sửa lỗi undefined port bằng cách dùng || 5000
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại port ${PORT}`);
