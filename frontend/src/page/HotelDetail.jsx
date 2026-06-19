@@ -22,6 +22,7 @@ const HotelDetail = () => {
         const res = await fetch(`${API_URL}/api/room-types/${hotel.id}`);
         const data = await res.json();
         setRooms(data);
+        console.log("Kiểm tra dữ liệu phòng đầu tiên:", data[0]);
       } catch (err) {
         console.error("Lỗi lấy phòng:", err);
       }
@@ -473,6 +474,14 @@ const HotelDetail = () => {
                     src={room?.image ? room.image.split("\n")[0].trim() : img1}
                     alt={room?.name}
                     className="room-thumbnail"
+                    onError={(e) => {
+                      console.log(
+                        "Ảnh lỗi, không load được link:",
+                        room?.image,
+                      );
+                      e.target.src = img1; // Tự đổi sang ảnh local nếu lỗi
+                    }}
+                    onLoad={() => console.log("Ảnh đã load OK:", room?.image)}
                   />
                   <div className="room-specs">
                     <p>
