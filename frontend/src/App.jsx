@@ -20,7 +20,7 @@ import SearchResults from "./page/giao_dien";
 import HotelDetail from "./page/HotelDetail";
 import Login from "./page/login";
 import Register from "./page/Register";
-import Booking from "./page/Booking"; // Trang đặt phòng
+import BookingForm from "./page/booking"; // Trang đặt phòng
 import BookingSuccess from "./page/BookingSuccess";
 import MyBookings from "./page/MyBookings";
 import GuideDetail from "./page/GuideDetail";
@@ -45,7 +45,7 @@ function App() {
         <Route path="/hotel-detail" element={<HotelDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/booking" element={<Booking />} />
+        <Route path="/booking" element={<BookingForm />} />
         <Route path="/booking-success" element={<BookingSuccess />} />
         <Route path="/my-bookings" element={<MyBookings />} />
         <Route path="/guide/:id" element={<GuideDetail />} />
