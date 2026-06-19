@@ -1,8 +1,138 @@
 import express from "express";
 import pool from "../database.js";
 import bcrypt from "bcryptjs";
+import nodemailer from "nodemailer";
 
 const router = express.Router();
+
+// gửi mã xác nhận qua mail.
+router.post("/send-otp", async (req, res) => {
+  const { email } = req.body;
+
+  const otp = generateOTP();
+
+  otpStore.set(email, {
+    otp,
+    expires: Date.now() + 5 * 60 * 1000, // 5 phút
+  });
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+
+  await transporter.sendMail({
+    from: "Booking App",
+    to: email,
+    subject: "Mã xác nhận đăng ký",
+    text: `Mã OTP của bạn là: ${otp}`,
+  });
+
+  res.json({ success: true, message: "OTP đã gửi" });
+});
+// kiểm tra và xác nhận thông tin
+router.post("/verify-otp-register", async (req, res) => {
+  const { email, otp, full_name, phone, password } = req.body;
+
+  const record = otpStore.get(email);
+
+  if (!record) {
+    return res.status(400).json({ message: "OTP không tồn tại" });
+  }
+
+  if (record.otp !== otp || Date.now() > record.expires) {
+    return res.status(400).json({ message: "OTP sai hoặc hết hạn" });
+  }
+
+  // tạo user
+  const hash = await bcrypt.hash(password, 10);
+
+  await pool.query(
+    `INSERT INTO users(full_name, email, phone, password_hash, role)
+     VALUES ($1,$2,$3,$4,'CUSTOMER')`,
+    [full_name, email, phone, hash],
+  );
+
+  otpStore.delete(email);
+
+  res.json({ success: true, message: "Đăng ký thành công" });
+});
+
+//gửi mã xác nhận cho việc quên mật khẩu
+router.post("/send-reset-otp", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // check user tồn tại
+    const user = await pool.query("SELECT id FROM users WHERE email = $1", [
+      email,
+    ]);
+
+    if (user.rows.length === 0) {
+      return res.status(400).json({ message: "Email không tồn tại" });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    otpStore.set(email, {
+      otp,
+      expires: Date.now() + 5 * 60 * 1000,
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    await transporter.sendMail({
+      from: "Booking App",
+      to: email,
+      subject: "Mã OTP đặt lại mật khẩu",
+      text: `Mã OTP của bạn là: ${otp} (hết hạn sau 5 phút)`,
+    });
+
+    res.json({ success: true, message: "OTP đã gửi" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+});
+// tạo lại mật khẩu
+router.post("/reset-password", async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  try {
+    const record = otpStore.get(email);
+
+    if (!record) {
+      return res.status(400).json({ message: "OTP không tồn tại" });
+    }
+
+    if (record.otp !== otp || Date.now() > record.expires) {
+      return res.status(400).json({ message: "OTP sai hoặc hết hạn" });
+    }
+
+    const hash = await bcrypt.hash(newPassword, 10);
+
+    await pool.query("UPDATE users SET password_hash = $1 WHERE email = $2", [
+      hash,
+      email,
+    ]);
+
+    otpStore.delete(email);
+
+    res.json({ success: true, message: "Đổi mật khẩu thành công" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+});
 // API ĐĂNG NHẬP ADMIN
 // API ĐĂNG NHẬP ADMIN - KHÔNG MÃ HÓA
 router.post("/api/admin/admin-login", async (req, res) => {

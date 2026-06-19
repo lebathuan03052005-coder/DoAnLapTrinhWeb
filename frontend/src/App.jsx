@@ -24,6 +24,7 @@ import BookingForm from "./page/booking"; // Trang đặt phòng
 import BookingSuccess from "./page/BookingSuccess";
 import MyBookings from "./page/MyBookings";
 import GuideDetail from "./page/GuideDetail";
+import ForgotPassword from "./page/ForgotPassword";
 
 // --- TRANG QUẢN TRỊ (ADMIN) ---
 import AdminLayout from "./page/page_admin/adminLayOut";
@@ -40,6 +41,7 @@ function App() {
 
       <Routes>
         {/* --- ROUTES NGƯỜI DÙNG --- */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/hotel-detail" element={<HotelDetail />} />

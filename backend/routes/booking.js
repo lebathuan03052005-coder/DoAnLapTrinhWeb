@@ -152,13 +152,14 @@ router.get("/api/room-images/:roomTypeId", async (req, res) => {
   }
 });
 
-// API ĐĂNG NHẬP KHÁCH
 router.post("/customer-login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const result = await pool.query(
-      `SELECT id, full_name, email, phone, role, password_hash FROM users WHERE email = $1 AND role = $2`,
+      `SELECT id, full_name, email, phone, role, password_hash 
+       FROM users 
+       WHERE email = $1 AND role = $2`,
       [email, "CUSTOMER"],
     );
 
@@ -170,13 +171,14 @@ router.post("/customer-login", async (req, res) => {
     }
 
     const user = result.rows[0];
+
     console.log("--- DEBUG ĐĂNG NHẬP ---");
     console.log("Email nhận được:", email);
-    console.log("Mật khẩu nhập vào (plaintext):", password);
-    console.log("Password hash lấy từ DB:", admin.password_hash);
+    console.log("Mật khẩu nhập vào:", password);
+    console.log("Password hash trong DB:", user.password_hash);
 
-    const match = await bcrypt.compare(password, admin.password_hash);
-    console.log("Kết quả so sánh (match):", match);
+    const match = await bcrypt.compare(password, user.password_hash);
+    console.log("Kết quả so sánh:", match);
 
     if (!match) {
       return res.status(401).json({
@@ -185,9 +187,13 @@ router.post("/customer-login", async (req, res) => {
       });
     }
 
+    // xóa password trước khi trả về
     delete user.password_hash;
 
-    res.json({ success: true, user });
+    res.json({
+      success: true,
+      user,
+    });
   } catch (err) {
     console.log(err);
 
