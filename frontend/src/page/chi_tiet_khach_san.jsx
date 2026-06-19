@@ -36,14 +36,15 @@ const HotelDetail = ({ hotel }) => {
 
   // Xử lý ảnh: Ưu tiên ảnh từ bảng hotel_images, nếu không có thì lấy ảnh chính trong bảng hotel
   const mainImage = images[0]?.image_url || hotel.image;
-  const mainImagePublic =
-    images[0]?.publicUrl ||
-    (hotel.image?.startsWith("http")
-      ? hotel.image
-      : hotel.image?.startsWith("/")
-        ? `${STATIC_BASE}${hotel.image}`
-        : hotel.image || "") ||
-    "";
+  const normalizedHotelImage = (() => {
+    const img = hotel.image || "";
+    if (!img) return "";
+    if (img.startsWith("http")) return img;
+    const pathPart = img.startsWith("/") ? img : `/${img}`;
+    return `${STATIC_BASE}${pathPart}`;
+  })();
+
+  const mainImagePublic = images[0]?.publicUrl || normalizedHotelImage || "";
   const subImages = images.slice(1, 4);
 
   // Upload state
