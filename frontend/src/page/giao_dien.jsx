@@ -335,7 +335,13 @@ const SearchResults = () => {
                   >
                     <div className="vnbk-image-wrapper">
                       <img
-                        src={`http://localhost:5000${hotel.thumbnail}`}
+                        // Sử dụng require hoặc import, hoặc đường dẫn trực tiếp tới thư mục public/assets
+                        src={
+                          new URL(
+                            `../assets/anhHotel/${hotel.thumbnail}`,
+                            import.meta.url,
+                          ).href
+                        }
                         alt={hotel.name}
                         className="hotel-img"
                       />

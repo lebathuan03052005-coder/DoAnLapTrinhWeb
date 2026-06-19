@@ -256,7 +256,10 @@ const HomePage = () => {
             >
               <div className="card-image-wrapper">
                 <img
-                  src={`/src/assets/anhHotel/${item.image}`}
+                  src={
+                    new URL(`../assets/anhHotel/${item.image}`, import.meta.url)
+                      .href
+                  }
                   alt={item.name}
                 />
                 <span className="city-badge">
@@ -316,8 +319,11 @@ const HomePage = () => {
                 <div className="promo-badge">Tiết kiệm -{h.discount}%</div>
                 <div className="promo-img-wrapper">
                   <img
-                    src={`/src/assets/anhHotel/${h.image}`} // <--- ĐÚNG: dùng biến 'h'
-                    alt={h.name} // <--- ĐÚNG: dùng biến 'h'
+                    src={
+                      new URL(`../assets/anhHotel/${h.image}`, import.meta.url)
+                        .href
+                    }
+                    alt={h.name}
                   />
                 </div>
                 <div className="promo-info">
