@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import "./trang_chu.css";
 import React, { useState, useEffect } from "react";
 import { removeDiacritics } from "./utils";
+import formatCurrency from "../utils/formatCurrency";
 
 const HomePage = () => {
   const navigate = useNavigate();

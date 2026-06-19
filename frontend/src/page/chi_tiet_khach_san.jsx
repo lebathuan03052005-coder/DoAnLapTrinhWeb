@@ -35,6 +35,67 @@ const GuideDetail = () => {
 
   if (!guide) return <h2 style={{ textAlign: "center", padding: "50px" }}>Không tìm thấy hướng dẫn</h2>;
 
+  // Xử lý ảnh: Ưu tiên ảnh từ bảng hotel_images, nếu không có thì lấy ảnh chính trong bảng hotel
+  const mainImage = images[0]?.image_url || hotel.image;
+  const normalizedHotelImage = (() => {
+    const img = hotel.image || "";
+    if (!img) return "";
+    if (img.startsWith("http")) return img;
+    const pathPart = img.startsWith("/") ? img : `/${img}`;
+    return `${STATIC_BASE}${pathPart}`;
+  })();
+
+  const mainImagePublic = images[0]?.publicUrl || normalizedHotelImage || "";
+  const subImages = images.slice(1, 4);
+
+  // Upload state
+  const [fileToUpload, setFileToUpload] = useState(null);
+  const [previewSrc, setPreviewSrc] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return setFileToUpload(null);
+    setFileToUpload(f);
+    const reader = new FileReader();
+    reader.onload = () => setPreviewSrc(reader.result);
+    reader.readAsDataURL(f);
+  };
+
+  const uploadImage = async () => {
+    if (!fileToUpload || !hotel?.id) return alert("Chọn ảnh trước khi tải lên");
+    setUploading(true);
+    try {
+      // API_BASE is defined above
+      const form = new FormData();
+      // backend may expect field name 'image' or 'file' — adjust if needed
+      form.append("image", fileToUpload);
+
+      const res = await fetch(`${API_BASE}/api/hotels/${hotel.id}/images`, {
+        method: "POST",
+        body: form,
+      });
+
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || "Upload thất bại");
+      }
+
+      // refresh images
+      setFileToUpload(null);
+      setPreviewSrc("");
+      await fetchHotelImages();
+      alert("Tải ảnh lên thành công");
+    } catch (err) {
+      console.error("Upload error", err);
+      alert("Lỗi tải ảnh lên: " + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // expose fetch function for upload to refresh — define inside effect scope earlier? we'll create helper by moving fetchHotelImages out
+
   return (
     <div className="guide-container">
 

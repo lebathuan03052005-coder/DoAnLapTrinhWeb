@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import formatCurrency from "../utils/formatCurrency";
 import { useNavigate } from "react-router-dom";
 
 const MyBookings = () => {
@@ -190,7 +191,7 @@ const MyBookings = () => {
                     margin: "0 0 8px 0",
                   }}
                 >
-                  {booking.total_amount?.toLocaleString("vi-VN")} VND
+                  {formatCurrency(booking.total_amount)} VND
                 </p>
                 <span
                   style={{

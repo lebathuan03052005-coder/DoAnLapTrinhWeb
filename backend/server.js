@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import bookingRoutes from "./routes/booking.js";
 import adminRoutes from "./routes/admin.js";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,10 +18,14 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const PORT = 5000;
 
-app.get("/", (req, res) => {
-  res.send("SERVER OK");
+    res.status(201).json({ image_url: imageUrl });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Lỗi lưu ảnh vào DB");
+  }
 });
 
+app.get("/health", (req, res) => res.json({ ok: true }));
 app.use("/", bookingRoutes);
 app.use("/", adminRoutes);
 

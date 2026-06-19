@@ -4,7 +4,7 @@
 .admin-container {
   display: flex;
   min-height: 100vh;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: #f4f7f6; /* Màu nền xám nhạt cho khu vực nội dung */
   margin: 0;
   padding: 0;
@@ -84,9 +84,10 @@
 .logout-btn:hover {
   background-color: rgba(239, 68, 68, 0.1);
   color: #f87171;
-  transform: translateX(0); /* Nút này không trượt để phân biệt với menu thường */
+  transform: translateX(
+    0
+  ); /* Nút này không trượt để phân biệt với menu thường */
 }
-
 
 /* =========================================
    2. KHU VỰC NỘI DUNG CHÍNH (MAIN WRAPPER)
@@ -149,4 +150,55 @@
   padding: 30px;
   flex: 1;
   overflow-y: auto;
+}
+
+/* Account edit box styles */
+.account-edit-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  align-items: flex-end;
+  background: #f8fafc;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #e6eef6;
+}
+.account-edit-box .edit-row {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  flex: 1 1 200px;
+}
+.account-edit-box label {
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.edit-input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1e3f0;
+  background: white;
+}
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-left: auto;
+}
+.edit-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.edit-btn.save {
+  background: #10b981;
+  color: white;
+}
+.edit-btn.cancel {
+  background: #ef4444;
+  color: white;
 }

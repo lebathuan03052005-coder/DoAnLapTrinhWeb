@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./booking.css";
 import qrImage from "../assets/qr-payment.png";
+import formatCurrency from "../utils/formatCurrency";
 
 const BookingForm = () => {
   const location = useLocation();

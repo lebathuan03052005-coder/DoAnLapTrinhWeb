@@ -310,7 +310,7 @@ const prevImage = () => {
                       <div className="price-and-btn">
                         <div className="price-box">
                           <p className="new-price">
-                            {room.base_price?.toLocaleString("vi-VN")}đ
+                            {formatCurrency(room.base_price)} đ
                             <span className="per-night"> / đêm</span>
                           </p>
                         </div>
