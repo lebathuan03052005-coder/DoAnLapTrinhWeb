@@ -4,6 +4,12 @@ import "./giao_dien.css";
 import { removeDiacritics } from "./utils";
 import { locationGuides } from "./locationGuides";
 import "./locationGuides.css";
+// Trả về URL công khai cho ảnh đã được chuyển vào `public/assets/anhHotel`
+const getImageUrl = (filePath) => {
+  if (!filePath) return "";
+  const fp = filePath.replace(/^\/+/, "");
+  return `/assets/anhHotel/${fp}`;
+};
 const SearchResults = () => {
   const navigate = useNavigate();
   const locationState = useLocation();
@@ -335,13 +341,8 @@ const SearchResults = () => {
                   >
                     <div className="vnbk-image-wrapper">
                       <img
-                        // Sử dụng require hoặc import, hoặc đường dẫn trực tiếp tới thư mục public/assets
-                        src={
-                          new URL(
-                            `../assets/anhHotel/${hotel.thumbnail}`,
-                            import.meta.url,
-                          ).href
-                        }
+                        // Sử dụng ảnh từ public/assets/anhHotel
+                        src={getImageUrl(hotel.thumbnail)}
                         alt={hotel.name}
                         className="hotel-img"
                       />

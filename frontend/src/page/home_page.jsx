@@ -2,8 +2,16 @@ import { useNavigate } from "react-router-dom";
 import "./trang_chu.css";
 import React, { useState, useEffect } from "react";
 import { removeDiacritics } from "./utils";
+
 const HomePage = () => {
   const navigate = useNavigate();
+
+  // Trả về URL công khai cho ảnh đã được chuyển vào `public/assets/anhHotel`
+  const getImageUrl = (filePath) => {
+    if (!filePath) return "";
+    const fp = filePath.replace(/^\/+/, ""); // xóa dấu / đầu
+    return `/assets/anhHotel/${fp}`;
+  };
 
   const [destination, setDestination] = useState("");
   const [checkInDate, setCheckInDate] = useState("");
@@ -22,16 +30,10 @@ const HomePage = () => {
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        // Dùng biến môi trường thay vì localhost cứng
         const baseUrl =
           import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-        const res = await fetch(`${baseUrl}/hotels`, {
-          cache: "no-store",
-        });
-
+        const res = await fetch(`${baseUrl}/hotels`, { cache: "no-store" });
         if (!res.ok) throw new Error("Lỗi mạng!");
-
         const data = await res.json();
         setHotelsData(Array.isArray(data) ? data : []);
       } catch (err) {
@@ -41,6 +43,7 @@ const HomePage = () => {
     };
     fetchHotels();
   }, []);
+
   const featuredHotels = [
     ...hotelsData
       .filter((h) => h.city === "Vũng Tàu" && h.stars === 5)
@@ -67,7 +70,6 @@ const HomePage = () => {
 
   return (
     <div className="homepage-wrapper">
-      {/* PHẦN 1: HERO */}
       <div className="agoda-hero">
         <h1 className="hero-headline">
           RONG CHƠI BỐN PHƯƠNG, GIÁ VẪN "YÊU THƯƠNG"
@@ -76,13 +78,11 @@ const HomePage = () => {
         <div className="hero-greeting">
           <h2 className="greeting-title">{getGreeting()}</h2>
           <p className="greeting-sub">
-            Trân trọng được chào đón những hành khách iu quý{" "}
+            Trân trọng được chào đón những hành khách iu quý
           </p>
         </div>
 
-        {/* THANH TÌM KIẾM NGANG */}
         <div className="search-bar-horizontal">
-          {/* Địa điểm */}
           <div className="search-field" style={{ position: "relative" }}>
             <i className="fa-solid fa-location-dot search-field-icon"></i>
             <div className="search-field-content">
@@ -118,7 +118,6 @@ const HomePage = () => {
 
           <div className="search-divider" />
 
-          {/* Nhận phòng */}
           <div className="search-field">
             <i className="fa-regular fa-calendar search-field-icon"></i>
             <div className="search-field-content">
@@ -134,7 +133,6 @@ const HomePage = () => {
 
           <div className="search-divider" />
 
-          {/* Trả phòng */}
           <div className="search-field">
             <i className="fa-regular fa-calendar search-field-icon"></i>
             <div className="search-field-content">
@@ -150,7 +148,6 @@ const HomePage = () => {
 
           <div className="search-divider" />
 
-          {/* Khách */}
           <div
             className="search-field"
             style={{ position: "relative", cursor: "pointer" }}
@@ -221,14 +218,12 @@ const HomePage = () => {
             )}
           </div>
 
-          {/* Nút tìm */}
           <button className="search-btn-circle" onClick={handleSearch}>
             <i className="fa-solid fa-magnifying-glass"></i>
           </button>
         </div>
       </div>
 
-      {/* PHẦN 2: DANH SÁCH CHỖ NGHỈ NỔI BẬT */}
       <div className="recommendation-section">
         <div className="rec-header">
           <h2 className="featured-title">Địa điểm nổi bật</h2>
@@ -255,13 +250,7 @@ const HomePage = () => {
               }
             >
               <div className="card-image-wrapper">
-                <img
-                  src={
-                    new URL(`../assets/anhHotel/${item.image}`, import.meta.url)
-                      .href
-                  }
-                  alt={item.name}
-                />
+                <img src={getImageUrl(item.image)} alt={item.name} />
                 <span className="city-badge">
                   <i className="fa-solid fa-location-dot"></i> {item.city}
                 </span>
@@ -291,7 +280,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* PHẦN 3: KHÁCH SẠN KHUYẾN MÃI */}
       <div className="promo-section">
         <h2 className="promo-title">Khách Sạn Khuyến Mãi</h2>
         <p className="promo-subtitle">
@@ -318,13 +306,7 @@ const HomePage = () => {
               >
                 <div className="promo-badge">Tiết kiệm -{h.discount}%</div>
                 <div className="promo-img-wrapper">
-                  <img
-                    src={
-                      new URL(`../assets/anhHotel/${h.image}`, import.meta.url)
-                        .href
-                    }
-                    alt={h.name}
-                  />
+                  <img src={getImageUrl(h.image)} alt={h.name} />
                 </div>
                 <div className="promo-info">
                   <h3>{h.name}</h3>
