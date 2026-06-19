@@ -255,7 +255,7 @@ const HomePage = () => {
               }
             >
               <div className="card-image-wrapper">
-                <img src={item.image} alt={item.name} />
+                img src={`http://localhost:5000${item.image}`} alt={item.name}
                 <span className="city-badge">
                   <i className="fa-solid fa-location-dot"></i> {item.city}
                 </span>
@@ -312,7 +312,7 @@ const HomePage = () => {
               >
                 <div className="promo-badge">Tiết kiệm -{h.discount}%</div>
                 <div className="promo-img-wrapper">
-                  <img src={h.image} alt={h.name} />
+                  <img src={`http://localhost:5000${h.image}`} alt={h.name} />
                 </div>
                 <div className="promo-info">
                   <h3>{h.name}</h3>
