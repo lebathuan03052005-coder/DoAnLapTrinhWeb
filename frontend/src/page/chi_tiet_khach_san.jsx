@@ -70,7 +70,7 @@ const HotelDetail = ({ hotel }) => {
       // backend may expect field name 'image' or 'file' — adjust if needed
       form.append("image", fileToUpload);
 
-      const res = await fetch(`${API_BASE}/hotels/${hotel.id}/images`, {
+      const res = await fetch(`${API_BASE}/api/hotels/${hotel.id}/images`, {
         method: "POST",
         body: form,
       });
