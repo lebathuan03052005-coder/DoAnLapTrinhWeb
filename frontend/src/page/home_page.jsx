@@ -256,7 +256,7 @@ const HomePage = () => {
             >
               <div className="card-image-wrapper">
                 <img
-                  src={`/src/assets/anhHotels/${item.image}`}
+                  src={`/src/assets/anhHotel/${item.image}`}
                   alt={item.name}
                 />
                 <span className="city-badge">
@@ -316,7 +316,7 @@ const HomePage = () => {
                 <div className="promo-badge">Tiết kiệm -{h.discount}%</div>
                 <div className="promo-img-wrapper">
                   <img
-                    src={`/src/assets/anhHotels/${h.image}`} // <--- ĐÚNG: dùng biến 'h'
+                    src={`/src/assets/anhHotel/${h.image}`} // <--- ĐÚNG: dùng biến 'h'
                     alt={h.name} // <--- ĐÚNG: dùng biến 'h'
                   />
                 </div>
