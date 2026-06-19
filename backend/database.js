@@ -1,39 +1,23 @@
-import sql from "mssql";
-import dotenv from "dotenv";
+import pg from "pg";
+import "dotenv/config";
 
-dotenv.config();
+const { Pool } = pg;
 
-const config = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  server: process.env.DB_SERVER,
-  database: process.env.DB_NAME,
-  options: {
-    encrypt: false, // Để false khi chạy local, nếu đẩy lên Azure thì đổi thành true
-    trustServerCertificate: true,
+// Cấu hình kết nối cho PostgreSQL trên Render
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // Bắt buộc khi dùng Postgres trên Render
   },
-  port: parseInt(process.env.DB_PORT),
-};
+});
 
-// Biến lưu trữ Pool dùng chung
-let poolPromise;
+// Kiểm tra kết nối khi app khởi động
+pool.on("connect", () => {
+  console.log("Đã kết nối thành công với Database PostgreSQL!");
+});
 
-const connectDB = async () => {
-  try {
-    // Nếu chưa có pool, thì tạo mới
-    if (!poolPromise) {
-      poolPromise = sql.connect(config);
-      await poolPromise; // Đợi kết nối xong để in ra log
-      console.log("KẾT NỐI SQL SERVER THÀNH CÔNG!");
-    }
+pool.on("error", (err) => {
+  console.error("Lỗi kết nối database:", err.stack);
+});
 
-    // Trả về pool đã tồn tại
-    return await poolPromise;
-  } catch (err) {
-    console.error("Lỗi kết nối CSDL:", err);
-    poolPromise = null; // Reset lại biến nếu kết nối thất bại
-    throw err;
-  }
-};
-
-export { sql, connectDB };
+export default pool;
