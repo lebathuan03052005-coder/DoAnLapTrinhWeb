@@ -14,7 +14,7 @@ const LoginAdmin = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${API_URL}api/admin/admin-login`, {
+      const response = await fetch(`${API_URL}/api/admin/admin-login`, {
         method: "POST",
 
         headers: {

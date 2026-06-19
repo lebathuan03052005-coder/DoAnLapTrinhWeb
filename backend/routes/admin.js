@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 const router = express.Router();
 // API ĐĂNG NHẬP ADMIN
-router.post("api/admin/admin-login", async (req, res) => {
+router.post("/api/admin/admin-login", async (req, res) => {
   const { email, password } = req.body;
   console.log("Dữ liệu nhận được từ Frontend:", { email, password });
   if (!email || !password) {

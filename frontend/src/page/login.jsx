@@ -5,7 +5,10 @@ import "./login.css";
 // TỰ ĐỘNG CHUYỂN ĐỔI URL:
 // Nếu có biến VITE_API_URL trong môi trường, dùng nó.
 // Nếu không, mặc định dùng localhost:5000 cho lúc bạn code ở nhà.
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+// Chuẩn hoá để không có slash ở cuối, và khi gọi endpoint luôn nối bằng "/"
+const API_URL = (
+  import.meta.env.VITE_API_URL || "http://localhost:5000"
+).replace(/\/$/, "");
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +20,7 @@ const Login = () => {
 
     try {
       // Dùng API_URL thay vì localhost cứng
-      const response = await fetch(`${API_URL}customer-login`, {
+      const response = await fetch(`${API_URL}/customer-login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
