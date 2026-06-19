@@ -88,26 +88,26 @@ const HotelDetail = () => {
       {/* --- PHẦN 1: BREADCRUMBS --- */}
       <div className="vnbk-breadcrumbs">
         <span>Trang chủ</span> »<span> Khách sạn</span> »
-        <span className="active"> {hotel.name}</span>
+        <span className="active"> {hotel?.name}</span>
       </div>
 
       {/* --- PHẦN 2: GALLERY ẢNH --- */}
       <div className="hotel-gallery-grid">
         <div className="gallery-left">
-          <img src={hotel.mainImage} alt="Main" />
+          <img src={hotel?.mainImage} alt="Main" />
         </div>
         <div className="gallery-right">
           <div className="grid-item">
-            <img src={hotel.subImages?.[0]} alt="View 1" />
+            <img src={hotel?.subImages?.[0]} alt="View 1" />
           </div>
           <div className="grid-item">
-            <img src={hotel.subImages?.[1]} alt="View 2" />
+            <img src={hotel?.subImages?.[1]} alt="View 2" />
           </div>
           <div
             className="grid-item more-photos"
             onClick={() => setIsGalleryOpen(true)}
           >
-            <img src={hotel.subImages?.[2]} alt="View 3" />
+            <img src={hotel?.subImages?.[2]} alt="View 3" />
             <div className="overlay">
               <span>Xem tất cả ảnh</span>
             </div>
@@ -119,16 +119,16 @@ const HotelDetail = () => {
       <div className="detail-booking-section">
         <div>
           <div className="hotel-tag">
-            KHÁCH SẠN {"⭐".repeat(hotel.stars || 0)}
+            KHÁCH SẠN {"⭐".repeat(hotel?.stars || 0)}
           </div>
-          <h1 className="hotel-title">{hotel.name}</h1>
+          <h1 className="hotel-title">{hotel?.name}</h1>
           <p className="hotel-address">
-            <i className="fa-solid fa-location-dot"></i> {hotel.address}
+            <i className="fa-solid fa-location-dot"></i> {hotel?.address}
           </p>
         </div>
         <div className="booking-price-info">
           <p className="price-text-highlight">
-            {hotel.newPrice || "Liên hệ giá"} / đêm
+            {hotel?.newPrice || "Liên hệ giá"} / đêm
           </p>
           <button className="btn-book-now" onClick={scrollToRooms}>
             LỰA CHỌN PHÒNG
@@ -458,21 +458,21 @@ const HotelDetail = () => {
       <div className="hotel-rooms-section" ref={roomSectionRef}>
         <h3 className="section-title">Các loại phòng trống</h3>
 
-        {rooms.length === 0 ? (
+        {!Array.isArray(rooms) || rooms.length === 0 ? (
           <p style={{ color: "#888", textAlign: "center", padding: "20px" }}>
             Đang tải danh sách phòng...
           </p>
         ) : (
           rooms.map((room, index) => (
             <div className="vnbk-room-card" key={index}>
-              <h4 className="room-title">{room.name}</h4>
+              <h4 className="room-title">{room?.name}</h4>
 
               <div className="room-card-body">
                 <div className="room-info-col">
                   <img
-                    src={room.image ? room.image.split("\n")[0].trim() : img1}
-                    alt={room.name}
-                    className="room-thumbnail" // Bạn có thể thêm class này để style trong CSS
+                    src={room?.image ? room.image.split("\n")[0].trim() : img1}
+                    alt={room?.name}
+                    className="room-thumbnail"
                   />
                   <div className="room-specs">
                     <p>
@@ -508,19 +508,29 @@ const HotelDetail = () => {
                     {room.description}
                   </p>
 
-                  {room.amenities && (
-                    <div className="offers-grid">
-                      {(typeof room.amenities === "string"
-                        ? JSON.parse(room.amenities)
-                        : room.amenities
-                      ).map((item, i) => (
-                        <div className="offer-item" key={i}>
-                          <i className="fa-solid fa-check text-green"></i>
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {(() => {
+                    try {
+                      const parsed =
+                        typeof room?.amenities === "string"
+                          ? JSON.parse(room?.amenities || "[]")
+                          : room?.amenities;
+                      if (Array.isArray(parsed) && parsed.length > 0) {
+                        return (
+                          <div className="offers-grid">
+                            {parsed.map((item, i) => (
+                              <div className="offer-item" key={i}>
+                                <i className="fa-solid fa-check text-green"></i>
+                                <span>{item}</span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                    } catch (e) {
+                      console.error("Error parsing amenities", e);
+                    }
+                    return null;
+                  })()}
 
                   <div className="booking-action-area">
                     <div style={{ flex: 1 }}>
@@ -720,11 +730,11 @@ const HotelDetail = () => {
 
       {/* --- PHẦN GIỚI THIỆU KHÁCH SẠN --- */}
       <div className="hotel-intro-section">
-        <h3 className="section-title">Giới thiệu về {hotel.name}</h3>
+        <h3 className="section-title">Giới thiệu về {hotel?.name}</h3>
 
         <div className="intro-text-container">
           <p>
-            Tọa lạc tại vị trí đắc địa, <strong>{hotel.name}</strong> mang đến
+            Tọa lạc tại vị trí đắc địa, <strong>{hotel?.name}</strong> mang đến
             một không gian nghỉ dưỡng đẳng cấp với sự kết hợp hoàn hảo giữa nét
             kiến trúc hiện đại và dịch vụ tận tâm. Khách sạn không chỉ là nơi
             lưu trú lý tưởng cho các chuyến công tác mà còn là điểm đến tuyệt
