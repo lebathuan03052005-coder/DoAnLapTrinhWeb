@@ -1,95 +1,80 @@
-import React, { useState, useEffect } from "react";
-import "./chi_tiet_khach_san.css";
+import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import step2Image from "../assets/hinh_1.png";
+import step1Image from "../assets/hinh_2.png";
+import step3Image from "../assets/hinh_3.png";
+import step4Image from "../assets/hinh_4.png";
+import step5Image from "../assets/hinh_5.png";
 
-const HotelDetail = ({ hotel }) => {
-  const [images, setImages] = useState([]);
+import "./GuideDetail.css"; 
 
-  useEffect(() => {
-    const fetchHotelImages = async () => {
-      if (!hotel?.id) return;
 
-      try {
-        const baseUrl =
-          import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-        const res = await fetch(`${baseUrl}/hotels/${hotel.id}/images`);
-
-        if (!res.ok) throw new Error("Không thể tải ảnh");
-
-        const data = await res.json();
-        setImages(data);
-      } catch (err) {
-        console.error("Lỗi fetch ảnh:", err);
-        setImages([]);
+const guides = [
+  {
+    id: 1,
+    title: "Hướng dẫn đặt phòng khách sạn",
+    intro: "Không phải tốn công sức di chuyển xem khách sạn và thanh toán, tham khảo so sánh được nhiều khách sạn một lúc là những tiện ích nổi bật của đặt phòng khách sạn trực tuyến. Với giao diện thân thiện nhất cho người dùng,  luôn mong muốn đem lại trải nghiệm tốt nhất cho khách hàng.",
+    sections: [
+      {
+        title: "Hướng dẫn cách đặt phòng khách sạn  trực tuyến ",
+        steps: [
+          { step: "Bước 1", content: "chọn địa điểm muốn tìm khách sạn.", image: step1Image  },
+          { step: "Bước 2", content: "Chọn ngày check-in, check-out và số lượng khách.", image: step2Image },
+          { step: "Bước 3", content: "Bấm TÌM để xem danh sách khách sạn phù hợp.", image: step3Image },
+          { step: "Bước 4", content: "Chọn khách sạn và loại phòng mong muốn.", image: step4Image },
+          { step: "Bước 5", content: "Điền thông tin liên hệ và xác nhận đặt phòng.", image: step5Image }
+        ]
       }
-    };
+    ]
+  },
+];
+const GuideDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const guide = guides.find(g => g.id === parseInt(id));
 
-    fetchHotelImages();
-  }, [hotel?.id]);
-
-  if (!hotel) return null;
+  if (!guide) return <h2 style={{ textAlign: "center", padding: "50px" }}>Không tìm thấy hướng dẫn</h2>;
 
   return (
-    <div className="vnbk-main-content" style={{ paddingTop: "10px" }}>
-      {/* 1. Breadcrumb */}
-      <div
-        className="vnbk-breadcrumbs"
-        style={{ marginBottom: "20px", fontSize: "13px" }}
-      >
-        <span>Trang chủ</span> » <span>Khách sạn</span> » <span>Việt Nam</span>{" "}
-        »
-        <span className="active" style={{ fontWeight: "bold" }}>
-          {" "}
-          {hotel.name}
-        </span>
+    <div className="guide-container">
+
+      {/* Banner */}
+      <div className="guide-banner">
+        <img src="https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1200&q=80" alt="banner" />
       </div>
 
-      {/* 2. Ảnh chính & Gallery */}
-      <div className="hotel-gallery-grid">
-        <div className="gallery-left">
-          <img
-            src={images[0]?.image_url || hotel.image}
-            alt={hotel.name}
-            style={{ width: "100%", borderRadius: "12px" }}
-          />
-        </div>
-        <div className="gallery-right">
-          {images.slice(1, 4).map((img) => (
-            <div className="grid-item" key={img.id}>
-              <img
-                src={img.image_url}
-                alt=""
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderRadius: "8px",
-                }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+      <div>
+        <button className="guide-back-btn" onClick={() => navigate(-1)}>
+          
+        </button>
 
-      {/* 3. Thông tin tiêu đề */}
-      <div className="detail-header-info" style={{ marginTop: "25px" }}>
-        <h1
-          style={{ color: "#003580", fontSize: "26px", margin: "0 0 10px 0" }}
-        >
-          {hotel.name}{" "}
-          <span style={{ fontSize: "18px" }}>
-            {"⭐".repeat(hotel.stars || 0)}
-          </span>
-        </h1>
-        <p style={{ color: "#555", fontSize: "15px" }}>
-          <i
-            className="fa-solid fa-location-dot"
-            style={{ marginRight: "8px" }}
-          ></i>
-          {hotel.address}
-        </p>
+        <h1 className="guide-title">{guide.title}</h1>
+        <p className="guide-intro">{guide.intro}</p>
+
+        {guide.sections.map((section, index) => (
+          <div key={index} style={{ marginBottom: "30px" }}>
+            <h2 className="guide-section-title">{section.title}</h2>
+
+            {section.intro && (
+              <p className="guide-section-intro">{section.intro}</p>
+            )}
+
+            {section.steps.map((item, i) => (
+              <div key={i} className={`guide-step ${i % 2 !== 0 ? 'reverse' : ''}`}>
+                <div className="guide-step-image">
+                  <img src={item.image} alt={item.step} />
+                </div>
+                <div className="guide-step-content">
+                  <span className="guide-step-badge">{item.step}</span>
+                  <p className="guide-step-text">{item.content}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default HotelDetail;
+export default GuideDetail;

@@ -1,72 +1,105 @@
-/* =====================================
-   CSS GALLERY CHI TIẾT KHÁCH SẠN
-   ===================================== */
+/* ===== GUIDE DETAIL ===== */
+.guide-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 40px;
+}
 
-.hotel-gallery-grid {
-  display: flex;
-  gap: 8px;
+.guide-banner {
   width: 100%;
-  aspect-ratio: 16/9; /* giữ tỷ lệ khung, tránh vỡ giao diện */
-  border-radius: 8px;
+  height: 280px;
+  border-radius: 12px;
   overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.guide-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.guide-back-btn {
+  background: none;
+  border: none;
+  color: #003580;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.guide-title {
+  color: #003580;
+  font-size: 24px;
   margin-bottom: 20px;
 }
 
-.gallery-left,
-.gallery-right {
-  flex: 1;
-  min-width: 0; /* ngăn overflow ngang */
+.guide-intro {
+  color: #444;
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  text-align: justify;
 }
 
-.gallery-left img,
-.gallery-right-top img,
-.bottom-img-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* ảnh lấp đầy khung, không méo */
-  display: block;
-  border-radius: 4px;
+.guide-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 24px;
 }
 
-.gallery-right {
+.guide-section-intro {
+  color: #444;
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.guide-step {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.gallery-right-top {
-  flex: 1;
-}
-
-.gallery-right-bottom {
-  flex: 1;
-  display: flex;
-  gap: 8px;
-}
-
-.bottom-img-item {
-  flex: 1;
-  position: relative; /* để overlay nằm đúng */
-  overflow: hidden;
-  border-radius: 4px;
-}
-
-/* Overlay "Xem tất cả ảnh" */
-.more-photos .overlay {
-  position: absolute;
-  inset: 0; /* shorthand cho top/right/bottom/left = 0 */
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
   align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 10;
-  transition: background 0.3s ease;
 }
 
-.more-photos .overlay:hover {
-  background: rgba(0, 0, 0, 0.7);
+.guide-step.reverse {
+  flex-direction: row-reverse;
+}
+
+.guide-step-image {
+  width: 45%;
+  flex-shrink: 0;
+}
+
+.guide-step-image img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  height: 200px;
+}
+
+.guide-step-content {
+  flex: 1;
+}
+
+.guide-step-badge {
+  background: #003580;
+  color: white;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.guide-step-text {
+  color: #444;
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 0;
 }

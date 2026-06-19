@@ -16,8 +16,8 @@ const BookingForm = () => {
   const [showQR, setShowQR] = useState(false);
   const parseDate = (dateStr) => {
     if (!dateStr) return null;
-    if (dateStr.includes("/")) {
-      const [day, month, year] = dateStr.split("/");
+    if (dateStr.includes('/')) {
+      const [day, month, year] = dateStr.split('/');
       return new Date(`${year}-${month}-${day}`);
     }
     return new Date(dateStr);
@@ -40,13 +40,9 @@ const BookingForm = () => {
     }
 
     try {
-      // Sử dụng biến môi trường VITE_API_URL
-      const baseUrl =
-        import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-      const res = await fetch(`${baseUrl}/bookings/create`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('http://localhost:5000/api/bookings/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           hotel_id: hotel.id,
           guest_name: guestName,
@@ -56,42 +52,39 @@ const BookingForm = () => {
           check_in_date: checkIn,
           check_out_date: checkOut,
           total_amount: totalAmount,
-          quantity: 1,
-        }),
+          quantity: 1
+        })
       });
 
       const data = await res.json();
 
-      if (res.ok && data.success) {
-        // Kiểm tra cả res.ok để chắc chắn server phản hồi 200 OK
+      if (data.success) {
         setShowQR(false);
-        navigate("/booking-success", {
-          state: { hotel, room, checkIn, checkOut, guests, totalAmount },
+        navigate('/booking-success', {
+          state: { hotel, room, checkIn, checkOut, guests, totalAmount }
         });
       } else {
-        alert(data.message || "Lỗi đặt phòng, vui lòng thử lại!");
+        alert("Lỗi đặt phòng, vui lòng thử lại!");
       }
     } catch (err) {
-      console.error("Lỗi đặt phòng:", err);
-      alert("Lỗi kết nối tới hệ thống, vui lòng kiểm tra mạng!");
+      alert("Lỗi kết nối server!");
     }
   };
 
   if (!hotel || !room) {
-    return (
-      <h2 style={{ textAlign: "center" }}>Vui lòng quay lại chọn phòng</h2>
-    );
-  }
-  return (
+    return <h2 style={{ textAlign: "center" }}>Vui lòng quay lại chọn phòng</h2>;
+  }return (
     <div className="form-container">
       <div className="main-layout">
+
         {/* LEFT - FORM */}
         <div className="form-wrapper">
           <h2 className="form-title">Điền thông tin liên hệ</h2>
           <div className="form-card">
+
             <div className="form-group">
               <label>Họ và tên *</label>
-              <input
+              <input 
                 type="text"
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
@@ -102,7 +95,7 @@ const BookingForm = () => {
             <div className="row">
               <div className="col">
                 <label>Email *</label>
-                <input
+                <input 
                   type="email"
                   value={guestEmail}
                   onChange={(e) => setGuestEmail(e.target.value)}
@@ -111,7 +104,7 @@ const BookingForm = () => {
               </div>
               <div className="col">
                 <label>Số điện thoại *</label>
-                <input
+                <input 
                   type="tel"
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
@@ -120,13 +113,13 @@ const BookingForm = () => {
               </div>
             </div>
 
-            <textarea
+            <textarea 
               placeholder="Yêu cầu đặc biệt..."
               value={specialRequest}
               onChange={(e) => setSpecialRequest(e.target.value)}
             />
 
-            <button
+            <button 
               className="submit-btn"
               onClick={() => {
                 if (!guestName || !guestPhone || !guestEmail) {
@@ -138,6 +131,7 @@ const BookingForm = () => {
             >
               THANH TOÁN QR 📱
             </button>
+
           </div>
         </div>
 
@@ -145,8 +139,9 @@ const BookingForm = () => {
         <div className="right-col">
           <h2 className="form-title">Thông tin đặt phòng</h2>
           <div className="summary-card">
+
             <div className="sum-header">
-              <img src={hotel.image} alt={hotel.name} />
+              <img src={`http://localhost:5000${hotel.image}`} alt={hotel.name} />
               <div>
                 <h4>{hotel.name}</h4>
                 <p>{hotel.address}</p>
@@ -160,9 +155,7 @@ const BookingForm = () => {
               </div>
               <div className="sum-row">
                 <span className="sum-label">Giá</span>
-                <span className="sum-value">
-                  {room.base_price?.toLocaleString("vi-VN")} đ/đêm
-                </span>
+                <span className="sum-value">{room.base_price?.toLocaleString("vi-VN")} đ/đêm</span>
               </div>
               <div className="sum-row">
                 <span className="sum-label">Ngày nhận phòng</span>
@@ -176,105 +169,75 @@ const BookingForm = () => {
                 <span className="sum-label">Số khách</span>
                 <span className="sum-value">{guests}</span>
               </div>
-              <div
-                className="sum-row"
-                style={{
-                  borderTop: "1px solid #eee",
-                  paddingTop: "12px",
-                  marginTop: "8px",
-                }}
-              >
+              <div className="sum-row" style={{ borderTop: '1px solid #eee', paddingTop: '12px', marginTop: '8px' }}>
                 <span className="sum-label">Số đêm</span>
                 <span className="sum-value">{nights} đêm</span>
               </div>
               <div className="sum-row">
                 <span className="sum-label">Tổng tiền</span>
-                <span
-                  className="sum-value"
-                  style={{
-                    color: "#ef5b25",
-                    fontWeight: "bold",
-                    fontSize: "18px",
-                  }}
-                >
-                  {totalAmount?.toLocaleString("vi-VN")} đ
+                <span className="sum-value" style={{ color: '#ef5b25', fontWeight: 'bold', fontSize: '18px' }}>
+                  {totalAmount?.toLocaleString('vi-VN')} đ
                 </span>
               </div>
             </div>
+
           </div>
         </div>
+
       </div>
 
       {/* POPUP QR */}
       {showQR && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(0,0,0,0.7)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              borderRadius: "16px",
-              padding: "30px",
-              textAlign: "center",
-              maxWidth: "380px",
-              width: "90%",
-            }}
-          >
-            <h3 style={{ color: "#003580", marginBottom: "8px" }}>
+        <div style={{
+          position: 'fixed', top: 0, left: 0,
+          width: '100%', height: '100%',
+          background: 'rgba(0,0,0,0.7)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '30px',
+            textAlign: 'center',
+            maxWidth: '380px',
+            width: '90%'
+          }}>
+            <h3 style={{ color: '#003580', marginBottom: '8px' }}>
               Quét mã QR để thanh toán
             </h3>
-            <p style={{ color: "#555", fontSize: "14px", marginBottom: "4px" }}>
+            <p style={{ color: '#555', fontSize: '14px', marginBottom: '4px' }}>
               📅 {checkIn} → {checkOut} ({nights} đêm)
             </p>
-            <p
-              style={{ color: "#888", fontSize: "14px", marginBottom: "16px" }}
-            >
-              {room.base_price?.toLocaleString("vi-VN")} đ x {nights} đêm ={" "}
-              <strong style={{ color: "#ef5b25", fontSize: "18px" }}>
-                {totalAmount?.toLocaleString("vi-VN")} đ
+            <p style={{ color: '#888', fontSize: '14px', marginBottom: '16px' }}>
+              {room.base_price?.toLocaleString('vi-VN')} đ x {nights} đêm = {' '}
+              <strong style={{ color: '#ef5b25', fontSize: '18px' }}>
+                {totalAmount?.toLocaleString('vi-VN')} đ
               </strong>
             </p>
 
-            <img
+            <img 
               src={qrImage}
               alt="QR thanh toán"
-              style={{
-                width: "220px",
-                height: "220px",
-                objectFit: "contain",
-                marginBottom: "16px",
-              }}
+              style={{ width: '220px', height: '220px', objectFit: 'contain', marginBottom: '16px' }}
             />
 
-            <p
-              style={{ color: "#555", fontSize: "13px", marginBottom: "20px" }}
-            >
+            <p style={{ color: '#555', fontSize: '13px', marginBottom: '20px' }}>
               Sau khi thanh toán, bấm xác nhận bên dưới
             </p>
 
-            <div
-              style={{ display: "flex", gap: "12px", justifyContent: "center" }}
-            >
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
               <button
                 onClick={() => setShowQR(false)}
                 style={{
-                  padding: "10px 20px",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                  background: "white",
-                  cursor: "pointer",
-                  color: "#555",
+                  padding: '10px 20px',
+                  border: '1px solid #ddd',
+                  borderRadius: '8px',
+                  background: 'white',
+                  cursor: 'pointer',
+                  color: '#555'
                 }}
               >
                 Hủy
@@ -282,13 +245,13 @@ const BookingForm = () => {
               <button
                 onClick={handlePaymentConfirm}
                 style={{
-                  padding: "10px 20px",
-                  border: "none",
-                  borderRadius: "8px",
-                  background: "#ef5b25",
-                  color: "white",
-                  cursor: "pointer",
-                  fontWeight: "bold",
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '8px',
+                  background: '#ef5b25',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
                 }}
               >
                 Đã thanh toán ✓
@@ -297,8 +260,10 @@ const BookingForm = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
 
 export default BookingForm;
+    

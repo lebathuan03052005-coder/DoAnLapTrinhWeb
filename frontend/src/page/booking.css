@@ -24,8 +24,7 @@ body {
 }
 
 /* CARD */
-.form-card,
-.summary-card {
+.form-card, .summary-card {
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -37,8 +36,7 @@ body {
 }
 
 /* INPUT */
-input,
-textarea {
+input, textarea {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -128,6 +126,7 @@ textarea {
   font-size: 16px;
   color: #111;
 }
+
 
 .thank-you-text {
   margin-top: 20px;

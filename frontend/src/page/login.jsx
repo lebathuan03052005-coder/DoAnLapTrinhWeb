@@ -1,49 +1,22 @@
 import React, { useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
-
-// TỰ ĐỘNG CHUYỂN ĐỔI URL:
-// Nếu có biến VITE_API_URL trong môi trường, dùng nó.
-// Nếu không, mặc định dùng localhost:5000 cho lúc bạn code ở nhà.
-// Chuẩn hoá để không có slash ở cuối, và khi gọi endpoint luôn nối bằng "/"
-const API_URL = (
-  import.meta.env.VITE_API_URL || "http://localhost:5000"
-).replace(/\/$/, "");
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleCustomerLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-
-    try {
-      // Dùng API_URL thay vì localhost cứng
-      const response = await fetch(`${API_URL}/customer-login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        localStorage.setItem("isCustomerLoggedIn", "true");
-        localStorage.setItem("customerName", data.user.full_name);
-        window.dispatchEvent(new Event("userChanged"));
-        navigate("/");
-      } else {
-        alert(data.message || "Đăng nhập thất bại");
-      }
-    } catch (error) {
-      console.error("Lỗi kết nối:", error);
-      alert("Không kết nối được server");
+    // Giả lập kiểm tra đăng nhập
+    if (email === "admin@gmail.com" && password === "123456") {
+      navigate("/admin"); // Dùng useNavigate để điều hướng bằng code
+    } else {
+      alert(
+        "Tài khoản hoặc mật khẩu không đúng! (Thử: admin@gmail.com / 123456)",
+      );
     }
   };
 
@@ -55,9 +28,9 @@ const Login = () => {
           <p>Chào mừng bạn đến với BOOKING.Commm</p>
         </div>
 
-        <form className="login-form" onSubmit={handleCustomerLogin}>
+        <form className="login-form" onSubmit={handleLogin}>
           <div className="input-group">
-            <label htmlFor="email">Email của bạn</label>
+            <label htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
@@ -81,23 +54,10 @@ const Login = () => {
           </div>
 
           <div className="login-options">
-            <label
-              className="remember-me"
-              style={{
-                display: "flex",
-                flexDirection: "row-reverse",
-                alignItems: "center",
-                gap: "8px",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="checkbox"
-                style={{ width: "20px", height: "18px" }}
-              />
-              <span>Ghi nhớ</span>
+            <label>
+              <input type="checkbox" /> Ghi nhớ đăng nhập
             </label>
-
+            {/* Thẻ Link này cần được import ở dòng 3 */}
             <Link to="/forgot-password">Quên mật khẩu?</Link>
             <Link to="/login_admin">Đăng nhập quản trị viên</Link>
           </div>

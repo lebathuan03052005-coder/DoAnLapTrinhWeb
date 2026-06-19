@@ -9,6 +9,7 @@ const BookingSuccess = () => {
 
   return (
     <div className="success-wrapper">
+
       <div className="success-icon">🎉</div>
 
       <h2 className="success-title">Đặt phòng thành công!</h2>
@@ -36,6 +37,7 @@ const BookingSuccess = () => {
       <button className="success-btn" onClick={() => navigate("/")}>
         VỀ TRANG CHỦ
       </button>
+
     </div>
   );
 };

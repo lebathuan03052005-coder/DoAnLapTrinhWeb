@@ -117,23 +117,6 @@
   cursor: pointer;
   transition: 0.3s;
 }
-.button-de {
-  background: #3498db;
-
-  color: white;
-
-  border: none;
-
-  padding: 12px 20px;
-
-  border-radius: 10px;
-
-  cursor: pointer;
-
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-
-  transition: all 0.3s ease;
-}
 .btn-details {
   padding: 6px 12px;
   background: #2316d9;
@@ -143,19 +126,6 @@
   cursor: pointer;
   transition: 0.3s;
   margin-left: 10px;
-}
-.btn-banned {
-  padding: 6px 12px;
-  background: #d3189e; /* Màu đỏ */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: 0.3s;
-  margin-left: 10px;
-}
-.btn-banned:hover {
-  background: #9b0f6e;
 }
 .btn-delete:hover {
   background: #dc2626;
@@ -257,177 +227,60 @@
   border-color: #ef5b25;
   box-shadow: 0 2px 4px rgba(239, 91, 37, 0.2);
 }
-
-/* Nền modal */
-.modal-backdrop {
+/* --- Bảng thông báo chi tiết khách sạn --- */
+.modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.45);
+
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
+
+  z-index: 999;
 }
 
-/* Thẻ chứa modal */
-.modal-card {
-  background: #fff;
-  width: 90%;
-  max-width: 500px;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-}
+.hotel-modal {
+  width: 500px;
 
-.modal-title {
-  margin-top: 0;
-  color: #333;
-  border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 10px;
-}
-
-.modal-body {
-  margin: 20px 0;
-}
-.modal-body p {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-.modal-body strong {
-  color: #555;
-}
-
-/* Nút bấm */
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-.btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-.btn-secondary {
-  background: #e0e0e0;
-  color: #555;
-}
-.btn-primary {
-  background: #3498db;
-  color: #fff;
-}
-.btn:hover {
-  opacity: 0.9;
-}
-
-/* Badge cho trạng thái */
-.status-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.85em;
-  text-transform: uppercase;
-}
-.status-badge.approved {
-  background: #d4edda;
-  color: #155724;
-}
-.status-badge.banned {
-  background: #f8d7da;
-  color: #721c24;
-}
-/* Modal Overlay */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-/* Nội dung Modal */
-.modal-content {
   background: white;
-  padding: 25px;
-  border-radius: 12px;
-  width: 450px;
-  max-width: 90%;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+  border-radius: 16px;
+
+  padding: 28px;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+  animation: popup 0.25s ease;
 }
 
-/* Card chứa thông tin phòng */
-.room-card {
-  border: 1px solid #e0e0e0;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: 0.3s;
+.hotel-modal h2 {
+  margin-bottom: 20px;
 }
 
-.room-card:hover {
-  background-color: #fcfcfc;
-  border-color: #3498db;
+.hotel-info p {
+  margin: 12px 0;
 }
 
-.room-name {
-  font-weight: 600;
-  font-size: 1.1em;
-}
-.room-price {
-  color: #27ae60;
-  font-weight: bold;
-}
-
-/* Nút bấm */
-.btn-close {
+.close-btn {
   margin-top: 20px;
+
   width: 100%;
-  padding: 10px;
-  background: #95a5a6;
-  color: white;
+
+  padding: 12px;
+
   border: none;
-  border-radius: 6px;
+
+  border-radius: 10px;
+
+  background: #2563eb;
+
+  color: white;
+
   cursor: pointer;
 }
-/* Sửa phần modal-body để các cặp thông tin hiển thị đẹp hơn */
-.modal-body {
-  margin: 20px 0;
-}
 
-.modal-body p {
-  display: flex; /* Đưa nhãn và nội dung lên cùng 1 hàng */
-  align-items: flex-start; /* Căn lề trên nếu nội dung dài */
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-.modal-body strong {
-  color: #555;
-  min-width: 80px; /* Cố định chiều rộng nhãn để thẳng hàng */
-  flex-shrink: 0; /* Đảm bảo nhãn không bị co lại */
-  margin-right: 10px;
-}
-
-.modal-body span {
-  color: #333;
-  word-break: break-word; /* Tự động xuống dòng nếu từ quá dài */
-}
 @keyframes popup {
   from {
     opacity: 0;

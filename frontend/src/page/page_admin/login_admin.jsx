@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 import "./login_admin.css"; // Dùng file CSS riêng
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const LoginAdmin = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +13,7 @@ const LoginAdmin = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${API_URL}/api/admin/admin-login`, {
+      const response = await fetch("http://localhost:5000/admin-login", {
         method: "POST",
 
         headers: {

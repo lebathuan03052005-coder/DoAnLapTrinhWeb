@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const Accounts = () => {
   const [accounts, setAccounts] = useState([]);
 
@@ -10,7 +10,7 @@ const Accounts = () => {
   const fetchAccounts = async () => {
     try {
       // Lấy danh sách tài khoản kết nối Database từ Backend API
-      const response = await fetch(`${API_URL}/api/accounts`);
+      const response = await fetch("http://localhost:5000/api/accounts");
       if (response.ok) {
         const data = await response.json();
         setAccounts(data);

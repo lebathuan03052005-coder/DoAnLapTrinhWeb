@@ -1,6 +1,3 @@
-/* =========================================
-   CẤU TRÚC CHUNG CỦA NAVBAR
-========================================= */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -9,20 +6,15 @@
   background: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   font-family: Arial, sans-serif;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
 }
 
 /* Logo */
-.navbar-logo a {
-  font-size: 24px;
-  font-weight: bold;
-  color: #003580;
-  text-decoration: none;
+.navbar-logo img {
+  height: 40px;
+  object-fit: contain;
 }
 
-/* Links (Menu chính) */
+/* Links */
 .navbar-links {
   list-style: none;
   display: flex;
@@ -39,10 +31,12 @@
   position: relative;
 }
 
+/* hover đẹp */
 .navbar-links li a:hover {
   color: #ff5a5f;
 }
 
+/* underline animation */
 .navbar-links li a::after {
   content: "";
   position: absolute;
@@ -58,17 +52,18 @@
   width: 100%;
 }
 
-/* Khu vực điều hướng bên phải (Actions) */
+/* dropdown arrow */
+.arrow {
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* buttons */
 .navbar-actions {
   display: flex;
   gap: 10px;
-  align-items: center;
-  position: relative;
 }
 
-/* =========================================
-   NÚT CHỨC NĂNG (Login / Register / Admin)
-========================================= */
 .btn-login {
   padding: 8px 14px;
   border: 1px solid #ff5a5f;
@@ -96,85 +91,4 @@
 
 .btn-signup:hover {
   background: #e14b50;
-}
-
-.btn-admin-dashboard {
-  padding: 8px 14px;
-  border: none;
-  background: #1e293b;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn-admin-dashboard:hover {
-  background: #334155;
-  transform: translateY(-2px);
-}
-
-/* =========================================
-   MENU DROPDOWN TÀI KHOẢN (Đã cập nhật class khớp với Navbar.jsx)
-========================================= */
-.account-dropdown {
-  position: relative;
-}
-
-/* Nút kích hoạt dropdown (Dùng class .account-trigger từ code JSX) */
-.account-trigger {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 14px;
-  border: 1px solid #d9d9d9;
-  background: #fff;
-  border-radius: 999px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
-  font-weight: 600;
-}
-
-.account-avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #1fb7d6, #0f8fb5);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 13px;
-}
-
-/* Bảng menu xổ xuống */
-.account-menu {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  width: 220px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  padding: 8px 0;
-  z-index: 20;
-}
-
-.account-menu button {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 0;
-  background: transparent;
-  padding: 12px 18px;
-  text-align: left;
-  font-size: 14px;
-  color: #334155;
-  cursor: pointer;
-}
-
-.account-menu button:hover {
-  background: #f5f7fb;
-  color: #003580;
 }

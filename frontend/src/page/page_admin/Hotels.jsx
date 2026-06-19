@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./hotels.css";
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Hotels = () => {
   const [hotels, setHotels] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedHotel, setSelectedHotel] = useState(null);
-  const [rooms, setRooms] = useState([]);
-  const [showRoom, setShowRoom] = useState(false);
   // State quản lý bộ lọc nhanh đang được chọn
   const [activeFilter, setActiveFilter] = useState("Tất cả");
 
@@ -20,47 +17,25 @@ const Hotels = () => {
 
   const fetchHotels = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/admin/hotels`);
+      const response = await fetch("http://localhost:5000/api/admin/hotels");
       if (response.ok) {
         const data = await response.json();
-        // dữ liệu lấy về được lưu trong biến hotels
         setHotels(data);
       }
     } catch (error) {
       console.error("Lỗi khi tải danh sách khách sạn:", error);
     }
   };
-  const [message, setMessage] = useState("");
 
-  const duLieuPhong = async (hotelId) => {
-    try {
-      const response = await fetch(
-        `${API_URL}/api/admin/hotels/${hotelId}/rooms`,
-      );
-      const result = await response.json();
-
-      if (result.success) {
-        setRooms(result.data);
-        setMessage(result.message || ""); // Lưu thông báo nếu có
-        setShowRoom(true);
-      }
-    } catch (error) {
-      alert("Lỗi kết nối");
-    }
-  };
-  const formatCurrency = (amount) => {
-    if (!amount) return "0 đ"; // Xử lý nếu giá trị bị null hoặc undefined
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(amount);
-  };
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa khách sạn này?")) return;
     try {
-      const response = await fetch(`${API_URL}/api/admin/hotels/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/admin/hotels/${id}`,
+        {
+          method: "DELETE",
+        },
+      );
       const data = await response.json();
       if (data.success) {
         fetchHotels();
@@ -71,28 +46,13 @@ const Hotels = () => {
   };
 
   const handleAccess = async (id) => {
-    if (!window.confirm("Bạn có chắc chắn muốn duyệt khách sạn này?")) return;
     try {
       const response = await fetch(
-        `${API_URL}/api/admin/hotels/${id}/approved`,
-        { method: "PUT" },
+        `http://localhost:5000/api/admin/hotels/${id}/access`,
+        {
+          method: "PUT",
+        },
       );
-      const data = await response.json();
-      if (data.success) {
-        fetchHotels();
-      } else {
-        alert("Lỗi khi cập nhật trạng thái truy cập");
-      }
-    } catch (error) {
-      alert("Lỗi khi kết nối để cập nhật trạng thái truy cập");
-    }
-  };
-  const handleBanned = async (id) => {
-    if (!window.confirm("Bạn có chắc chắn muốn cấm khách sạn này?")) return;
-    try {
-      const response = await fetch(`${API_URL}/api/admin/hotels/${id}/banned`, {
-        method: "PUT",
-      });
       const data = await response.json();
       if (data.success) {
         fetchHotels();
@@ -131,6 +91,7 @@ const Hotels = () => {
   return (
     <div className="admin-hotels-container">
       <h3>Quản lý Khách sạn </h3>
+
       {/* Khu vực Tìm kiếm & Bộ lọc */}
       <div className="admin-hotels-filter-section">
         {/* Hàng 1: Ô nhập tìm kiếm */}
@@ -169,6 +130,7 @@ const Hotels = () => {
           </div>
         </div>
       </div>
+
       {/* Bảng danh sách */}
       <div className="table-responsive">
         <table className="admin-hotels-table">
@@ -190,23 +152,12 @@ const Hotels = () => {
                   <td>{hotel.city}</td>
                   <td>{hotel.status}</td>
                   <td>
-                    <button
-                      className="btn-edit"
-                      onClick={() => handleAccess(hotel.id)}
-                    >
-                      Duyệt
-                    </button>
+                    <button className="btn-edit">Duyệt</button>
                     <button
                       className="btn-delete"
                       onClick={() => handleDelete(hotel.id)}
                     >
                       Xóa
-                    </button>
-                    <button
-                      className="btn-banned"
-                      onClick={() => handleBanned(hotel.id)}
-                    >
-                      Cấm
                     </button>
                     <button
                       className="btn-details"
@@ -228,80 +179,44 @@ const Hotels = () => {
         </table>
       </div>
       {selectedHotel && (
-        <div className="modal-backdrop" onClick={() => setSelectedHotel(null)}>
-          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-title">Chi tiết khách sạn</h2>
+        <div className="modal-overlay" onClick={() => setSelectedHotel(null)}>
+          <div className="hotel-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Chi tiết khách sạn</h2>
 
-            <div className="modal-body">
+            <div className="hotel-info">
               <p>
-                <strong>ID:</strong> <span>{selectedHotel.id}</span>
-              </p>
-              <p>
-                <strong>Tên:</strong> <span>{selectedHotel.name}</span>
-              </p>
-              <p>
-                <strong>Thành phố:</strong> <span>{selectedHotel.city}</span>
+                <strong>ID: </strong> {selectedHotel.id}
               </p>
 
               <p>
-                <strong>Trạng thái:</strong>
-                <span className={`status-badge ${selectedHotel.status}`}>
-                  {selectedHotel.status}
-                </span>
+                <strong>Tên: </strong>
+                {selectedHotel.name}
               </p>
 
               <p>
-                <strong>Mô tả:</strong> <span>{selectedHotel.description}</span>
+                <strong>Thành phố: </strong>
+                {selectedHotel.city}
+              </p>
+
+              <p>
+                <strong>Trạng thái: </strong>
+                {selectedHotel.status}
+              </p>
+
+              <p>
+                <strong>Mô tả: </strong>
+                {selectedHotel.description}
               </p>
               <p>
-                <strong>Địa chỉ:</strong> <span>{selectedHotel.address}</span>
+                <strong>Địa chỉ: </strong>
+                {selectedHotel.address}
               </p>
             </div>
 
-            <div className="modal-footer">
-              <button
-                className="btn btn-secondary"
-                onClick={() => setSelectedHotel(null)}
-              >
-                Đóng
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  duLieuPhong(selectedHotel.id);
-                }}
-              >
-                Xem danh sách phòng
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {showRoom && (
-        <div className="modal-backdrop" onClick={() => setShowRoom(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2 style={{ marginTop: 0 }}>Danh sách phòng</h2>
-
-            {rooms.length > 0 && (
-              <p style={{ color: "#555", fontWeight: "bold" }}>
-                Tổng số phòng: {rooms.length}
-              </p>
-            )}
-
-            {rooms.length === 0 ? (
-              <p className="empty-message">{message}</p>
-            ) : (
-              rooms.map((room) => (
-                <div key={room.id} className="room-card">
-                  <span className="room-name">{room.name}</span>
-                  <span className="room-price">
-                    {formatCurrency(room.base_price)}
-                  </span>
-                </div>
-              ))
-            )}
-
-            <button className="btn-close" onClick={() => setShowRoom(false)}>
+            <button
+              className="close-btn"
+              onClick={() => setSelectedHotel(null)}
+            >
               Đóng
             </button>
           </div>

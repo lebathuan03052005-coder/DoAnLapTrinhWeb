@@ -6,75 +6,47 @@ import step3Image from "../assets/hinh_3.png";
 import step4Image from "../assets/hinh_4.png";
 import step5Image from "../assets/hinh_5.png";
 
-import "./GuideDetail.css";
+import "./GuideDetail.css"; 
+
 
 const guides = [
   {
     id: 1,
     title: "Hướng dẫn đặt phòng khách sạn",
-    intro:
-      "Không phải tốn công sức di chuyển xem khách sạn và thanh toán, tham khảo so sánh được nhiều khách sạn một lúc là những tiện ích nổi bật của đặt phòng khách sạn trực tuyến. Với giao diện thân thiện nhất cho người dùng,  luôn mong muốn đem lại trải nghiệm tốt nhất cho khách hàng.",
+    intro: "Không phải tốn công sức di chuyển xem khách sạn và thanh toán, tham khảo so sánh được nhiều khách sạn một lúc là những tiện ích nổi bật của đặt phòng khách sạn trực tuyến. Với giao diện thân thiện nhất cho người dùng,  luôn mong muốn đem lại trải nghiệm tốt nhất cho khách hàng.",
     sections: [
       {
         title: "Hướng dẫn cách đặt phòng khách sạn  trực tuyến ",
         steps: [
-          {
-            step: "Bước 1",
-            content: "chọn địa điểm muốn tìm khách sạn.",
-            image: step1Image,
-          },
-          {
-            step: "Bước 2",
-            content: "Chọn ngày check-in, check-out và số lượng khách.",
-            image: step2Image,
-          },
-          {
-            step: "Bước 3",
-            content: "Bấm TÌM để xem danh sách khách sạn phù hợp.",
-            image: step3Image,
-          },
-          {
-            step: "Bước 4",
-            content: "Chọn khách sạn và loại phòng mong muốn.",
-            image: step4Image,
-          },
-          {
-            step: "Bước 5",
-            content: "Điền thông tin liên hệ và xác nhận đặt phòng.",
-            image: step5Image,
-          },
-        ],
-      },
-    ],
+          { step: "Bước 1", content: "chọn địa điểm muốn tìm khách sạn.", image: step1Image  },
+          { step: "Bước 2", content: "Chọn ngày check-in, check-out và số lượng khách.", image: step2Image },
+          { step: "Bước 3", content: "Bấm TÌM để xem danh sách khách sạn phù hợp.", image: step3Image },
+          { step: "Bước 4", content: "Chọn khách sạn và loại phòng mong muốn.", image: step4Image },
+          { step: "Bước 5", content: "Điền thông tin liên hệ và xác nhận đặt phòng.", image: step5Image }
+        ]
+      }
+    ]
   },
 ];
 const GuideDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const guide = guides.find((g) => g.id === parseInt(id));
+  const guide = guides.find(g => g.id === parseInt(id));
 
-  if (!guide)
-    return (
-      <h2 style={{ textAlign: "center", padding: "50px" }}>
-        Không tìm thấy hướng dẫn
-      </h2>
-    );
+  if (!guide) return <h2 style={{ textAlign: "center", padding: "50px" }}>Không tìm thấy hướng dẫn</h2>;
 
   return (
     <div className="guide-container">
+
       {/* Banner */}
       <div className="guide-banner">
-        <img
-          src="https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1200&q=80"
-          alt="banner"
-        />
+        <img src="https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1200&q=80" alt="banner" />
       </div>
 
       <div>
-        <button
-          className="guide-back-btn"
-          onClick={() => navigate(-1)}
-        ></button>
+        <button className="guide-back-btn" onClick={() => navigate(-1)}>
+          
+        </button>
 
         <h1 className="guide-title">{guide.title}</h1>
         <p className="guide-intro">{guide.intro}</p>
@@ -88,10 +60,7 @@ const GuideDetail = () => {
             )}
 
             {section.steps.map((item, i) => (
-              <div
-                key={i}
-                className={`guide-step ${i % 2 !== 0 ? "reverse" : ""}`}
-              >
+              <div key={i} className={`guide-step ${i % 2 !== 0 ? 'reverse' : ''}`}>
                 <div className="guide-step-image">
                   <img src={item.image} alt={item.step} />
                 </div>

@@ -1,48 +1,52 @@
 import express from "express";
-import pool from "../database.js";
-// bcrypt removed: passwords will be stored/compared in plaintext per request
+import sql from "mssql";
+import { connectDB } from "../database.js";
 
 const router = express.Router();
 
-// API ĐĂNG NHẬP ADMIN - KHÔNG MÃ HÓA
-router.post("/api/admin/admin-login", async (req, res) => {
+// API ĐĂNG NHẬP ADMIN
+router.post("/admin-login", async (req, res) => {
   const { email, password } = req.body;
-
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Vui lòng nhập email và mật khẩu!" });
+  }
   try {
-    const result = await pool.query(
-      `SELECT id, full_name, email, role, password_hash FROM users WHERE email = $1 AND role = $2`,
-      [email, "ADMIN"],
-    );
+    const pool = await connectDB();
+    const request = pool.request();
+    request.input("email", sql.VarChar, email);
+    request.input("password", sql.VarChar, password);
 
-    if (result.rows.length === 0) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Sai tài khoản!" });
-    }
+    const result = await request.query(`
+      SELECT id, full_name, email, role
+      FROM Users
+      WHERE email = @email AND password_hash = @password AND role = 'admin'
+    `);
 
-    const admin = result.rows[0];
-    if (password !== admin.password_hash) {
-      return res.status(401).json({
+    if (result.recordset.length > 0) {
+      res.json({ success: true, admin: result.recordset[0] });
+    } else {
+      res.status(401).json({
         success: false,
-        message: "Sai tài khoản hoặc mật khẩu Admin!",
+        message: "Tài khoản hoặc mật khẩu Admin không đúng!",
       });
     }
-
-    delete admin.password_hash;
-    res.json({ success: true, admin });
   } catch (error) {
-    console.error("Lỗi đăng nhập admin:", error);
-    res.status(500).json({ success: false, message: "Lỗi Server!" });
+    console.error("Lỗi đăng nhập Admin:", error);
+    res.status(500).json({ success: false, message: "Lỗi kết nối Server!" });
   }
 });
 
 // API QUẢN LÝ TÀI KHOẢN
 router.get("/api/accounts", async (req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT id, full_name, email, phone, role FROM users`,
-    );
-    res.json(result.rows);
+    const pool = await connectDB();
+    const result = await pool.request().query(`
+      SELECT id, full_name, email, phone, role
+      FROM Users
+    `);
+    res.json(result.recordset);
   } catch (error) {
     console.error("Lỗi lấy danh sách tài khoản:", error);
     res
@@ -51,44 +55,18 @@ router.get("/api/accounts", async (req, res) => {
   }
 });
 
-// QUẢN LÝ KHÁCH SẠN
+// QUẢN LÝ KHÁCH SẠN (Đã đổi route thành /api/admin/hotels để tránh trùng lặp)
 router.get("/api/admin/hotels", async (req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT id, name, city, status, description, address FROM hotels`,
-    );
-    res.json(result.rows);
+    const pool = await connectDB();
+    const result = await pool.request().query(`
+      SELECT id, name, city, status, description, address
+      FROM Hotels
+    `);
+    res.json(result.recordset);
   } catch (error) {
     console.error("Lỗi lấy danh sách khách sạn:", error);
     res.status(500).json({ success: false, message: "Lỗi Server!" });
-  }
-});
-
-router.get("/api/admin/hotels/:id/rooms", async (req, res) => {
-  try {
-    const hotelId = req.params.id;
-
-    const result = await pool.query(
-      `SELECT * FROM room_types WHERE hotel_id = $1`,
-      [hotelId],
-    );
-    const rows = result.rows;
-
-    if (rows.length === 0) {
-      return res.json({
-        success: true,
-        data: [],
-        message: "Khách sạn này hiện chưa có phòng nào.",
-      });
-    }
-
-    res.json({ success: true, data: rows });
-  } catch (error) {
-    console.error("LỖI SQL CHI TIẾT:", error);
-    res.status(500).json({
-      success: false,
-      message: "Lỗi Server: " + error.message,
-    });
   }
 });
 
@@ -96,11 +74,16 @@ router.get("/api/admin/hotels/:id/rooms", async (req, res) => {
 router.delete("/api/admin/hotels/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await pool.query(
-      `DELETE FROM hotels WHERE id = $1 RETURNING id`,
-      [id],
-    );
-    if (result.rowCount === 0) {
+    const pool = await connectDB();
+    const request = pool.request();
+    request.input("id", sql.Int, id);
+
+    const result = await request.query(`
+      DELETE FROM Hotels
+      WHERE id = @id
+    `);
+
+    if (result.rowsAffected[0] === 0) {
       return res
         .status(404)
         .json({ success: false, message: "Không tìm thấy khách sạn!" });
@@ -108,46 +91,6 @@ router.delete("/api/admin/hotels/:id", async (req, res) => {
     res.json({ success: true, message: "Xóa thành công!" });
   } catch (error) {
     console.error("Lỗi xóa khách sạn:", error);
-    res.status(500).json({ success: false, message: "Lỗi Server!" });
-  }
-});
-
-// Duyệt khách sạn
-router.put("/api/admin/hotels/:id/approved", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await pool.query(
-      `UPDATE hotels SET status = 'approved' WHERE id = $1 RETURNING id`,
-      [id],
-    );
-    if (result.rowCount === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Không tìm thấy khách sạn!" });
-    }
-    res.json({ success: true, message: "Duyệt khách sạn thành công!" });
-  } catch (error) {
-    console.error("Lỗi duyệt khách sạn:", error);
-    res.status(500).json({ success: false, message: "Lỗi Server!" });
-  }
-});
-
-// Cấm khách sạn
-router.put("/api/admin/hotels/:id/banned", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await pool.query(
-      `UPDATE hotels SET status = 'banned' WHERE id = $1 RETURNING id`,
-      [id],
-    );
-    if (result.rowCount === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Không tìm thấy khách sạn!" });
-    }
-    res.json({ success: true, message: "Cấm khách sạn thành công!" });
-  } catch (error) {
-    console.error("Lỗi cấm khách sạn:", error);
     res.status(500).json({ success: false, message: "Lỗi Server!" });
   }
 });
@@ -162,29 +105,33 @@ router.post("/api/change-admin-password", async (req, res) => {
   }
 
   try {
-    const check = await pool.query(
-      `SELECT id, password_hash FROM users WHERE email = $1 AND role = $2`,
-      [email, "ADMIN"],
-    );
+    const pool = await connectDB();
+    const request = pool.request();
+    request.input("email", sql.VarChar, email);
+    request.input("oldPassword", sql.VarChar, oldPassword);
 
-    if (check.rows.length === 0) {
-      return res
+    const check = await request.query(`
+      SELECT id
+      FROM Users
+      WHERE email = @email AND password_hash = @oldPassword AND role = 'admin'
+    `);
+
+    if (check.recordset.length > 0) {
+      const updateRequest = pool.request();
+      updateRequest.input("email", sql.VarChar, email);
+      updateRequest.input("newPassword", sql.VarChar, newPassword);
+
+      await updateRequest.query(`
+        UPDATE Users
+        SET password_hash = @newPassword
+        WHERE email = @email AND role = 'admin'
+      `);
+      res.json({ success: true, message: "Đổi mật khẩu thành công!" });
+    } else {
+      res
         .status(401)
         .json({ success: false, message: "Mật khẩu cũ không chính xác!" });
     }
-
-    const user = check.rows[0];
-    if (oldPassword !== user.password_hash) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Mật khẩu cũ không chính xác!" });
-    }
-
-    await pool.query(
-      `UPDATE users SET password_hash = $1 WHERE email = $2 AND role = $3`,
-      [newPassword, email, "ADMIN"],
-    );
-    res.json({ success: true, message: "Đổi mật khẩu thành công!" });
   } catch (error) {
     console.error("Lỗi đổi mật khẩu:", error);
     res.status(500).json({ success: false, message: "Lỗi kết nối Server!" });
