@@ -1,0 +1,72 @@
+/* =====================================
+   CSS GALLERY CHI TIẾT KHÁCH SẠN
+   ===================================== */
+
+.hotel-gallery-grid {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  aspect-ratio: 16/9; /* giữ tỷ lệ khung, tránh vỡ giao diện */
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.gallery-left,
+.gallery-right {
+  flex: 1;
+  min-width: 0; /* ngăn overflow ngang */
+}
+
+.gallery-left img,
+.gallery-right-top img,
+.bottom-img-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ảnh lấp đầy khung, không méo */
+  display: block;
+  border-radius: 4px;
+}
+
+.gallery-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gallery-right-top {
+  flex: 1;
+}
+
+.gallery-right-bottom {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+}
+
+.bottom-img-item {
+  flex: 1;
+  position: relative; /* để overlay nằm đúng */
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+/* Overlay "Xem tất cả ảnh" */
+.more-photos .overlay {
+  position: absolute;
+  inset: 0; /* shorthand cho top/right/bottom/left = 0 */
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s ease;
+}
+
+.more-photos .overlay:hover {
+  background: rgba(0, 0, 0, 0.7);
+}

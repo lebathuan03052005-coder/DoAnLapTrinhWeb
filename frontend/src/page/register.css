@@ -1,0 +1,179 @@
+.register-page {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  min-height: 100vh;
+
+  width: 100vw;
+
+  background: linear-gradient(
+    135deg,
+    #001529 0%,
+    #1890ff 100%
+  );
+
+  font-family:
+    "Segoe UI",
+    Tahoma,
+    Geneva,
+    Verdana,
+    sans-serif;
+}
+
+.register-card {
+  background: white;
+
+  width: 100%;
+
+  max-width: 600px;
+
+  padding: 40px;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 10px 25px
+    rgba(0, 0, 0, 0.2);
+}
+
+.register-header {
+  text-align: center;
+
+  margin-bottom: 30px;
+}
+
+.register-header h2 {
+  margin: 0;
+
+  color: #001529;
+
+  font-size: 28px;
+
+  font-weight: 700;
+}
+
+.register-header p {
+  color: #666;
+
+  margin-top: 10px;
+
+  font-size: 14px;
+}
+
+.register-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.input-group label {
+  margin-bottom: 8px;
+
+  margin-left: 5px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #333;
+
+  text-align: left;
+}
+
+.input-group input {
+  padding: 14px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  transition: all 0.3s;
+}
+
+.input-group input:focus {
+  outline: none;
+
+  border-color: #1890ff;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(24, 144, 255, 0.2);
+}
+
+.message {
+  text-align: center;
+
+  margin-bottom: 16px;
+
+  font-weight: 600;
+}
+
+.message.success {
+  color: green;
+}
+
+.message.error {
+  color: red;
+}
+
+.register-button {
+  background: #1890ff;
+
+  color: white;
+
+  border: none;
+
+  padding: 14px;
+
+  border-radius: 8px;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.register-button:hover {
+  background: #40a9ff;
+}
+
+.register-button:disabled {
+  background: #8dbff5;
+
+  cursor: not-allowed;
+}
+
+.register-footer {
+  text-align: center;
+
+  margin-top: 25px;
+
+  color: #888;
+
+  font-size: 14px;
+}
+
+.register-footer a {
+  color: #1890ff;
+
+  text-decoration: none;
+
+  font-weight: 600;
+}
+
