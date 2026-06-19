@@ -1,136 +1,9 @@
 import express from "express";
 import pool from "../database.js";
 // bcrypt removed: passwords will be stored/compared in plaintext per request
-import nodemailer from "nodemailer";
 
 const router = express.Router();
 
-// gửi mã xác nhận qua mail.
-router.post("/send-otp", async (req, res) => {
-  const { email } = req.body;
-
-  const otp = generateOTP();
-
-  otpStore.set(email, {
-    otp,
-    expires: Date.now() + 5 * 60 * 1000, // 5 phút
-  });
-
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-
-  await transporter.sendMail({
-    from: "Booking App",
-    to: email,
-    subject: "Mã xác nhận đăng ký",
-    text: `Mã OTP của bạn là: ${otp}`,
-  });
-
-  res.json({ success: true, message: "OTP đã gửi" });
-});
-// kiểm tra và xác nhận thông tin
-router.post("/verify-otp-register", async (req, res) => {
-  const { email, otp, full_name, phone, password } = req.body;
-
-  const record = otpStore.get(email);
-
-  if (!record) {
-    return res.status(400).json({ message: "OTP không tồn tại" });
-  }
-
-  if (record.otp !== otp || Date.now() > record.expires) {
-    return res.status(400).json({ message: "OTP sai hoặc hết hạn" });
-  }
-
-  // tạo user (lưu mật khẩu trực tiếp, không mã hóa)
-  await pool.query(
-    `INSERT INTO users(full_name, email, phone, password_hash, role)
-     VALUES ($1,$2,$3,$4,'CUSTOMER')`,
-    [full_name, email, phone, password],
-  );
-
-  otpStore.delete(email);
-
-  res.json({ success: true, message: "Đăng ký thành công" });
-});
-
-//gửi mã xác nhận cho việc quên mật khẩu
-router.post("/send-reset-otp", async (req, res) => {
-  const { email } = req.body;
-
-  try {
-    // check user tồn tại
-    const user = await pool.query("SELECT id FROM users WHERE email = $1", [
-      email,
-    ]);
-
-    if (user.rows.length === 0) {
-      return res.status(400).json({ message: "Email không tồn tại" });
-    }
-
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    otpStore.set(email, {
-      otp,
-      expires: Date.now() + 5 * 60 * 1000,
-    });
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: "Booking App",
-      to: email,
-      subject: "Mã OTP đặt lại mật khẩu",
-      text: `Mã OTP của bạn là: ${otp} (hết hạn sau 5 phút)`,
-    });
-
-    res.json({ success: true, message: "OTP đã gửi" });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Lỗi server" });
-  }
-});
-// tạo lại mật khẩu
-router.post("/reset-password", async (req, res) => {
-  const { email, otp, newPassword } = req.body;
-
-  try {
-    const record = otpStore.get(email);
-
-    if (!record) {
-      return res.status(400).json({ message: "OTP không tồn tại" });
-    }
-
-    if (record.otp !== otp || Date.now() > record.expires) {
-      return res.status(400).json({ message: "OTP sai hoặc hết hạn" });
-    }
-
-    // Lưu mật khẩu mới trực tiếp (không mã hóa)
-    await pool.query("UPDATE users SET password_hash = $1 WHERE email = $2", [
-      newPassword,
-      email,
-    ]);
-
-    otpStore.delete(email);
-
-    res.json({ success: true, message: "Đổi mật khẩu thành công" });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Lỗi server" });
-  }
-});
-// API ĐĂNG NHẬP ADMIN
 // API ĐĂNG NHẬP ADMIN - KHÔNG MÃ HÓA
 router.post("/api/admin/admin-login", async (req, res) => {
   const { email, password } = req.body;
@@ -158,6 +31,7 @@ router.post("/api/admin/admin-login", async (req, res) => {
     delete admin.password_hash;
     res.json({ success: true, admin });
   } catch (error) {
+    console.error("Lỗi đăng nhập admin:", error);
     res.status(500).json({ success: false, message: "Lỗi Server!" });
   }
 });
@@ -177,7 +51,7 @@ router.get("/api/accounts", async (req, res) => {
   }
 });
 
-// QUẢN LÝ KHÁCH SẠN (Đã đổi route thành /api/admin/hotels để tránh trùng lặp)
+// QUẢN LÝ KHÁCH SẠN
 router.get("/api/admin/hotels", async (req, res) => {
   try {
     const result = await pool.query(
@@ -217,6 +91,7 @@ router.get("/api/admin/hotels/:id/rooms", async (req, res) => {
     });
   }
 });
+
 // Xóa khách sạn
 router.delete("/api/admin/hotels/:id", async (req, res) => {
   const { id } = req.params;
@@ -236,6 +111,7 @@ router.delete("/api/admin/hotels/:id", async (req, res) => {
     res.status(500).json({ success: false, message: "Lỗi Server!" });
   }
 });
+
 // Duyệt khách sạn
 router.put("/api/admin/hotels/:id/approved", async (req, res) => {
   const { id } = req.params;
@@ -255,6 +131,7 @@ router.put("/api/admin/hotels/:id/approved", async (req, res) => {
     res.status(500).json({ success: false, message: "Lỗi Server!" });
   }
 });
+
 // Cấm khách sạn
 router.put("/api/admin/hotels/:id/banned", async (req, res) => {
   const { id } = req.params;
@@ -274,6 +151,7 @@ router.put("/api/admin/hotels/:id/banned", async (req, res) => {
     res.status(500).json({ success: false, message: "Lỗi Server!" });
   }
 });
+
 // API ĐỔI MẬT KHẨU ADMIN
 router.post("/api/change-admin-password", async (req, res) => {
   const { email, oldPassword, newPassword } = req.body;
@@ -296,14 +174,12 @@ router.post("/api/change-admin-password", async (req, res) => {
     }
 
     const user = check.rows[0];
-    // So sánh trực tiếp mật khẩu cũ
     if (oldPassword !== user.password_hash) {
       return res
         .status(401)
         .json({ success: false, message: "Mật khẩu cũ không chính xác!" });
     }
 
-    // Lưu mật khẩu mới trực tiếp (không mã hóa)
     await pool.query(
       `UPDATE users SET password_hash = $1 WHERE email = $2 AND role = $3`,
       [newPassword, email, "ADMIN"],

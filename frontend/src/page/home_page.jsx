@@ -9,8 +9,10 @@ const HomePage = () => {
   // Trả về URL công khai cho ảnh đã được chuyển vào `public/assets/anhHotel`
   const getImageUrl = (filePath) => {
     if (!filePath) return "";
-    const fp = filePath.replace(/^\/+/, ""); // xóa dấu / đầu
-    return `/assets/anhHotel/${fp}`;
+    // Use only the filename part so DB-stored paths like "uploads/h1.jpg" still map
+    const parts = filePath.split("/");
+    const fname = parts[parts.length - 1] || filePath;
+    return `/assets/anhHotel/${fname}`;
   };
 
   const [destination, setDestination] = useState("");

@@ -1,67 +1,11 @@
 import express from "express";
 import pool from "../database.js";
-import nodemailer from "nodemailer";
+// OTP/email functionality removed per request. Registration and password reset
+// are handled via direct endpoints below without OTP verification.
+
 // bcrypt removed: passwords will be stored/compared in plaintext per request
 
 const router = express.Router();
-
-// In-memory OTP store: { [email]: { otp, expiresAt, purpose } }
-const otps = {};
-
-// Configure nodemailer transporter. Uses SMTP env vars when available,
-// otherwise falls back to a test account (useful for local dev).
-let transporter;
-async function getTransporter() {
-  if (transporter) return transporter;
-
-  const host = process.env.SMTP_HOST;
-  const port = process.env.SMTP_PORT;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-
-  if (host && port && user && pass) {
-    transporter = nodemailer.createTransport({
-      host,
-      port: Number(port),
-      secure: Number(port) === 465,
-      auth: { user, pass },
-    });
-    return transporter;
-  }
-
-  // Create ethereal test account when no SMTP configured
-  const testAccount = await nodemailer.createTestAccount();
-  transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false,
-    auth: { user: testAccount.user, pass: testAccount.pass },
-  });
-  console.log("Using ethereal test account", testAccount);
-  return transporter;
-}
-
-async function sendOtpEmail(to, otp, purpose = "verify") {
-  const t = await getTransporter();
-  const subject =
-    purpose === "reset"
-      ? "Mã OTP đặt lại mật khẩu"
-      : "Mã xác thực đăng ký tài khoản";
-  const text = `Mã OTP của bạn là: ${otp}. Mã có hiệu lực trong 10 phút.`;
-
-  const info = await t.sendMail({
-    from: process.env.EMAIL_FROM || "no-reply@example.com",
-    to,
-    subject,
-    text,
-    html: `<p>${text}</p>`,
-  });
-
-  // If using ethereal, log preview URL
-  if (nodemailer.getTestMessageUrl(info)) {
-    console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
-  }
-}
 
 // LẤY DANH SÁCH TẤT CẢ KHÁCH SẠN (Public)
 router.get("/api/hotels", async (req, res) => {
@@ -263,76 +207,14 @@ router.post("/customer-login", async (req, res) => {
   }
 });
 
-// =====================
-// OTP / REGISTER FLOW
-// =====================
+// OTP routes removed. Use /api/register and /api/reset-password below.
 
-// POST /api/send-otp
-router.post("/api/send-otp", async (req, res) => {
+// Reset password WITHOUT OTP (per request)
+router.post("/api/reset-password", async (req, res) => {
   try {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Thiếu email" });
-
-    // generate 6-digit code
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
-    otps[email] = { otp, expiresAt, purpose: "register" };
-
-    await sendOtpEmail(email, otp, "register");
-
-    res.json({ success: true, message: "Đã gửi OTP" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Lỗi gửi OTP" });
-  }
-});
-
-// POST /api/verify-otp-register
-router.post("/api/verify-otp-register", async (req, res) => {
-  try {
-    const { full_name, email, phone, password, otp } = req.body;
-    if (!email || !otp || !full_name || !phone || !password)
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword)
       return res.status(400).json({ message: "Thiếu trường dữ liệu" });
-
-    const record = otps[email];
-    if (!record || record.purpose !== "register")
-      return res.status(400).json({ message: "OTP không hợp lệ" });
-
-    if (record.expiresAt < Date.now())
-      return res.status(400).json({ message: "OTP đã hết hạn" });
-    if (record.otp !== otp) return res.status(400).json({ message: "OTP sai" });
-
-    // check existing email
-    const check = await pool.query(`SELECT id FROM users WHERE email = $1`, [
-      email,
-    ]);
-    if (check.rows.length > 0)
-      return res.status(400).json({ message: "Email đã được sử dụng" });
-
-    const insert = await pool.query(
-      `INSERT INTO users (full_name, email, phone, password_hash, role, status, created_at) VALUES ($1, $2, $3, $4, 'CUSTOMER', 'ACTIVE', NOW()) RETURNING id`,
-      [full_name, email, phone, password],
-    );
-
-    // remove otp
-    delete otps[email];
-
-    res.json({
-      success: true,
-      message: "Đăng ký thành công",
-      userId: insert.rows[0].id,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Lỗi server" });
-  }
-});
-
-// POST /api/send-reset-otp
-router.post("/api/send-reset-otp", async (req, res) => {
-  try {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Thiếu email" });
 
     const userRes = await pool.query(`SELECT id FROM users WHERE email = $1`, [
       email,
@@ -340,37 +222,10 @@ router.post("/api/send-reset-otp", async (req, res) => {
     if (userRes.rows.length === 0)
       return res.status(400).json({ message: "Email không tồn tại" });
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = Date.now() + 10 * 60 * 1000;
-    otps[email] = { otp, expiresAt, purpose: "reset" };
-
-    await sendOtpEmail(email, otp, "reset");
-    res.json({ success: true, message: "Đã gửi OTP đặt lại mật khẩu" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Lỗi gửi OTP" });
-  }
-});
-
-// POST /api/reset-password
-router.post("/api/reset-password", async (req, res) => {
-  try {
-    const { email, otp, newPassword } = req.body;
-    if (!email || !otp || !newPassword)
-      return res.status(400).json({ message: "Thiếu trường dữ liệu" });
-
-    const record = otps[email];
-    if (!record || record.purpose !== "reset")
-      return res.status(400).json({ message: "OTP không hợp lệ" });
-    if (record.expiresAt < Date.now())
-      return res.status(400).json({ message: "OTP đã hết hạn" });
-    if (record.otp !== otp) return res.status(400).json({ message: "OTP sai" });
-
     await pool.query(`UPDATE users SET password_hash = $1 WHERE email = $2`, [
       newPassword,
       email,
     ]);
-    delete otps[email];
     res.json({ success: true, message: "Đổi mật khẩu thành công" });
   } catch (err) {
     console.error(err);

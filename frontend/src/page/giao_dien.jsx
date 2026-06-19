@@ -7,8 +7,9 @@ import "./locationGuides.css";
 // Trả về URL công khai cho ảnh đã được chuyển vào `public/assets/anhHotel`
 const getImageUrl = (filePath) => {
   if (!filePath) return "";
-  const fp = filePath.replace(/^\/+/, "");
-  return `/assets/anhHotel/${fp}`;
+  const parts = filePath.split("/");
+  const fname = parts[parts.length - 1] || filePath;
+  return `/assets/anhHotel/${fname}`;
 };
 const SearchResults = () => {
   const navigate = useNavigate();
