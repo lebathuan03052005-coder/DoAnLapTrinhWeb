@@ -125,7 +125,21 @@ router.post("/api/bookings/create", async (req, res) => {
     res.status(500).send("Lỗi đặt phòng");
   }
 });
-
+// Lấy danh sách ảnh của một khách sạn cụ thể
+router.get("/api/hotels/:hotelId/images", async (req, res) => {
+  try {
+    const { hotelId } = req.params;
+    // Lấy tất cả ảnh có hotel_id khớp với id khách sạn đang chọn
+    const result = await pool.query(
+      "SELECT * FROM hotel_images WHERE hotel_id = $1",
+      [hotelId],
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Lỗi lấy ảnh:", err);
+    res.status(500).json({ error: "Không thể lấy ảnh" });
+  }
+});
 // LẤY LOẠI PHÒNG THEO KHÁCH SẠN
 router.get("/api/room-types/:hotelId", async (req, res) => {
   try {

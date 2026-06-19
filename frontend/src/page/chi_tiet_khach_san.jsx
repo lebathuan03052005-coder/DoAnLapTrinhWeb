@@ -11,7 +11,7 @@ const HotelDetail = ({ hotel }) => {
       try {
         const baseUrl =
           import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-        const res = await fetch(`${baseUrl}/hotels/${hotel.id}/images`);
+        const res = await fetch(`${baseUrl}/api/hotels/${hotel.id}/images`);
 
         if (!res.ok) throw new Error("Không thể tải ảnh");
 
@@ -27,6 +27,10 @@ const HotelDetail = ({ hotel }) => {
   }, [hotel?.id]);
 
   if (!hotel) return null;
+
+  // Xử lý ảnh: Ưu tiên ảnh từ bảng hotel_images, nếu không có thì lấy ảnh chính trong bảng hotel
+  const mainImage = images[0]?.image_url || hotel.image;
+  const subImages = images.slice(1, 4);
 
   return (
     <div className="vnbk-main-content" style={{ paddingTop: "10px" }}>
@@ -47,17 +51,29 @@ const HotelDetail = ({ hotel }) => {
       <div className="hotel-gallery-grid">
         <div className="gallery-left">
           <img
-            src={images[0]?.image_url || hotel.image}
+            src={mainImage}
             alt={hotel.name}
-            style={{ width: "100%", borderRadius: "12px" }}
+            onError={(e) => {
+              e.target.src =
+                "https://via.placeholder.com/800x400?text=No+Image";
+            }}
+            style={{
+              width: "100%",
+              height: "400px",
+              objectFit: "cover",
+              borderRadius: "12px",
+            }}
           />
         </div>
         <div className="gallery-right">
-          {images.slice(1, 4).map((img) => (
+          {subImages.map((img) => (
             <div className="grid-item" key={img.id}>
               <img
                 src={img.image_url}
-                alt=""
+                alt="Hotel view"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }} // Ẩn nếu ảnh phụ bị lỗi
                 style={{
                   width: "100%",
                   height: "100%",

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./booking.css";
 import qrImage from "../assets/qr-payment.png";
+import formatCurrency from "../utils/formatCurrency";
 
 const BookingForm = () => {
   const location = useLocation();
@@ -161,7 +162,7 @@ const BookingForm = () => {
               <div className="sum-row">
                 <span className="sum-label">Giá</span>
                 <span className="sum-value">
-                  {room.base_price?.toLocaleString("vi-VN")} đ/đêm
+                  {formatCurrency(room.base_price)} đ/đêm
                 </span>
               </div>
               <div className="sum-row">
@@ -240,9 +241,9 @@ const BookingForm = () => {
             <p
               style={{ color: "#888", fontSize: "14px", marginBottom: "16px" }}
             >
-              {room.base_price?.toLocaleString("vi-VN")} đ x {nights} đêm ={" "}
+              {formatCurrency(room.base_price)} đ x {nights} đêm ={" "}
               <strong style={{ color: "#ef5b25", fontSize: "18px" }}>
-                {totalAmount?.toLocaleString("vi-VN")} đ
+                {formatCurrency(totalAmount)} đ
               </strong>
             </p>
 

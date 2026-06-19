@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import "./HotelDetail.css"; // Đảm bảo import file CSS vào đây
 import React, { useState, useEffect, useRef } from "react";
+import formatCurrency from "../utils/formatCurrency";
 import img1 from "../assets/hotel5_3.jpg";
 import img2 from "../assets/hotel5_4.jpg";
 import img3 from "../assets/hotel5_5.jpg";
@@ -63,6 +64,26 @@ const HotelDetail = () => {
   const [activeTab, setActiveTab] = useState("Tất cả");
 
   const currentMainImage = hotelGalleryData[currentImageIndex];
+
+  // Fallback images served from public folder (will be available at /assets/anhHotel/...)
+  const publicFallbacks = [
+    "/assets/anhHotel/h1.jpg",
+    "/assets/anhHotel/h2.jpg",
+    "/assets/anhHotel/h3.jpg",
+    "/assets/anhHotel/h4.jpg",
+    "/assets/anhHotel/h5.jpg",
+    "/assets/anhHotel/h10.jpg",
+    "/assets/anhHotel/h20.jpg",
+    "/assets/anhHotel/h30.jpg",
+  ];
+
+  const getFallbackForRoom = (room) => {
+    if (!Array.isArray(publicFallbacks) || publicFallbacks.length === 0)
+      return img1;
+    const seed =
+      typeof room?.id === "number" ? room.id : Math.floor(Math.random() * 1000);
+    return publicFallbacks[seed % publicFallbacks.length];
+  };
 
   const nextImage = (e) => {
     e.stopPropagation();
@@ -129,7 +150,10 @@ const HotelDetail = () => {
         </div>
         <div className="booking-price-info">
           <p className="price-text-highlight">
-            {hotel?.newPrice || "Liên hệ giá"} / đêm
+            {hotel?.newPrice
+              ? `${formatCurrency(hotel.newPrice)} đ`
+              : "Liên hệ giá"}{" "}
+            / đêm
           </p>
           <button className="btn-book-now" onClick={scrollToRooms}>
             LỰA CHỌN PHÒNG
@@ -479,7 +503,19 @@ const HotelDetail = () => {
                         "Ảnh lỗi, không load được link:",
                         room?.image,
                       );
-                      e.target.src = img1; // Tự đổi sang ảnh local nếu lỗi
+                      // Prefer a public fallback image (from /public/assets/anhHotel)
+                      const fallback = getFallbackForRoom(room);
+                      // Prevent infinite loop: only set a new src if it's different
+                      if (
+                        e.target.src !== window.location.origin + fallback &&
+                        e.target.src !== fallback
+                      ) {
+                        e.target.onerror = null;
+                        e.target.src = fallback;
+                      } else {
+                        e.target.onerror = null;
+                        e.target.src = img1; // final fallback to bundled asset
+                      }
                     }}
                     onLoad={() => console.log("Ảnh đã load OK:", room?.image)}
                   />
@@ -546,7 +582,7 @@ const HotelDetail = () => {
                       <div className="price-and-btn">
                         <div className="price-box">
                           <p className="new-price">
-                            {room.base_price?.toLocaleString("vi-VN")}đ
+                            {formatCurrency(room.base_price)} đ
                             <span className="per-night"> / đêm</span>
                           </p>
                         </div>

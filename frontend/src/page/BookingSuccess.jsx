@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./BookingSuccess.css";
+import formatCurrency from "../utils/formatCurrency";
 
 const BookingSuccess = () => {
   const { state } = useLocation();
@@ -23,7 +24,7 @@ const BookingSuccess = () => {
           <p className="hotel-address">📍 {hotel.address}</p>
           {room && (
             <p className="room-info">
-              🛏 {room.name} — {room.base_price?.toLocaleString("vi-VN")} đ/đêm
+              🛏 {room.name} — {formatCurrency(room.base_price)} đ/đêm
             </p>
           )}
         </div>

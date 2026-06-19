@@ -4,6 +4,7 @@ import "./giao_dien.css";
 import { removeDiacritics } from "./utils";
 import { locationGuides } from "./locationGuides";
 import "./locationGuides.css";
+import formatCurrency from "../utils/formatCurrency";
 // Trả về URL công khai cho ảnh đã được chuyển vào `public/assets/anhHotel`
 const getImageUrl = (filePath) => {
   if (!filePath) return "";
@@ -233,7 +234,7 @@ const SearchResults = () => {
           <div className="vnbk-filter-box">
             <h4 className="filter-title">Khoảng giá</h4>
             <p className="price-range-value">
-              0 đ — {maxPrice.toLocaleString("vi-VN")} đ
+              0 đ — {formatCurrency(maxPrice)} đ
             </p>
             <input
               type="range"
@@ -385,7 +386,7 @@ const SearchResults = () => {
 
                     <div className="hotel-price-box">
                       <p className="new-price">
-                        {hotel.price?.toLocaleString("vi-VN")} đ
+                        {formatCurrency(hotel.price)} đ
                       </p>
                       <button
                         className="btn-book"

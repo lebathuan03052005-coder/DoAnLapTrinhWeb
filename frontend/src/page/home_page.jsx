@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import "./trang_chu.css";
 import React, { useState, useEffect } from "react";
 import { removeDiacritics } from "./utils";
+import formatCurrency from "../utils/formatCurrency";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -272,9 +273,7 @@ const HomePage = () => {
                 </div>
                 <div className="price-section">
                   <p className="price-note">Giá mỗi đêm chưa gồm thuế và phí</p>
-                  <p className="price">
-                    {item.price?.toLocaleString("vi-VN")} đ
-                  </p>
+                  <p className="price">{formatCurrency(item.price)} đ</p>
                 </div>
               </div>
             </div>
@@ -318,12 +317,12 @@ const HomePage = () => {
                   <p className="promo-address">{h.address}</p>
                   <div className="promo-price-row">
                     <span className="promo-new-price">
-                      {h.price?.toLocaleString("vi-VN")} VND
+                      {formatCurrency(h.price)} VND
                     </span>
                     <span className="promo-old-price">
-                      {Math.round(
-                        h.price / (1 - h.discount / 100),
-                      ).toLocaleString("vi-VN")}{" "}
+                      {formatCurrency(
+                        Math.round(h.price / (1 - h.discount / 100)),
+                      )}{" "}
                       VND
                     </span>
                   </div>

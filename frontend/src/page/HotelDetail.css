@@ -283,6 +283,15 @@
   border-radius: 6px;
   margin-bottom: 15px;
 }
+
+/* Thumbnail class used in JSX */
+.room-thumbnail {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
 .room-specs p {
   margin: 10px 0;
   font-size: 14px;
@@ -381,6 +390,26 @@
   align-items: center;
   position: relative;
   margin-top: 25px;
+}
+
+/* Price styles */
+.price-text-highlight {
+  color: #ef5b25;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0;
+}
+.new-price {
+  color: #ef5b25;
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+}
+.per-night {
+  color: #666;
+  font-weight: 600;
+  margin-left: 6px;
+  font-size: 13px;
 }
 
 /* Tag Giảm giá 3D */
