@@ -27,9 +27,12 @@ const ChiTietKhachSan = ({ hotel }) => {
         return;
       }
       try {
-        const res = await fetch(`${API_BASE}/hotels/${hotelId}/images`);
+        const url = `${API_BASE}/hotels/${hotelId}/images`;
+        console.log("FETCH URL =", url);
+        const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+        console.log("DATA =", data);
         const normalized = (Array.isArray(data) ? data : []).map((img) => {
           const raw = img.image_url || img.url || "";
           return { ...img, publicUrl: makePublicUrl(raw) };
@@ -44,9 +47,11 @@ const ChiTietKhachSan = ({ hotel }) => {
   );
 
   useEffect(() => {
+    console.log("HOTEL =", hotel);
+    console.log("HOTEL ID =", hotel?.id);
+    // call the correct fetch function and pass hotel id
     fetchImages(hotel?.id);
-  }, [hotel?.id, fetchImages]);
-
+  }, [hotel?.id]);
   const handleFileChange = (e) => {
     const f = e.target.files?.[0] || null;
     setFileToUpload(f);

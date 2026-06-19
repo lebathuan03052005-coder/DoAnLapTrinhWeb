@@ -241,7 +241,8 @@ const HomePage = () => {
               className="property-card"
               key={item.id}
               style={{ cursor: "pointer" }}
-              onClick={() =>
+              onClick={() => {
+                console.log("NAVIGATE -> /hotel-detail (item):", item);
                 navigate("/hotel-detail", {
                   state: {
                     hotel: item,
@@ -249,8 +250,8 @@ const HomePage = () => {
                     checkOutDate,
                     guests: `${adults} người lớn, ${rooms} phòng`,
                   },
-                })
-              }
+                });
+              }}
             >
               <div className="card-image-wrapper">
                 <img src={getImageUrl(item.image)} alt={item.name} />
@@ -294,7 +295,8 @@ const HomePage = () => {
               <div
                 className="promo-card"
                 key={h.id}
-                onClick={() =>
+                onClick={() => {
+                  console.log("NAVIGATE -> /hotel-detail (promo):", h);
                   navigate("/hotel-detail", {
                     state: {
                       hotel: h,
@@ -302,8 +304,8 @@ const HomePage = () => {
                       checkOutDate,
                       guests: `${adults} người lớn, ${rooms} phòng`,
                     },
-                  })
-                }
+                  });
+                }}
               >
                 <div className="promo-badge">Tiết kiệm -{h.discount}%</div>
                 <div className="promo-img-wrapper">
