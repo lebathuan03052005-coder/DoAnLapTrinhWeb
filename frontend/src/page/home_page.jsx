@@ -255,7 +255,10 @@ const HomePage = () => {
               }
             >
               <div className="card-image-wrapper">
-                <img src={`${API_URL}/uploads/${item.image}`} alt={item.name} />
+                <img
+                  src={`/src/assets/anhHotels/${item.image}`}
+                  alt={item.name}
+                />
                 <span className="city-badge">
                   <i className="fa-solid fa-location-dot"></i> {item.city}
                 </span>
@@ -313,7 +316,7 @@ const HomePage = () => {
                 <div className="promo-badge">Tiết kiệm -{h.discount}%</div>
                 <div className="promo-img-wrapper">
                   <img
-                    src={`${API_URL}/uploads/${item.image}`}
+                    src={`/src/assets/anhHotels/${item.image}`}
                     alt={item.name}
                   />
                 </div>
