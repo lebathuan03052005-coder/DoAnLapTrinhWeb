@@ -72,9 +72,11 @@ const HotelDetail = () => {
     "/assets/anhHotel/h3.jpg",
     "/assets/anhHotel/h4.jpg",
     "/assets/anhHotel/h5.jpg",
+    "/assets/anhHotel/h6.jpg",
+    "/assets/anhHotel/h7.jpg",
+    "/assets/anhHotel/h8.jpg",
+    "/assets/anhHotel/h9.jpg",
     "/assets/anhHotel/h10.jpg",
-    "/assets/anhHotel/h20.jpg",
-    "/assets/anhHotel/h30.jpg",
   ];
 
   const getFallbackForRoom = (room) => {

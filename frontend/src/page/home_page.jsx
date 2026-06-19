@@ -1,51 +1,51 @@
 import { useNavigate } from "react-router-dom";
 import "./trang_chu.css";
 import React, { useState, useEffect } from "react";
-import { removeDiacritics } from "./utils";
 import formatCurrency from "../utils/formatCurrency";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-  // Trả về URL công khai cho ảnh đã được chuyển vào `public/assets/anhHotel`
+  // Hàm chuyển đổi đường dẫn ảnh sang URL tĩnh của Backend
   const getImageUrl = (filePath) => {
-    if (!filePath) return "";
-    // Use only the filename part so DB-stored paths like "uploads/h1.jpg" still map
-    const parts = filePath.split("/");
-    const fname = parts[parts.length - 1] || filePath;
-    return `/assets/anhHotel/${fname}`;
+    if (!filePath) return "https://via.placeholder.com/400x250?text=No+Image";
+    if (filePath.startsWith("http")) return filePath;
+    // Đồng bộ cách lấy ảnh giống bên trang chi tiết từ STATIC_BASE
+    const staticBase = API_BASE.replace(/\/api\/?$/, "");
+    const pathPart = filePath.startsWith("/") ? filePath : `/${filePath}`;
+    return `${staticBase}${pathPart}`;
   };
 
   const [destination, setDestination] = useState("");
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
-  const [hotelsData, setHotelsData] = useState([]);
+  const [hotelsData, setHotelsData] = useState([]); // Chứa dữ liệu lấy từ API
 
   const [showGuestPicker, setShowGuestPicker] = useState(false);
-  const [adults, setAdults] = useState(0);
+  const [adults, setAdults] = useState(1); // Mặc định nên là 1 người lớn
   const [children, setChildren] = useState(0);
-  const [rooms, setRooms] = useState(0);
+  const [rooms, setRooms] = useState(1); // Mặc định nên là 1 phòng
   const [activeLocation, setActiveLocation] = useState("");
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
   const locations = ["Vũng Tàu", "Đà Lạt"];
 
+  // Gọi API lấy toàn bộ danh sách khách sạn khi vào trang chủ
   useEffect(() => {
-    const fetchHotels = async () => {
+    const fetchAllHotels = async () => {
       try {
-        const baseUrl =
-          import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-        const res = await fetch(`${baseUrl}/hotels`, { cache: "no-store" });
-        if (!res.ok) throw new Error("Lỗi mạng!");
-        const data = await res.json();
-        setHotelsData(Array.isArray(data) ? data : []);
+        const res = await fetch(`${API_BASE}/hotels`); // Điều chỉnh endpoint tùy backend của bạn
+        if (res.ok) {
+          const data = await res.json();
+          setHotelsData(data);
+        }
       } catch (err) {
-        console.error("Lỗi fetch:", err);
-        setHotelsData([]);
+        console.error("Lỗi lấy danh sách khách sạn:", err);
       }
     };
-    fetchHotels();
-  }, []);
+    fetchAllHotels();
+  }, [API_BASE]);
 
   const featuredHotels = [
     ...hotelsData
@@ -60,7 +60,15 @@ const HomePage = () => {
     const location = destination.trim() || activeLocation;
     const keyword = destination.trim();
     navigate("/search", {
-      state: { location, checkInDate, checkOutDate, keyword },
+      state: {
+        location,
+        checkInDate,
+        checkOutDate,
+        keyword,
+        adults,
+        children,
+        rooms,
+      },
     });
   };
 
@@ -242,7 +250,6 @@ const HomePage = () => {
               key={item.id}
               style={{ cursor: "pointer" }}
               onClick={() => {
-                console.log("NAVIGATE -> /hotel-detail (item):", item);
                 navigate("/hotel-detail", {
                   state: {
                     hotel: item,
@@ -296,7 +303,6 @@ const HomePage = () => {
                 className="promo-card"
                 key={h.id}
                 onClick={() => {
-                  console.log("NAVIGATE -> /hotel-detail (promo):", h);
                   navigate("/hotel-detail", {
                     state: {
                       hotel: h,

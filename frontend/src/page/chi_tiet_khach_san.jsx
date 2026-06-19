@@ -13,7 +13,6 @@ const ChiTietKhachSan = ({ hotel }) => {
     (url = "") => {
       if (!url) return "";
       if (url.startsWith("http")) return url;
-      // ensure leading slash
       const pathPart = url.startsWith("/") ? url : `/${url}`;
       return `${STATIC_BASE}${pathPart}`;
     },
@@ -46,12 +45,16 @@ const ChiTietKhachSan = ({ hotel }) => {
     [API_BASE, makePublicUrl],
   );
 
+  // ĐÃ SỬA: Đổi từ fetchHotel(hotel.id) sang fetchImages(hotel.id) để khớp với hàm khai báo bên trên
   useEffect(() => {
     console.log("HOTEL =", hotel);
     console.log("HOTEL ID =", hotel?.id);
-    // call the correct fetch function and pass hotel id
-    fetchImages(hotel?.id);
-  }, [hotel?.id]);
+
+    if (hotel?.id) {
+      fetchImages(hotel.id);
+    }
+  }, [hotel?.id, fetchImages]);
+
   const handleFileChange = (e) => {
     const f = e.target.files?.[0] || null;
     setFileToUpload(f);
@@ -69,7 +72,7 @@ const ChiTietKhachSan = ({ hotel }) => {
     setUploading(true);
     try {
       const form = new FormData();
-      form.append("image", fileToUpload); // backend expects "image"
+      form.append("image", fileToUpload);
       const res = await fetch(`${API_BASE}/hotels/${hotel.id}/images`, {
         method: "POST",
         body: form,
@@ -78,7 +81,6 @@ const ChiTietKhachSan = ({ hotel }) => {
         const txt = await res.text();
         throw new Error(txt || `Upload failed (${res.status})`);
       }
-      // clear and refresh
       setFileToUpload(null);
       setPreviewSrc("");
       await fetchImages(hotel.id);
@@ -96,9 +98,9 @@ const ChiTietKhachSan = ({ hotel }) => {
   const mainImagePublic =
     images[0]?.publicUrl ||
     (hotel.image ? makePublicUrl(hotel.image) : "") ||
-    "";
+    "https://via.placeholder.com/800x400?text=No+Image";
 
-  const subImages = images.slice(1, 4);
+  const subImages = images.slice(1, 5); // Lấy tối đa khoảng 4 ảnh nhỏ bên cạnh
 
   return (
     <div className="vnbk-main-content" style={{ paddingTop: 10 }}>
@@ -119,7 +121,6 @@ const ChiTietKhachSan = ({ hotel }) => {
             src={mainImagePublic}
             alt={hotel.name || "Hotel"}
             onError={(e) => {
-              // final fallback: placeholder image
               e.currentTarget.onerror = null;
               e.currentTarget.src =
                 "https://via.placeholder.com/800x400?text=No+Image";
@@ -143,7 +144,6 @@ const ChiTietKhachSan = ({ hotel }) => {
                 src={img.publicUrl}
                 alt="thumb"
                 onError={(e) => {
-                  // hide broken thumbnail
                   e.currentTarget.style.display = "none";
                 }}
                 style={{
