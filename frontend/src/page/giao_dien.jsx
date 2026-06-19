@@ -335,7 +335,7 @@ const SearchResults = () => {
                   >
                     <div className="vnbk-image-wrapper">
                       <img
-                        src={hotel.image}
+                        src={`http://localhost:5000${hotel.thumbnail}`}
                         alt={hotel.name}
                         className="hotel-img"
                       />
