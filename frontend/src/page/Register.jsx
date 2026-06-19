@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./register.css";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
@@ -19,7 +20,7 @@ const Register = () => {
     setMessage(null);
 
     try {
-      const res = await fetch("http://localhost:5000/api/register", {
+      const res = await fetch(`${API_URL}/api/register`, {
         method: "POST",
 
         headers: {

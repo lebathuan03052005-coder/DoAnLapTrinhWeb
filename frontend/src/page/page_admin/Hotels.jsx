@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./hotels.css";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Hotels = () => {
   const [hotels, setHotels] = useState([]);
@@ -19,7 +20,7 @@ const Hotels = () => {
 
   const fetchHotels = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/admin/hotels");
+      const response = await fetch(`${API_URL}/api/admin/hotels`);
       if (response.ok) {
         const data = await response.json();
         // dữ liệu lấy về được lưu trong biến hotels
@@ -34,7 +35,7 @@ const Hotels = () => {
   const duLieuPhong = async (hotelId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/admin/hotels/${hotelId}/rooms`,
+        `${API_URL}/api/admin/hotels/${hotelId}/rooms`,
       );
       const result = await response.json();
 
@@ -57,12 +58,9 @@ const Hotels = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn xóa khách sạn này?")) return;
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/admin/hotels/${id}`,
-        {
-          method: "DELETE",
-        },
-      );
+      const response = await fetch(`${API_URL}/api/admin/hotels/${id}`, {
+        method: "DELETE",
+      });
       const data = await response.json();
       if (data.success) {
         fetchHotels();
@@ -76,10 +74,8 @@ const Hotels = () => {
     if (!window.confirm("Bạn có chắc chắn muốn duyệt khách sạn này?")) return;
     try {
       const response = await fetch(
-        `http://localhost:5000/api/admin/hotels/${id}/approved`,
-        {
-          method: "PUT",
-        },
+        `${API_URL}/api/admin/hotels/${id}/approved`,
+        { method: "PUT" },
       );
       const data = await response.json();
       if (data.success) {
@@ -94,12 +90,9 @@ const Hotels = () => {
   const handleBanned = async (id) => {
     if (!window.confirm("Bạn có chắc chắn muốn cấm khách sạn này?")) return;
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/admin/hotels/${id}/banned`,
-        {
-          method: "PUT",
-        },
-      );
+      const response = await fetch(`${API_URL}/api/admin/hotels/${id}/banned`, {
+        method: "PUT",
+      });
       const data = await response.json();
       if (data.success) {
         fetchHotels();

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ChangePassword.css";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
 
@@ -26,22 +28,19 @@ const ChangePassword = () => {
     if (!adminEmail) return;
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/change-admin-password",
-        {
-          method: "POST",
+      const response = await fetch(`${API_URL}/api/change-admin-password`, {
+        method: "POST",
 
-          headers: {
-            "Content-Type": "application/json",
-          },
-
-          body: JSON.stringify({
-            email: adminEmail,
-            oldPassword,
-            newPassword,
-          }),
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+
+        body: JSON.stringify({
+          email: adminEmail,
+          oldPassword,
+          newPassword,
+        }),
+      });
 
       const data = await response.json();
 

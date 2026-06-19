@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./giao_dien.css";
 import hotel1 from "../assets/hotel1.jpg";
 import hotel1_2 from "../assets/hotel1_2.jpg";
-import hotel1_3 from "../assets/hotel1_3.jpg"; 
+import hotel1_3 from "../assets/hotel1_3.jpg";
 import hotel1_4 from "../assets/hotel1_4.jpg";
 import hotel1_5 from "../assets/hotel1_5.jpg";
 import hotel1_6 from "../assets/hotel1_6.jpg";
@@ -17,6 +17,7 @@ import hotel2 from "../assets/hotel2.jpg";
 import hotel2_1 from "../assets/hotel2_1.jpg";
 import hotel2_2 from "../assets/hotel2_2.jpg";
 import hotel2_3 from "../assets/hotel2_3.jpg";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 import hotel2_4 from "../assets/hotel2_4.jpg";
 import hotel2_5 from "../assets/hotel2_5.jpg";
 import hotel2_6 from "../assets/hotel2_6.jpg";
@@ -113,9 +114,6 @@ import hotel10_8 from "../assets/hotel10_8.jpg";
 import hotel10_9 from "../assets/hotel10_9.jpg";
 import hotel10_10 from "../assets/hotel10_10.jpg";
 
-
-
-
 const SearchResults = () => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState("");
@@ -125,53 +123,62 @@ const SearchResults = () => {
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [rooms, setRooms] = useState(1);
-  const guestLabel = `${adults} người lớn${children > 0 ? `, ${children} trẻ em` : ''}`;
-const locationState = useLocation();
-const selectedLocation = locationState.state?.location || "Vũng Tàu";
-const effectiveLocation = selectedLocation;
-const checkIn = locationState.state?.checkInDate || "16/04/2026";
-const checkOut = locationState.state?.checkOutDate || "17/04/2026";
-const guestsFromHome = locationState.state?.guests || null;
-console.log("📍 Địa điểm hiện tại:", effectiveLocation);
+  const guestLabel = `${adults} người lớn${children > 0 ? `, ${children} trẻ em` : ""}`;
+  const locationState = useLocation();
+  const selectedLocation = locationState.state?.location || "Vũng Tàu";
+  const effectiveLocation = selectedLocation;
+  const checkIn = locationState.state?.checkInDate || "16/04/2026";
+  const checkOut = locationState.state?.checkOutDate || "17/04/2026";
+  const guestsFromHome = locationState.state?.guests || null;
+  console.log("📍 Địa điểm hiện tại:", effectiveLocation);
   const [hotelsData, setHotelsData] = useState([]);
-  const danhSachPhuong = ["Phường 1", "Phường 2", "Phường 3", "Phường 4", "Phường 5", "Phường 7", "Phường 8", "Thắng Tam"];
-  const phuongHienThi = showAllPhuong ? danhSachPhuong : danhSachPhuong.slice(0, 6);
+  const danhSachPhuong = [
+    "Phường 1",
+    "Phường 2",
+    "Phường 3",
+    "Phường 4",
+    "Phường 5",
+    "Phường 7",
+    "Phường 8",
+    "Thắng Tam",
+  ];
+  const phuongHienThi = showAllPhuong
+    ? danhSachPhuong
+    : danhSachPhuong.slice(0, 6);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(5000000);
   useEffect(() => {
-  const fetchHotels = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/hotels", {
-  cache: 'no-store'
-});
-const data = await res.json();
+    const fetchHotels = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/hotels`, { cache: "no-store" });
+        const data = await res.json();
 
-      setHotelsData(data);
-    } catch (err) {
-      console.error("Lỗi fetch:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setHotelsData(data);
+      } catch (err) {
+        console.error("Lỗi fetch:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  fetchHotels();
-}, []);
-const removeDiacritics = (str) =>
-  (str || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
+    fetchHotels();
+  }, []);
+  const removeDiacritics = (str) =>
+    (str || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
   const goToDetail = (hotel) => {
-    // Ưu tiên dùng ảnh có sẵn trong data (chứa hotel1 của bạn). 
+    // Ưu tiên dùng ảnh có sẵn trong data (chứa hotel1 của bạn).
     // Nếu khách sạn nào chưa có subImages thì mới dùng 3 link ảnh dự phòng bên dưới.
     const hotelWithSubImages = {
       ...hotel,
       subImages: hotel.subImages || [
         "https://cdn.pixabay.com/photo/2014/07/21/19/20/lobby-398845_1280.jpg",
         "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1000&auto=format&fit=crop"
-      ]
+        "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1000&auto=format&fit=crop",
+      ],
     };
     navigate("/hotel-detail", { state: { hotel: hotelWithSubImages } });
     window.scrollTo(0, 0);
@@ -181,242 +188,280 @@ const removeDiacritics = (str) =>
     <div className="vnbk-page-container">
       {/* 1. THANH TÌM KIẾM */}
       <div className="vnbk-search-bar-wrapper">
-  <div className="vnbk-search-bar">
-
-    {/* Ô địa điểm */}
-    <div className="vnbk-input-group">
-      <i className="fa-solid fa-location-dot text-muted"></i>
-      <input
-        type="text"
-        placeholder="Địa điểm hoặc tên Khách sạn"
-        value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
-      />
-    </div>
-
-    {/* Ô ngày check-in */}
-    <div className="vnbk-input-group">
-      <i className="fa-regular fa-calendar text-muted"></i>
-      <input type="text" value={checkIn} readOnly />
-    </div>
-
-    {/* Ô ngày check-out */}
-    <div className="vnbk-input-group">
-      <i className="fa-regular fa-calendar text-muted"></i>
-      <input type="text" value={checkOut} readOnly />
-    </div>
-
-    {/* Ô chọn khách */}
-    <div
-      className="vnbk-input-group"
-      style={{ position: 'relative', cursor: 'pointer' }}
-      onClick={() => setShowGuestPicker(!showGuestPicker)}
-    >
-      <i className="fa-regular fa-user text-muted"></i>
-      <input
-        type="text"
-        readOnly
-        value={`${guestLabel}, ${rooms} phòng`}
-        style={{ cursor: 'pointer', pointerEvents: 'none' }}
-      />
-      {showGuestPicker && (
-        <div
-          className="guest-dropdown-panel"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="counter-row">
-            <div>
-              <b>Người lớn</b>
-              <p>Từ 18 tuổi trở lên</p>
-            </div>
-            <div>
-              <button onClick={() => setAdults(Math.max(1, adults - 1))}>−</button>
-              <span>{adults}</span>
-              <button onClick={() => setAdults(adults + 1)}>+</button>
-            </div>
+        <div className="vnbk-search-bar">
+          {/* Ô địa điểm */}
+          <div className="vnbk-input-group">
+            <i className="fa-solid fa-location-dot text-muted"></i>
+            <input
+              type="text"
+              placeholder="Địa điểm hoặc tên Khách sạn"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
           </div>
-          <div className="counter-row">
-            <div>
-              <b>Trẻ em</b>
-              <p>Từ 0 – 17 tuổi</p>
-            </div>
-            <div>
-              <button onClick={() => setChildren(Math.max(0, children - 1))}>−</button>
-              <span>{children}</span>
-              <button onClick={() => setChildren(children + 1)}>+</button>
-            </div>
+
+          {/* Ô ngày check-in */}
+          <div className="vnbk-input-group">
+            <i className="fa-regular fa-calendar text-muted"></i>
+            <input type="text" value={checkIn} readOnly />
           </div>
-          <div className="counter-row">
-            <div>
-              <b>Phòng</b>
-              <p>Số lượng phòng</p>
-            </div>
-            <div>
-              <button onClick={() => setRooms(Math.max(1, rooms - 1))}>−</button>
-              <span>{rooms}</span>
-              <button onClick={() => setRooms(rooms + 1)}>+</button>
-            </div>
+
+          {/* Ô ngày check-out */}
+          <div className="vnbk-input-group">
+            <i className="fa-regular fa-calendar text-muted"></i>
+            <input type="text" value={checkOut} readOnly />
           </div>
-          <button className="guest-apply-btn" onClick={() => setShowGuestPicker(false)}>
-            Áp dụng
-          </button>
-        </div>
-      )}
-    </div>
 
-    <button className="vnbk-btn-search">TÌM KIẾM</button>
-  </div>
-</div>
-
-        <div className="vnbk-breadcrumbs">
-          <a href="#">Trang chủ</a> » <a href="#">Khách sạn</a> » <span className="active">Khách sạn {effectiveLocation}</span>
-        </div>
-
-        <div className="vnbk-layout">
-          {/* CỘT TRÁI: BỘ LỌC */}
-          <aside className="vnbk-sidebar">
-
-  {/* BỘ LỌC GIÁ — ĐẦU TIÊN */}
-  <div className="vnbk-filter-box">
-    <h4 className="filter-title">Khoảng giá</h4>
-    <p className="price-range-value">
-      0 đ — {maxPrice.toLocaleString("vi-VN")} đ
-    </p>
-    <input
-      type="range"
-      min="0"
-      max="5000000"
-      step="100000"
-      value={maxPrice}
-      onChange={(e) => setMaxPrice(Number(e.target.value))}
-    />
-    <div className="price-range-labels">
-      <span>0 đ</span>
-      <span>5.000.000 đ</span>
-    </div>
-  </div>
-
-  {/* HẠNG SAO */}
-  <div className="vnbk-filter-box">
-    <h4 className="filter-title">Hạng sao</h4>
-    {[5, 4, 3, 2, 1].map((star) => (
-      <label className="vnbk-checkbox-item" key={star}>
-        <input type="checkbox" /> <span>{"⭐".repeat(star)}</span>
-      </label>
-    ))}
-  </div>
-
-  {/* KHU VỰC */}
-  {/* TIỆN ÍCH */}
-<div className="vnbk-filter-box">
-  <h4 className="filter-title">Tiện ích</h4>
-  {[
-    { icon: "fa-wifi", label: "Wifi miễn phí" },
-    { icon: "fa-swimming-pool", label: "Hồ bơi" },
-    { icon: "fa-snowflake", label: "Máy lạnh" },
-    { icon: "fa-ban-smoking", label: "Không hút thuốc" },
-    { icon: "fa-dumbbell", label: "Phòng gym" },
-    { icon: "fa-spa", label: "Spa" },
-    { icon: "fa-parking", label: "Bãi đỗ xe" },
-    { icon: "fa-utensils", label: "Nhà hàng" },
-  ].map((item) => (
-    <label className="vnbk-checkbox-item" key={item.label}>
-      <input type="checkbox" />
-      <i className={`fa-solid ${item.icon}`} style={{ color: '#ef5b25', width: '16px' }}></i>
-      <span>{item.label}</span>
-    </label>
-  ))}
-</div>
-
-</aside>
-          {/* CỘT PHẢI: DANH SÁCH KHÁCH SẠN */}
-          <main className="vnbk-results">
-            <h2 className="result-title">
-  Khách sạn {effectiveLocation}
-</h2>
-
-            {isLoading ? (
-              <div className="vnbk-skeleton">
-                 <div className="skeleton-item">Đang tìm kiếm những chỗ nghỉ tốt nhất...</div>
+          {/* Ô chọn khách */}
+          <div
+            className="vnbk-input-group"
+            style={{ position: "relative", cursor: "pointer" }}
+            onClick={() => setShowGuestPicker(!showGuestPicker)}
+          >
+            <i className="fa-regular fa-user text-muted"></i>
+            <input
+              type="text"
+              readOnly
+              value={`${guestLabel}, ${rooms} phòng`}
+              style={{ cursor: "pointer", pointerEvents: "none" }}
+            />
+            {showGuestPicker && (
+              <div
+                className="guest-dropdown-panel"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="counter-row">
+                  <div>
+                    <b>Người lớn</b>
+                    <p>Từ 18 tuổi trở lên</p>
+                  </div>
+                  <div>
+                    <button onClick={() => setAdults(Math.max(1, adults - 1))}>
+                      −
+                    </button>
+                    <span>{adults}</span>
+                    <button onClick={() => setAdults(adults + 1)}>+</button>
+                  </div>
+                </div>
+                <div className="counter-row">
+                  <div>
+                    <b>Trẻ em</b>
+                    <p>Từ 0 – 17 tuổi</p>
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => setChildren(Math.max(0, children - 1))}
+                    >
+                      −
+                    </button>
+                    <span>{children}</span>
+                    <button onClick={() => setChildren(children + 1)}>+</button>
+                  </div>
+                </div>
+                <div className="counter-row">
+                  <div>
+                    <b>Phòng</b>
+                    <p>Số lượng phòng</p>
+                  </div>
+                  <div>
+                    <button onClick={() => setRooms(Math.max(1, rooms - 1))}>
+                      −
+                    </button>
+                    <span>{rooms}</span>
+                    <button onClick={() => setRooms(rooms + 1)}>+</button>
+                  </div>
+                </div>
+                <button
+                  className="guest-apply-btn"
+                  onClick={() => setShowGuestPicker(false)}
+                >
+                  Áp dụng
+                </button>
               </div>
-            ) : (
-              <div className="vnbk-real-hotel-list">
-               {hotelsData
+            )}
+          </div>
 
-  .filter((hotel) => {
-    const city = removeDiacritics(hotel.city);
-    const name = removeDiacritics(hotel.name);
-    const address = removeDiacritics(hotel.address);
+          <button className="vnbk-btn-search">TÌM KIẾM</button>
+        </div>
+      </div>
 
-    const location = removeDiacritics(effectiveLocation);
-    const key = removeDiacritics(keyword);
+      <div className="vnbk-breadcrumbs">
+        <a href="#">Trang chủ</a> » <a href="#">Khách sạn</a> »{" "}
+        <span className="active">Khách sạn {effectiveLocation}</span>
+      </div>
 
-    // FIX đúng ở đây
-   console.log("city:", city, "| location:", location, "| match:", city.includes(location));
-const matchLocation = location === "" || city.includes(location);
-    const matchKeyword =
-      key === "" ||
-      name.includes(key) ||
-      city.includes(key) ||
-      address.includes(key);
+      <div className="vnbk-layout">
+        {/* CỘT TRÁI: BỘ LỌC */}
+        <aside className="vnbk-sidebar">
+          {/* BỘ LỌC GIÁ — ĐẦU TIÊN */}
+          <div className="vnbk-filter-box">
+            <h4 className="filter-title">Khoảng giá</h4>
+            <p className="price-range-value">
+              0 đ — {maxPrice.toLocaleString("vi-VN")} đ
+            </p>
+            <input
+              type="range"
+              min="0"
+              max="5000000"
+              step="100000"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
+            />
+            <div className="price-range-labels">
+              <span>0 đ</span>
+              <span>5.000.000 đ</span>
+            </div>
+          </div>
 
-    return matchLocation && matchKeyword;
-  })
-  .map((hotel) => (
-                  <div 
-                    className="vnbk-hotel-card" 
+          {/* HẠNG SAO */}
+          <div className="vnbk-filter-box">
+            <h4 className="filter-title">Hạng sao</h4>
+            {[5, 4, 3, 2, 1].map((star) => (
+              <label className="vnbk-checkbox-item" key={star}>
+                <input type="checkbox" /> <span>{"⭐".repeat(star)}</span>
+              </label>
+            ))}
+          </div>
+
+          {/* KHU VỰC */}
+          {/* TIỆN ÍCH */}
+          <div className="vnbk-filter-box">
+            <h4 className="filter-title">Tiện ích</h4>
+            {[
+              { icon: "fa-wifi", label: "Wifi miễn phí" },
+              { icon: "fa-swimming-pool", label: "Hồ bơi" },
+              { icon: "fa-snowflake", label: "Máy lạnh" },
+              { icon: "fa-ban-smoking", label: "Không hút thuốc" },
+              { icon: "fa-dumbbell", label: "Phòng gym" },
+              { icon: "fa-spa", label: "Spa" },
+              { icon: "fa-parking", label: "Bãi đỗ xe" },
+              { icon: "fa-utensils", label: "Nhà hàng" },
+            ].map((item) => (
+              <label className="vnbk-checkbox-item" key={item.label}>
+                <input type="checkbox" />
+                <i
+                  className={`fa-solid ${item.icon}`}
+                  style={{ color: "#ef5b25", width: "16px" }}
+                ></i>
+                <span>{item.label}</span>
+              </label>
+            ))}
+          </div>
+        </aside>
+        {/* CỘT PHẢI: DANH SÁCH KHÁCH SẠN */}
+        <main className="vnbk-results">
+          <h2 className="result-title">Khách sạn {effectiveLocation}</h2>
+
+          {isLoading ? (
+            <div className="vnbk-skeleton">
+              <div className="skeleton-item">
+                Đang tìm kiếm những chỗ nghỉ tốt nhất...
+              </div>
+            </div>
+          ) : (
+            <div className="vnbk-real-hotel-list">
+              {hotelsData
+
+                .filter((hotel) => {
+                  const city = removeDiacritics(hotel.city);
+                  const name = removeDiacritics(hotel.name);
+                  const address = removeDiacritics(hotel.address);
+
+                  const location = removeDiacritics(effectiveLocation);
+                  const key = removeDiacritics(keyword);
+
+                  // FIX đúng ở đây
+                  console.log(
+                    "city:",
+                    city,
+                    "| location:",
+                    location,
+                    "| match:",
+                    city.includes(location),
+                  );
+                  const matchLocation =
+                    location === "" || city.includes(location);
+                  const matchKeyword =
+                    key === "" ||
+                    name.includes(key) ||
+                    city.includes(key) ||
+                    address.includes(key);
+
+                  return matchLocation && matchKeyword;
+                })
+                .map((hotel) => (
+                  <div
+                    className="vnbk-hotel-card"
                     key={hotel.id}
-                    style={{ cursor: 'pointer' }} 
+                    style={{ cursor: "pointer" }}
                     onClick={() => goToDetail(hotel)}
                   >
                     <div className="vnbk-image-wrapper">
-                     <img src={hotel.image} alt={hotel.name} className="hotel-img" />
+                      <img
+                        src={hotel.image}
+                        alt={hotel.name}
+                        className="hotel-img"
+                      />
                     </div>
-                    
+
                     <div className="hotel-info">
-                      <h3>{hotel.name} <span className="stars">{"⭐".repeat(hotel.stars)}</span></h3>
-                      <p><i className="fa-solid fa-location-dot"></i> {hotel.address}</p>
-                      <p className="rating-text">
-                        <strong>{hotel.rating}</strong> Tuyệt vời ({hotel.reviews} đánh giá)
+                      <h3>
+                        {hotel.name}{" "}
+                        <span className="stars">
+                          {"⭐".repeat(hotel.stars)}
+                        </span>
+                      </h3>
+                      <p>
+                        <i className="fa-solid fa-location-dot"></i>{" "}
+                        {hotel.address}
                       </p>
-                      
+                      <p className="rating-text">
+                        <strong>{hotel.rating}</strong> Tuyệt vời (
+                        {hotel.reviews} đánh giá)
+                      </p>
+
                       <div className="vnbk-amenities-icons">
-                      {(hotel.amenities || []).map((icon, index) => (
+                        {(hotel.amenities || []).map((icon, index) => (
                           <span key={index}>
-                            <i className={`fa-solid fa-${icon}`}></i> {
-                              icon === 'wifi' ? 'Wifi' : 
-                              icon === 'pool' ? 'Hồ bơi' : 
-                              icon === 'snowflake' ? 'Máy lạnh' : 
-                              icon === 'ban-smoking' ? 'Không hút thuốc' : 'Dịch vụ'
-                            }
+                            <i className={`fa-solid fa-${icon}`}></i>{" "}
+                            {icon === "wifi"
+                              ? "Wifi"
+                              : icon === "pool"
+                                ? "Hồ bơi"
+                                : icon === "snowflake"
+                                  ? "Máy lạnh"
+                                  : icon === "ban-smoking"
+                                    ? "Không hút thuốc"
+                                    : "Dịch vụ"}
                           </span>
                         ))}
-                        <span className="amenity-more">+ {Math.floor(Math.random() * 50) + 10}</span>
+                        <span className="amenity-more">
+                          + {Math.floor(Math.random() * 50) + 10}
+                        </span>
                       </div>
                     </div>
 
                     <div className="hotel-price-box">
-                   <p className="new-price">
-  {hotel.price?.toLocaleString("vi-VN")} đ
-</p>
-                     <button 
-  className="btn-book"
-  onClick={(e) => {
-    e.stopPropagation();
-    goToDetail(hotel);
-  }}
->
-  Chọn phòng
-</button>
+                      <p className="new-price">
+                        {hotel.price?.toLocaleString("vi-VN")} đ
+                      </p>
+                      <button
+                        className="btn-book"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToDetail(hotel);
+                        }}
+                      >
+                        Chọn phòng
+                      </button>
                     </div>
                   </div>
                 ))}
-              </div>
-            )}
-          </main>
-        </div>
+            </div>
+          )}
+        </main>
       </div>
-   
+    </div>
   );
 };
 

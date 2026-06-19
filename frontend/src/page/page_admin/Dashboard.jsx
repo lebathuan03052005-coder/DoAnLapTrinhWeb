@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./dashboard.css";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ pending: 0, approved: 0, banned: 0 });
@@ -7,7 +8,7 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/admin/hotels");
+      const response = await fetch(`${API_URL}/api/admin/hotels`);
       const data = await response.json();
 
       const hotels = Array.isArray(data) ? data : [];
