@@ -133,20 +133,48 @@ const HotelDetail = () => {
       {/* --- PHẦN 2: GALLERY ẢNH --- */}
       <div className="hotel-gallery-grid">
         <div className="gallery-left">
-          <img src={getGalleryImg(0)} alt="Main" />
+          <img
+            src={getGalleryImg(0)}
+            alt="Main"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = getImageUrl(hotel?.image);
+            }}
+          />
         </div>
         <div className="gallery-right">
           <div className="grid-item">
-            <img src={getGalleryImg(1)} alt="View 1" />
+            <img
+              src={getGalleryImg(1)}
+              alt="View 1"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = getImageUrl(hotel?.image);
+              }}
+            />
           </div>
           <div className="grid-item">
-            <img src={getGalleryImg(2)} alt="View 2" />
+            <img
+              src={getGalleryImg(2)}
+              alt="View 2"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = getImageUrl(hotel?.image);
+              }}
+            />
           </div>
           <div
             className="grid-item more-photos"
             onClick={() => setIsGalleryOpen(true)}
           >
-            <img src={getGalleryImg(3)} alt="View 3" />
+            <img
+              src={getGalleryImg(3)}
+              alt="View 3"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = getImageUrl(hotel?.image);
+              }}
+            />
             <div className="overlay">
               <span>Xem tất cả ảnh</span>
             </div>
@@ -863,7 +891,14 @@ const HotelDetail = () => {
                 <i className="fa-solid fa-chevron-left"></i>
               </button>
 
-              <img src={currentMainImage?.url} alt="Main View" />
+              <img
+                src={currentMainImage?.url}
+                alt="Main View"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = getImageUrl(hotel?.image);
+                }}
+              />
 
               <div className="vnbk-overlay-text-bottom">
                 <span className="vnbk-img-label">
@@ -888,17 +923,22 @@ const HotelDetail = () => {
               </button>
             </div>
 
-            <div className="vnbk-thumbnail-strip">
-              {hotelGalleryData.map((img, index) => (
-                <div
-                  key={img.id}
-                  className={`vnbk-thumb-box ${index === currentImageIndex ? "selected" : ""}`}
-                  onClick={() => setCurrentImageIndex(index)}
-                >
-                  <img src={img.url} alt={`Thumb ${img.id}`} />
-                </div>
-              ))}
-            </div>
+            {hotelGalleryData.map((img, index) => (
+              <div
+                key={img.id}
+                className={`vnbk-thumb-box ${index === currentImageIndex ? "selected" : ""}`}
+                onClick={() => setCurrentImageIndex(index)}
+              >
+                <img
+                  src={img.url}
+                  alt={`Thumb ${img.id}`}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = getImageUrl(hotel?.image);
+                  }}
+                />
+              </div>
+            ))}
           </div>
         </div>
       )}
