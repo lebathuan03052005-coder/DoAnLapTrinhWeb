@@ -99,7 +99,7 @@ const Login = () => {
               <span>Ghi nhớ</span>
             </label>
 
-            <Link to="/forgot-password">Quên mật khẩu?</Link>
+            <Link to="/forgotPassword">Quên mật khẩu?</Link>
             <Link to="/login_admin">Đăng nhập quản trị viên</Link>
           </div>
 

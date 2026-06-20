@@ -24,7 +24,7 @@ import BookingForm from "./page/booking"; // Trang đặt phòng
 import BookingSuccess from "./page/BookingSuccess";
 import MyBookings from "./page/MyBookings";
 import GuideDetail from "./page/GuideDetail";
-import ForgotPassword from "./page/forgotPassword";
+import ForgotPassword from "./page/ForgotPassword";
 import BookingsList from "./page/BookingsList";
 import MyBookings2 from "./page/MyBookings2";
 import HotelManagement from "./page/HotelManagement";
@@ -46,7 +46,7 @@ function App() {
 
       <Routes>
         {/* --- ROUTES NGƯỜI DÙNG --- */}
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/hotel-detail" element={<HotelDetail />} />
