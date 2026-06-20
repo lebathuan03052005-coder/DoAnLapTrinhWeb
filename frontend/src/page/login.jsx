@@ -19,7 +19,6 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      // Dùng API_URL thay vì localhost cứng
       const response = await fetch(`${API_URL}/customer-login`, {
         method: "POST",
         headers: {
@@ -35,7 +34,9 @@ const Login = () => {
 
       if (response.ok && data.success) {
         localStorage.setItem("isCustomerLoggedIn", "true");
+        localStorage.setItem("customerId", data.user.id);
         localStorage.setItem("customerName", data.user.full_name);
+        localStorage.setItem("customerEmail", data.user.email);
         window.dispatchEvent(new Event("userChanged"));
         navigate("/");
       } else {

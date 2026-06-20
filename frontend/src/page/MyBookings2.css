@@ -1,0 +1,260 @@
+:root {
+  --mb-navy: #003580;
+  --mb-navy-deep: #00214f;
+  --mb-orange: #ef5b25;
+  --mb-bg: #f4f6fb;
+  --mb-card: #ffffff;
+  --mb-text: #1b2436;
+  --mb-text-muted: #6b7585;
+  --mb-border: #e5e9f0;
+  --mb-green: #16a34a;
+  --mb-green-soft: #e8f7ee;
+  --mb-amber: #b45309;
+  --mb-amber-soft: #fef3e0;
+  --mb-red: #dc2626;
+  --mb-red-soft: #fdeaea;
+  --mb-radius: 16px;
+  --mb-shadow: 0 8px 24px rgba(0, 53, 128, 0.08);
+}
+
+.mb-page {
+  font-family:
+    "Inter",
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background: var(--mb-bg);
+  color: var(--mb-text);
+  min-height: 100vh;
+  padding: 32px 20px 64px;
+  box-sizing: border-box;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.mb-header {
+  margin-bottom: 26px;
+}
+
+.mb-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mb-orange);
+  margin-bottom: 6px;
+}
+
+.mb-header h1 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--mb-navy-deep);
+  letter-spacing: -0.01em;
+}
+
+.mb-header p {
+  margin: 0;
+  color: var(--mb-text-muted);
+  font-size: 14px;
+}
+
+/* ===== States ===== */
+.mb-state {
+  background: var(--mb-card);
+  border-radius: var(--mb-radius);
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--mb-text-muted);
+  font-size: 14.5px;
+  box-shadow: var(--mb-shadow);
+}
+
+.mb-state-error {
+  color: var(--mb-red);
+}
+
+.mb-empty {
+  background: var(--mb-card);
+  border-radius: var(--mb-radius);
+  box-shadow: var(--mb-shadow);
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.mb-empty-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.mb-empty h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  color: var(--mb-navy-deep);
+}
+
+.mb-empty p {
+  margin: 0 0 18px;
+  color: var(--mb-text-muted);
+  font-size: 13.5px;
+}
+
+.mb-explore-btn {
+  padding: 11px 24px;
+  border-radius: 10px;
+  border: none;
+  background: var(--mb-orange);
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.mb-explore-btn:hover {
+  filter: brightness(1.05);
+}
+
+/* ===== List & Card ===== */
+.mb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mb-card {
+  background: var(--mb-card);
+  border-radius: var(--mb-radius);
+  box-shadow: var(--mb-shadow);
+  overflow: hidden;
+  border-left: 5px solid transparent;
+}
+
+.status-edge-pending {
+  border-left-color: var(--mb-amber);
+}
+.status-edge-confirmed,
+.status-edge-paid {
+  border-left-color: var(--mb-green);
+}
+.status-edge-cancelled {
+  border-left-color: var(--mb-red);
+}
+
+.mb-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--mb-border);
+}
+
+.mb-hotel-img {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.mb-card-head-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.mb-hotel-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--mb-text);
+}
+
+.mb-hotel-address {
+  font-size: 12.5px;
+  color: var(--mb-text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mb-card-body {
+  padding: 14px 18px;
+}
+
+.mb-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 13.5px;
+}
+
+.mb-info-label {
+  color: var(--mb-text-muted);
+  flex-shrink: 0;
+}
+
+.mb-info-value {
+  text-align: right;
+  font-weight: 600;
+}
+
+.mb-total-row {
+  border-top: 1px dashed var(--mb-border);
+  margin-top: 6px;
+  padding-top: 12px;
+}
+
+.mb-total-value {
+  font-weight: 800;
+  font-size: 17px;
+  color: var(--mb-orange);
+}
+
+.mb-card-footer {
+  padding: 10px 18px;
+  background: #fafbff;
+  font-size: 11.5px;
+  color: var(--mb-text-muted);
+  text-align: right;
+}
+
+/* ===== Status pill ===== */
+.mb-pill {
+  display: inline-block;
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mb-pill-pending {
+  background: var(--mb-amber-soft);
+  color: var(--mb-amber);
+}
+
+.mb-pill-confirmed {
+  background: var(--mb-green-soft);
+  color: var(--mb-green);
+}
+
+.mb-pill-cancelled {
+  background: var(--mb-red-soft);
+  color: var(--mb-red);
+}
+
+/* ===== Accessibility ===== */
+.mb-explore-btn:focus-visible {
+  outline: 3px solid rgba(0, 53, 128, 0.35);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mb-explore-btn {
+    transition: none;
+  }
+}

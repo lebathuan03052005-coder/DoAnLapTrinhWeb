@@ -26,6 +26,7 @@ import MyBookings from "./page/MyBookings";
 import GuideDetail from "./page/GuideDetail";
 import ForgotPassword from "./page/ForgotPassword";
 import BookingsList from "./page/BookingsList";
+import MyBookings2 from "./page/MyBookings2";
 
 // --- TRANG QUẢN TRỊ (ADMIN) ---
 import AdminLayout from "./page/page_admin/adminLayOut";
@@ -53,6 +54,7 @@ function App() {
         <Route path="/my-bookings" element={<MyBookings />} />
         <Route path="/guide/:id" element={<GuideDetail />} />
         <Route path="/bookingsList" element={<BookingsList />} />
+        <Route path="/mybookings2" element={<MyBookings2 />} />
 
         {/* --- ROUTES ADMIN --- */}
         <Route path="/login_admin" element={<LoginAdmin />} />

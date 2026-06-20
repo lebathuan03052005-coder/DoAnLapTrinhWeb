@@ -34,22 +34,24 @@ const BookingForm = () => {
 
   const totalAmount = room?.base_price * nights;
   const handlePaymentConfirm = async () => {
-    // Kiểm tra thông tin
     if (!guestName || !guestPhone || !guestEmail) {
       alert("Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
     try {
-      // Sử dụng biến môi trường VITE_API_URL
       const baseUrl =
         import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+      // Lấy id khách hàng đang đăng nhập (nếu có)
+      const customerId = localStorage.getItem("customerId");
 
       const res = await fetch(`${baseUrl}/bookings/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           hotel_id: hotel.id,
+          user_id: customerId || null, // gắn booking với user đang đăng nhập
           guest_name: guestName,
           guest_phone: guestPhone,
           guest_email: guestEmail,
@@ -64,7 +66,6 @@ const BookingForm = () => {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // Kiểm tra cả res.ok để chắc chắn server phản hồi 200 OK
         setShowQR(false);
         navigate("/booking-success", {
           state: { hotel, room, checkIn, checkOut, guests, totalAmount },
