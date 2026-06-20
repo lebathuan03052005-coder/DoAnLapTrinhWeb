@@ -114,6 +114,9 @@ const Navbar = () => {
                   <button>Phòng đã đặt</button>
                 </Link>
                 <Link to="/hotelManagement">
+                  <button> Quản lý khách sạn </button>
+                </Link>
+                <Link to="/bookingManagement">
                   <button>Quản lý phòng </button>
                 </Link>
                 <button onClick={handleLogout}>Đăng xuất</button>

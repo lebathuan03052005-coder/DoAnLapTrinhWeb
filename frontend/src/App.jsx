@@ -29,6 +29,7 @@ import BookingsList from "./page/BookingsList";
 import MyBookings2 from "./page/MyBookings2";
 import HotelManagement from "./page/HotelManagement ";
 import BookingActions from "./page/BookingActions";
+import BookingManagement from "./page/BookingManagement ";
 
 // --- TRANG QUẢN TRỊ (ADMIN) ---
 import AdminLayout from "./page/page_admin/adminLayOut";
@@ -59,6 +60,7 @@ function App() {
         <Route path="/mybookings2" element={<MyBookings2 />} />
         <Route path="/hotelManagement" element={<HotelManagement />} />
         <Route path="/bookingAction" element={<BookingActions />} />
+        <Route path="/bookingManagement" element={<BookingManagement />} />
 
         {/* --- ROUTES ADMIN --- */}
         <Route path="/login_admin" element={<LoginAdmin />} />
