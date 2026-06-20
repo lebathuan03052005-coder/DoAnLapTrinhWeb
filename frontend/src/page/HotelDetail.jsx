@@ -53,13 +53,27 @@ const HotelDetail = () => {
     roomSectionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const hotelGalleryData =
-    hotel?.subImages?.map((imgUrl, index) => ({
-      id: index + 1,
-      url: getImageUrl(imgUrl),
-      category: "Khách sạn",
-    })) || [];
+  // Gộp ảnh đại diện khách sạn + ảnh của tất cả các loại phòng khách sạn này quản lý
+  const roomImages = rooms
+    .map((room) => room?.image?.split("\n")[0]?.trim())
+    .filter(Boolean);
 
+  const hotelGalleryData = [
+    hotel?.image && {
+      id: 0,
+      url: getImageUrl(hotel.image),
+      category: "Khách sạn",
+    },
+    ...roomImages.map((img, index) => ({
+      id: index + 1,
+      url: getImageUrl(img),
+      category: "Phòng",
+    })),
+  ].filter(Boolean);
+
+  // Lấy ảnh theo vị trí, nếu chưa đủ ảnh thì fallback về ảnh khách sạn
+  const getGalleryImg = (index) =>
+    hotelGalleryData[index]?.url || getImageUrl(hotel?.image);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("Tất cả");
@@ -119,27 +133,26 @@ const HotelDetail = () => {
       {/* --- PHẦN 2: GALLERY ẢNH --- */}
       <div className="hotel-gallery-grid">
         <div className="gallery-left">
-          <img src={getImageUrl(hotel?.mainImage)} alt="Main" />
+          <img src={getGalleryImg(0)} alt="Main" />
         </div>
         <div className="gallery-right">
           <div className="grid-item">
-            <img src={getImageUrl(hotel?.subImages?.[0])} alt="View 1" />
+            <img src={getGalleryImg(1)} alt="View 1" />
           </div>
           <div className="grid-item">
-            <img src={getImageUrl(hotel?.subImages?.[1])} alt="View 2" />
+            <img src={getGalleryImg(2)} alt="View 2" />
           </div>
           <div
             className="grid-item more-photos"
             onClick={() => setIsGalleryOpen(true)}
           >
-            <img src={getImageUrl(hotel?.subImages?.[2])} alt="View 3" />
+            <img src={getGalleryImg(3)} alt="View 3" />
             <div className="overlay">
               <span>Xem tất cả ảnh</span>
             </div>
           </div>
         </div>
       </div>
-
       {/* --- PHẦN 3: TIÊU ĐỀ & GIÁ --- */}
       <div className="detail-booking-section">
         <div>

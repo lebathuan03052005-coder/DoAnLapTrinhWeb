@@ -338,8 +338,7 @@ const SearchResults = () => {
                   >
                     <div className="vnbk-image-wrapper">
                       <img
-                        // Sử dụng ảnh từ public/assets/anhHotel
-                        src={getImageUrl(hotel.thumbnail)}
+                        src={getImageUrl(hotel.image)}
                         alt={hotel.name}
                         className="hotel-img"
                       />
