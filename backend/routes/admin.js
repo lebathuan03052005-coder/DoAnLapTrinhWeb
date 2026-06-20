@@ -5,11 +5,152 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import nodemailer from "nodemailer";
-
+import { sendResetCodeEmail } from "../mailer.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadDir = path.join(__dirname, "..", "uploads");
 
 const router = express.Router();
+function generateOtp() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+// BƯỚC 1: Gửi mã OTP về email của tài khoản (áp dụng cho cả ADMIN và CUSTOMER)
+router.post("/api/auth/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Vui lòng nhập email!" });
+  }
+
+  try {
+    const userResult = await pool.query(
+      `SELECT id, email, full_name FROM users WHERE email = $1`,
+      [email],
+    );
+
+    if (userResult.rows.length === 0) {
+      // Không tiết lộ email có tồn tại hay không, tránh dò email người khác
+      return res.json({
+        success: true,
+        message: "Nếu email tồn tại, mã xác nhận đã được gửi!",
+      });
+    }
+
+    const otp = generateOtp();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 phút
+
+    await pool.query(
+      `UPDATE users SET reset_code = $1, reset_code_expires = $2 WHERE email = $3`,
+      [otp, expiresAt, email],
+    );
+
+    await sendResetCodeEmail(email, otp);
+
+    res.json({
+      success: true,
+      message: "Mã xác nhận đã được gửi đến email của bạn!",
+    });
+  } catch (error) {
+    console.error("Lỗi gửi mã khôi phục:", error);
+    res.status(500).json({ success: false, message: "Lỗi Server!" });
+  }
+});
+
+// BƯỚC 2 (tùy chọn): Xác nhận mã OTP trước khi cho nhập mật khẩu mới
+router.post("/api/auth/verify-reset-code", async (req, res) => {
+  const { email, code } = req.body;
+
+  if (!email || !code) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Thiếu thông tin xác nhận!" });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT reset_code, reset_code_expires FROM users WHERE email = $1`,
+      [email],
+    );
+
+    if (result.rows.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Mã không hợp lệ!" });
+    }
+
+    const user = result.rows[0];
+
+    if (!user.reset_code || user.reset_code !== code) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Mã xác nhận không đúng!" });
+    }
+
+    if (new Date() > new Date(user.reset_code_expires)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Mã xác nhận đã hết hạn!" });
+    }
+
+    res.json({ success: true, message: "Mã hợp lệ!" });
+  } catch (error) {
+    console.error("Lỗi xác nhận mã:", error);
+    res.status(500).json({ success: false, message: "Lỗi Server!" });
+  }
+});
+
+// BƯỚC 3: Đặt lại mật khẩu mới bằng mã OTP đã xác nhận
+router.post("/api/auth/reset-password", async (req, res) => {
+  const { email, code, newPassword } = req.body;
+
+  if (!email || !code || !newPassword) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Vui lòng nhập đầy đủ thông tin!" });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT reset_code, reset_code_expires FROM users WHERE email = $1`,
+      [email],
+    );
+
+    if (result.rows.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Mã không hợp lệ!" });
+    }
+
+    const user = result.rows[0];
+
+    if (!user.reset_code || user.reset_code !== code) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Mã xác nhận không đúng!" });
+    }
+
+    if (new Date() > new Date(user.reset_code_expires)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Mã xác nhận đã hết hạn!" });
+    }
+
+    // Đổi mật khẩu mới + xóa mã OTP đã dùng
+    await pool.query(
+      `UPDATE users 
+       SET password_hash = $1, reset_code = NULL, reset_code_expires = NULL 
+       WHERE email = $2`,
+      [newPassword, email],
+    );
+
+    res.json({ success: true, message: "Đặt lại mật khẩu thành công!" });
+  } catch (error) {
+    console.error("Lỗi đặt lại mật khẩu:", error);
+    res.status(500).json({ success: false, message: "Lỗi Server!" });
+  }
+});
 
 // API ĐĂNG NHẬP ADMIN
 router.post("/api/admin/admin-login", async (req, res) => {
