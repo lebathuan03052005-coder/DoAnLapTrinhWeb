@@ -35,7 +35,7 @@ import Hotels from "./page/page_admin/Hotels";
 import Accounts from "./page/page_admin/Accounts";
 import ChangePassword from "./page/page_admin/ChangePassword";
 import LoginAdmin from "./page/page_admin/login_admin";
-
+import HotelManagement from "./page/page_admin/HotelManagement ";
 function App() {
   return (
     <Router>
@@ -64,6 +64,7 @@ function App() {
           <Route path="hotels" element={<Hotels />} />
           <Route path="accounts" element={<Accounts />} />
           <Route path="change-password" element={<ChangePassword />} />
+          <Route path="hotelManagement" element={<HotelManagement />} />
         </Route>
       </Routes>
 

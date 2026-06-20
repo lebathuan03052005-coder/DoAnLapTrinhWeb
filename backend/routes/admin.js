@@ -44,12 +44,10 @@ router.post("/api/admin/admin-login", async (req, res) => {
     }
 
     if (!match) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Sai tài khoản hoặc mật khẩu Admin!",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Sai tài khoản hoặc mật khẩu Admin!",
+      });
     }
 
     delete admin.password_hash;
@@ -74,7 +72,74 @@ router.get("/api/accounts", async (req, res) => {
       .json({ success: false, message: "Lỗi khi lấy danh sách tài khoản!" });
   }
 });
-
+// Thêm khách sạn mới
+router.post("/api/admin/hotels", async (req, res) => {
+  const { name, city, address, description, stars, price, status } = req.body;
+  if (!name || !city || !address)
+    return res
+      .status(400)
+      .json({ success: false, message: "Thiếu thông tin bắt buộc!" });
+  try {
+    const result = await pool.query(
+      `INSERT INTO hotels (name, city, address, description, stars, price, status, created_at, updated_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,NOW(),NOW()) RETURNING id`,
+      [
+        name,
+        city,
+        address,
+        description || "",
+        stars || 3,
+        price || null,
+        status || "pending",
+      ],
+    );
+    res.json({
+      success: true,
+      message: "Thêm khách sạn thành công!",
+      id: result.rows[0].id,
+    });
+  } catch (error) {
+    console.error("Lỗi thêm khách sạn:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Lỗi Server: " + error.message });
+  }
+});
+// Sửa thông tin khách sạn
+router.put("/api/admin/hotels/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, city, address, description, stars, price, status } = req.body;
+  if (!name || !city || !address)
+    return res
+      .status(400)
+      .json({ success: false, message: "Thiếu thông tin bắt buộc!" });
+  try {
+    const result = await pool.query(
+      `UPDATE hotels SET name=$1, city=$2, address=$3, description=$4, stars=$5, price=$6, status=$7, updated_at=NOW()
+       WHERE id=$8 RETURNING id`,
+      [
+        name,
+        city,
+        address,
+        description || "",
+        stars || 3,
+        price || null,
+        status || "pending",
+        id,
+      ],
+    );
+    if (result.rowCount === 0)
+      return res
+        .status(404)
+        .json({ success: false, message: "Không tìm thấy khách sạn!" });
+    res.json({ success: true, message: "Cập nhật khách sạn thành công!" });
+  } catch (error) {
+    console.error("Lỗi sửa khách sạn:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Lỗi Server: " + error.message });
+  }
+});
 // QUẢN LÝ KHÁCH SẠN
 router.get("/api/admin/hotels", async (req, res) => {
   try {

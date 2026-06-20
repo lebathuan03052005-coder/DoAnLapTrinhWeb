@@ -13,6 +13,7 @@ const AdminLayout = () => {
     { path: "/admin/hotels", label: "Quản lý khách sạn" },
     { path: "/admin/accounts", label: "Quản lý tài khoản" },
     { path: "/admin/change-password", label: "Đổi mật khẩu" },
+    { path: "/admin/hotelManagement", label: "Quản lý khách sạn" },
   ];
 
   useEffect(() => {
