@@ -1,9 +1,9 @@
 import express from "express";
 import pool from "../database.js";
+import bcrypt from "bcrypt";
+
 // OTP/email functionality removed per request. Registration and password reset
 // are handled via direct endpoints below without OTP verification.
-
-// bcrypt removed: passwords will be stored/compared in plaintext per request
 
 const router = express.Router();
 
@@ -194,23 +194,35 @@ router.post("/customer-login", async (req, res) => {
     console.log("Mật khẩu nhập vào:", password);
     console.log("Password hash trong DB:", user.password_hash);
 
-    // So sánh trực tiếp mật khẩu (không mã hóa)
-    console.log("Kết quả so sánh:", password === user.password_hash);
-
-    if (password !== user.password_hash) {
-      return res.status(401).json({
-        success: false,
-        message: "Sai tài khoản hoặc mật khẩu",
-      });
+    const stored = user.password_hash || "";
+    let match = false;
+    if (stored && stored.startsWith("$2")) {
+      match = await bcrypt.compare(password, stored);
+    } else {
+      match = password === stored;
+      if (match) {
+        // upgrade plaintext to bcrypt
+        try {
+          const newHash = await bcrypt.hash(password, 10);
+          await pool.query(
+            `UPDATE users SET password_hash = $1 WHERE id = $2`,
+            [newHash, user.id],
+          );
+        } catch (e) {
+          console.error("Failed to upgrade user password hash:", e);
+        }
+      }
     }
 
-    // xóa password trước khi trả về
+    if (!match) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Sai tài khoản hoặc mật khẩu" });
+    }
+
     delete user.password_hash;
 
-    res.json({
-      success: true,
-      user,
-    });
+    res.json({ success: true, user });
   } catch (err) {
     console.log(err);
 
@@ -236,8 +248,9 @@ router.post("/api/reset-password", async (req, res) => {
     if (userRes.rows.length === 0)
       return res.status(400).json({ message: "Email không tồn tại" });
 
+    const newHash = await bcrypt.hash(newPassword, 10);
     await pool.query(`UPDATE users SET password_hash = $1 WHERE email = $2`, [
-      newPassword,
+      newHash,
       email,
     ]);
     res.json({ success: true, message: "Đổi mật khẩu thành công" });
@@ -270,9 +283,10 @@ router.post("/api/register", async (req, res) => {
     }
 
     // Lưu user mới (lưu mật khẩu trực tiếp, không mã hóa)
+    const hash = await bcrypt.hash(password, 10);
     const insertResult = await pool.query(
       `INSERT INTO users (full_name, email, phone, password_hash, role, status, created_at) VALUES ($1, $2, $3, $4, 'CUSTOMER', 'ACTIVE', NOW()) RETURNING id`,
-      [full_name, email, phone, password],
+      [full_name, email, phone, hash],
     );
 
     const userId = insertResult.rows[0].id;

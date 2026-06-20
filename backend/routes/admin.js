@@ -1,6 +1,6 @@
 import express from "express";
 import pool from "../database.js";
-// bcrypt removed: passwords will be stored/compared in plaintext per request
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
@@ -21,11 +21,35 @@ router.post("/api/admin/admin-login", async (req, res) => {
     }
 
     const admin = result.rows[0];
-    if (password !== admin.password_hash) {
-      return res.status(401).json({
-        success: false,
-        message: "Sai tài khoản hoặc mật khẩu Admin!",
-      });
+    const stored = admin.password_hash || "";
+    let match = false;
+
+    if (stored && stored.startsWith("$2")) {
+      match = await bcrypt.compare(password, stored);
+    } else {
+      // plaintext fallback for existing accounts
+      match = password === stored;
+      // if plaintext matched, upgrade to bcrypt hash
+      if (match) {
+        const newHash = await bcrypt.hash(password, 10);
+        try {
+          await pool.query(
+            `UPDATE users SET password_hash = $1 WHERE id = $2`,
+            [newHash, admin.id],
+          );
+        } catch (e) {
+          console.error("Failed to upgrade admin password hash:", e);
+        }
+      }
+    }
+
+    if (!match) {
+      return res
+        .status(401)
+        .json({
+          success: false,
+          message: "Sai tài khoản hoặc mật khẩu Admin!",
+        });
     }
 
     delete admin.password_hash;
@@ -174,15 +198,24 @@ router.post("/api/change-admin-password", async (req, res) => {
     }
 
     const user = check.rows[0];
-    if (oldPassword !== user.password_hash) {
+    const stored = user.password_hash || "";
+    let match = false;
+    if (stored && stored.startsWith("$2")) {
+      match = await bcrypt.compare(oldPassword, stored);
+    } else {
+      match = oldPassword === stored;
+    }
+
+    if (!match) {
       return res
         .status(401)
         .json({ success: false, message: "Mật khẩu cũ không chính xác!" });
     }
 
+    const newHash = await bcrypt.hash(newPassword, 10);
     await pool.query(
       `UPDATE users SET password_hash = $1 WHERE email = $2 AND role = $3`,
-      [newPassword, email, "ADMIN"],
+      [newHash, email, "ADMIN"],
     );
     res.json({ success: true, message: "Đổi mật khẩu thành công!" });
   } catch (error) {
