@@ -11,7 +11,7 @@ const uploadDir = path.join(__dirname, "..", "uploads");
 
 const router = express.Router();
 
-// API ĐĂNG NHẬP ADMIN - KHÔNG MÃ HÓA
+// API ĐĂNG NHẬP ADMIN
 router.post("/api/admin/admin-login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -77,6 +77,48 @@ router.get("/api/accounts", async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Lỗi khi lấy danh sách tài khoản!" });
+  }
+});
+
+// CẬP NHẬT TÀI KHOẢN khách hàng
+router.put("/api/accounts/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const { full_name, email, phone, role } = req.body;
+
+  try {
+    const result = await pool.query(
+      `
+      UPDATE users
+      SET
+        full_name=$1,
+        email=$2,
+        phone=$3,
+        role=$4
+      WHERE id=$5
+      RETURNING id, full_name, email, phone, role
+      `,
+      [full_name, email, phone, role.toUpperCase(), id],
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy tài khoản",
+      });
+    }
+
+    res.json({
+      success: true,
+      user: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Lỗi cập nhật tài khoản:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 });
 // Thêm khách sạn mới

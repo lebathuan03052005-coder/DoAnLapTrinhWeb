@@ -159,8 +159,8 @@ const Accounts = () => {
                               }))
                             }
                           >
-                            <option value="user">user</option>
-                            <option value="admin">admin</option>
+                            <option value="CUSTOMER">CUSTOMER</option>
+                            <option value="ADMIN">ADMIN</option>
                           </select>
                         </div>
 
