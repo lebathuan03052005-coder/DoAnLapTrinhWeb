@@ -81,7 +81,7 @@ const Navbar = () => {
         {/* Bổ sung link Đặt phòng của tôi nếu đã login */}
         {userType && (
           <li>
-            <Link to="/my-bookings">Đặt Phòng Của Tôi</Link>
+            <Link to="/bookingsList">Đặt Phòng Của Tôi</Link>
           </li>
         )}
       </ul>
