@@ -290,7 +290,7 @@ router.get("/hotels", async (req, res) => {
     const result = await pool.query(`
             SELECT h.*, 
             COALESCE((SELECT image_url FROM hotel_images hi WHERE hi.hotel_id = h.id LIMIT 1), 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800') AS image
-            FROM Hotels h
+            FROM hotels h
         `);
     res.json(result.rows);
   } catch (err) {
