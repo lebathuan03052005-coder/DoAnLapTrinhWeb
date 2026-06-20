@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "./forgotPassword.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://doanlaptrinhweb-4n3f.onrender.com";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
@@ -55,35 +55,58 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="forgot-page">
-      <div className="forgot-card">
-        <h2>Đặt lại mật khẩu</h2>
+    <div className="fp-container">
+      <div className="fp-card">
+        <h2 className="fp-title">Đặt lại mật khẩu</h2>
+        <p className="fp-subtitle">Nhập thông tin để cập nhật mật khẩu mới</p>
 
+        {/* Hiển thị thông báo (thành công/lỗi) */}
         {message && (
-          <div className={`message ${message.type}`}>{message.text}</div>
+          <div className={`fp-message ${message.type}`}>{message.text}</div>
         )}
 
-        <div className="form">
-          <input
-            placeholder="Nhập email của bạn"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+        <div className="fp-form">
+          {/* Input Email */}
+          <div className="fp-field">
+            <label>Email tài khoản</label>
+            <input
+              className="fp-input"
+              placeholder="example@gmail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="Mật khẩu mới"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Xác nhận mật khẩu"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
+          {/* Input Mật khẩu mới */}
+          <div className="fp-field">
+            <label>Mật khẩu mới</label>
+            <input
+              className="fp-input"
+              type="password"
+              placeholder="••••••••"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
 
-          <button onClick={handleResetPassword} disabled={loading}>
+          {/* Input Xác nhận */}
+          <div className="fp-field">
+            <label>Xác nhận mật khẩu</label>
+            <input
+              className="fp-input"
+              type="password"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
+
+          {/* Nút hành động */}
+          <button
+            className="fp-button"
+            onClick={handleResetPassword}
+            disabled={loading}
+          >
             {loading ? "Đang xử lý..." : "Cập nhật mật khẩu"}
           </button>
         </div>

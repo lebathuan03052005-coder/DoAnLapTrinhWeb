@@ -294,8 +294,8 @@ export default function HotelManagement() {
             <div className="hm-modal-header">
               <h2>
                 {modal === "add"
-                  ? "➕ Thêm khách sạn mới"
-                  : "✏️ Sửa thông tin khách sạn"}
+                  ? " Thêm khách sạn mới"
+                  : " Sửa thông tin khách sạn"}
               </h2>
               <button className="hm-close" onClick={closeModal}>
                 ✕
@@ -391,8 +391,8 @@ export default function HotelManagement() {
                 {formLoading
                   ? "Đang lưu..."
                   : modal === "add"
-                    ? "➕ Thêm mới"
-                    : "💾 Lưu thay đổi"}
+                    ? " Thêm mới"
+                    : " Lưu thay đổi"}
               </button>
             </div>
           </div>
@@ -412,7 +412,7 @@ export default function HotelManagement() {
             ↻ Làm mới
           </button>
           <button className="hm-btn hm-btn--add" onClick={openAdd}>
-            ➕ Thêm khách sạn
+            Thêm khách sạn
           </button>
         </div>
       </div>

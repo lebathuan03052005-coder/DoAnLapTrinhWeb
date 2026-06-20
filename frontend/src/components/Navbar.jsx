@@ -111,10 +111,10 @@ const Navbar = () => {
             {menuOpen && (
               <div className="account-menu">
                 <Link to="/bookingsList">
-                  <button>Đặt phòng của tôi</button>
+                  <button>Phòng đã đặt</button>
                 </Link>
                 <Link to="/hotelManagement">
-                  <button>Quản lý phòng</button>
+                  <button>Quản lý phòng </button>
                 </Link>
                 <button onClick={handleLogout}>Đăng xuất</button>
               </div>
