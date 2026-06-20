@@ -209,21 +209,52 @@ router.get("/api/bookings/user/:userId", async (req, res) => {
   }
 });
 
-// (Tùy chọn) Cập nhật trạng thái booking — dùng cho nút xác nhận/hủy trên trang admin
+// Cập nhật trạng thái booking — dùng cho nút xác nhận/hủy trên trang quản lý khách sạn
+// Chỉ user là chủ khách sạn đó (hotels.partner_id) mới được đổi trạng thái booking thuộc khách sạn mình
 router.put("/api/bookings/:id/status", async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body; // PENDING | CONFIRMED | CANCELLED
+  const { status, userId } = req.body; // PENDING | CONFIRMED | CANCELLED, userId = người đang đăng nhập
+
+  if (!userId) {
+    return res.status(401).json({
+      success: false,
+      message: "Thiếu thông tin người dùng, vui lòng đăng nhập lại",
+    });
+  }
 
   try {
     const result = await pool.query(
-      `UPDATE bookings SET status = $1 WHERE id = $2 RETURNING id`,
-      [status, id],
+      `UPDATE bookings b
+       SET status = $1
+       FROM hotels h
+       WHERE b.id = $2
+         AND b.hotel_id = h.id
+         AND h.partner_id = $3
+       RETURNING b.id`,
+      [status, id, userId],
     );
+
     if (result.rowCount === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Không tìm thấy đơn đặt phòng!" });
+      // Phân biệt rõ lý do thất bại: không tồn tại hay không có quyền
+      const check = await pool.query(
+        `SELECT b.id, h.partner_id FROM bookings b
+         JOIN hotels h ON h.id = b.hotel_id
+         WHERE b.id = $1`,
+        [id],
+      );
+
+      if (check.rows.length === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Không tìm thấy đơn đặt phòng!" });
+      }
+
+      return res.status(403).json({
+        success: false,
+        message: "Bạn không có quyền cập nhật đơn đặt phòng của khách sạn này",
+      });
     }
+
     res.json({ success: true, message: "Cập nhật trạng thái thành công!" });
   } catch (error) {
     console.error("Lỗi cập nhật trạng thái:", error);
@@ -509,26 +540,7 @@ router.get("/api/bookings", async (req, res) => {
   }
 });
 
-// (Tùy chọn) Cập nhật trạng thái booking — dùng cho nút xác nhận/hủy trên trang admin
-router.put("/api/bookings/:id/status", async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body; // PENDING | CONFIRMED | CANCELLED
-
-  try {
-    const result = await pool.query(
-      `UPDATE bookings SET status = $1 WHERE id = $2 RETURNING id`,
-      [status, id],
-    );
-    if (result.rowCount === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Không tìm thấy đơn đặt phòng!" });
-    }
-    res.json({ success: true, message: "Cập nhật trạng thái thành công!" });
-  } catch (error) {
-    console.error("Lỗi cập nhật trạng thái:", error);
-    res.status(500).json({ success: false, message: "Lỗi Server!" });
-  }
-});
+// Route PUT /api/bookings/:id/status đã được định nghĩa đầy đủ (kèm kiểm tra quyền) ở phía trên.
+// Đã xóa bản định nghĩa trùng lặp ở đây để tránh nhầm lẫn.
 
 export default router;
