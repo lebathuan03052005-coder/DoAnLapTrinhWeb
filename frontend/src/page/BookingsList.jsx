@@ -48,7 +48,7 @@ const BookingsList = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${baseUrl}/bookings`);
+      const res = await fetch(`${baseUrl}/api/bookings`);
       const data = await res.json();
       if (res.ok && data.success) {
         setBookings(data.bookings || []);
@@ -92,9 +92,9 @@ const BookingsList = () => {
     <div className="bk-page">
       <header className="bk-header">
         <div className="bk-header-text">
-          <span className="bk-eyebrow">Quản lý vận hành</span>
+          <span className="bk-eyebrow">Quản lý phòng đã đặt</span>
           <h1>Đơn đặt phòng</h1>
-          <p>Toàn bộ thông tin khách hàng đã gửi sau khi hoàn tất đặt phòng.</p>
+          <p>Toàn bộ thông tin đặt bàn của bạn.</p>
         </div>
         <div className="bk-count-card">
           <span className="bk-count-number">{bookings.length}</span>
