@@ -27,6 +27,7 @@ import GuideDetail from "./page/GuideDetail";
 import ForgotPassword from "./page/ForgotPassword";
 import BookingsList from "./page/BookingsList";
 import MyBookings2 from "./page/MyBookings2";
+import HotelManagement from "./page/HotelManagement ";
 
 // --- TRANG QUẢN TRỊ (ADMIN) ---
 import AdminLayout from "./page/page_admin/adminLayOut";
@@ -35,7 +36,7 @@ import Hotels from "./page/page_admin/Hotels";
 import Accounts from "./page/page_admin/Accounts";
 import ChangePassword from "./page/page_admin/ChangePassword";
 import LoginAdmin from "./page/page_admin/login_admin";
-import HotelManagement from "./page/page_admin/HotelManagement ";
+
 function App() {
   return (
     <Router>
@@ -55,6 +56,7 @@ function App() {
         <Route path="/guide/:id" element={<GuideDetail />} />
         <Route path="/bookingsList" element={<BookingsList />} />
         <Route path="/mybookings2" element={<MyBookings2 />} />
+        <Route path="/hotelManagement" element={<HotelManagement />} />
 
         {/* --- ROUTES ADMIN --- */}
         <Route path="/login_admin" element={<LoginAdmin />} />
@@ -64,7 +66,6 @@ function App() {
           <Route path="hotels" element={<Hotels />} />
           <Route path="accounts" element={<Accounts />} />
           <Route path="change-password" element={<ChangePassword />} />
-          <Route path="hotelManagement" element={<HotelManagement />} />
         </Route>
       </Routes>
 

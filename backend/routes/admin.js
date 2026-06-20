@@ -1,6 +1,13 @@
 import express from "express";
 import pool from "../database.js";
 import bcrypt from "bcrypt";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+import nodemailer from "nodemailer";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const uploadDir = path.join(__dirname, "..", "uploads");
 
 const router = express.Router();
 
@@ -105,39 +112,38 @@ router.post("/api/admin/hotels", async (req, res) => {
       .json({ success: false, message: "Lỗi Server: " + error.message });
   }
 });
-// Sửa thông tin khách sạn
-router.put("/api/admin/hotels/:id", async (req, res) => {
+// PUT: Cập nhật khách sạn
+app.put("/api/admin/hotels/:id", async (req, res) => {
   const { id } = req.params;
   const { name, city, address, description, stars, price, status } = req.body;
-  if (!name || !city || !address)
-    return res
-      .status(400)
-      .json({ success: false, message: "Thiếu thông tin bắt buộc!" });
+  const partnerId = req.headers["x-partner-id"]; // Lấy ID đối tác từ header (hoặc từ JWT token)
+  const userRole = req.headers["x-user-role"]; // 'admin' hoặc 'partner'
+
   try {
-    const result = await pool.query(
-      `UPDATE hotels SET name=$1, city=$2, address=$3, description=$4, stars=$5, price=$6, status=$7, updated_at=NOW()
-       WHERE id=$8 RETURNING id`,
-      [
-        name,
-        city,
-        address,
-        description || "",
-        stars || 3,
-        price || null,
-        status || "pending",
-        id,
-      ],
-    );
-    if (result.rowCount === 0)
+    let query = "";
+    let params = [];
+
+    if (userRole === "admin") {
+      // Admin được sửa tất cả
+      query =
+        "UPDATE hotels SET name=?, city=?, address=?, description=?, stars=?, price=?, status=? WHERE id=?";
+      params = [name, city, address, description, stars, price, status, id];
+    } else {
+      // Partner chỉ được sửa khách sạn của mình và không được đổi status
+      query =
+        "UPDATE hotels SET name=?, city=?, address=?, description=?, stars=?, price=? WHERE id=? AND partner_id=?";
+      params = [name, city, address, description, stars, price, id, partnerId];
+    }
+
+    const result = await db.query(query, params);
+    if (result.affectedRows === 0) {
       return res
-        .status(404)
-        .json({ success: false, message: "Không tìm thấy khách sạn!" });
-    res.json({ success: true, message: "Cập nhật khách sạn thành công!" });
-  } catch (error) {
-    console.error("Lỗi sửa khách sạn:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Lỗi Server: " + error.message });
+        .status(403)
+        .json({ success: false, message: "Không có quyền sửa khách sạn này!" });
+    }
+    res.json({ success: true, message: "Cập nhật thành công!" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Lỗi server" });
   }
 });
 // QUẢN LÝ KHÁCH SẠN
@@ -288,5 +294,44 @@ router.post("/api/change-admin-password", async (req, res) => {
     res.status(500).json({ success: false, message: "Lỗi kết nối Server!" });
   }
 });
-
+// Lấy danh sách ảnh của khách sạn
+router.get("/api/hotels/:id/images", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, image_url FROM hotel_images WHERE hotel_id = $1 ORDER BY id ASC`,
+      [req.params.id],
+    );
+    res.json({ success: true, data: result.rows });
+  } catch (error) {
+    console.error("Lỗi lấy ảnh khách sạn:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Lỗi Server: " + error.message });
+  }
+});
+// Xóa 1 ảnh của khách sạn
+router.delete("/api/hotels/:id/images/:imageId", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `DELETE FROM hotel_images WHERE id = $1 AND hotel_id = $2 RETURNING image_url`,
+      [req.params.imageId, req.params.id],
+    );
+    if (result.rowCount === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Không tìm thấy ảnh!" });
+    }
+    const filePath = path.join(
+      uploadDir,
+      path.basename(result.rows[0].image_url),
+    );
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    res.json({ success: true, message: "Xóa ảnh thành công!" });
+  } catch (error) {
+    console.error("Lỗi xóa ảnh khách sạn:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Lỗi Server: " + error.message });
+  }
+});
 export default router;
