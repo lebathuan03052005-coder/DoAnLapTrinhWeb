@@ -82,14 +82,42 @@ const HomePage = () => {
   return (
     <div className="homepage-wrapper">
       <div className="agoda-hero">
-        <h1 className="hero-headline">
+        <h1
+          style={{
+            textAlign: "center",
+            fontSize: "2rem",
+            fontWeight: "800",
+            color: "#050101",
+            textShadow: "2px 2px 6px rgba(0,0,0,0.25)",
+            marginBottom: "30px",
+            letterSpacing: "1px",
+            lineHeight: "1.4",
+          }}
+        >
           RONG CHƠI BỐN PHƯƠNG, GIÁ VẪN "YÊU THƯƠNG"
         </h1>
-
-        <div className="hero-greeting">
-          <h2 className="greeting-title">{getGreeting()}</h2>
-          <p className="greeting-sub">
-            Trân trọng được chào đón những hành khách iu quý
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "10px",
+          }}
+        >
+          <p
+            style={{
+              maxWidth: "900px",
+              textAlign: "center",
+              fontSize: "1.15rem",
+              fontWeight: "600",
+              color: "#222",
+              lineHeight: "1.8",
+              textShadow: "1px 1px 4px rgba(0,0,0,0.15)",
+              marginBottom: "30px",
+              padding: "0 20px",
+            }}
+          >
+            HÂN HẠNH ĐƯỢC PHỤC VỤ QUÝ KHÁCH, CHÚC QUÝ KHÁCH CÓ MỘT KỲ NGHỈ THẬT
+            THÚ VỊ VÀ NHIỀU NIỀM VUI
           </p>
         </div>
 

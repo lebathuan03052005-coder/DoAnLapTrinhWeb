@@ -7,6 +7,7 @@ import img1 from "../assets/hotel5_3.jpg";
 import img2 from "../assets/hotel5_4.jpg";
 import img3 from "../assets/hotel5_5.jpg";
 import img4 from "../assets/hotel5_6.jpg";
+import { getImageUrl } from "../utils/getImageUrl";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const HotelDetail = () => {
@@ -55,7 +56,7 @@ const HotelDetail = () => {
   const hotelGalleryData =
     hotel?.subImages?.map((imgUrl, index) => ({
       id: index + 1,
-      url: imgUrl,
+      url: getImageUrl(imgUrl),
       category: "Khách sạn",
     })) || [];
 
@@ -118,20 +119,20 @@ const HotelDetail = () => {
       {/* --- PHẦN 2: GALLERY ẢNH --- */}
       <div className="hotel-gallery-grid">
         <div className="gallery-left">
-          <img src={hotel?.mainImage} alt="Main" />
+          <img src={getImageUrl(hotel?.mainImage)} alt="Main" />
         </div>
         <div className="gallery-right">
           <div className="grid-item">
-            <img src={hotel?.subImages?.[0]} alt="View 1" />
+            <img src={getImageUrl(hotel?.subImages?.[0])} alt="View 1" />
           </div>
           <div className="grid-item">
-            <img src={hotel?.subImages?.[1]} alt="View 2" />
+            <img src={getImageUrl(hotel?.subImages?.[1])} alt="View 2" />
           </div>
           <div
             className="grid-item more-photos"
             onClick={() => setIsGalleryOpen(true)}
           >
-            <img src={hotel?.subImages?.[2]} alt="View 3" />
+            <img src={getImageUrl(hotel?.subImages?.[2])} alt="View 3" />
             <div className="overlay">
               <span>Xem tất cả ảnh</span>
             </div>
@@ -497,7 +498,11 @@ const HotelDetail = () => {
               <div className="room-card-body">
                 <div className="room-info-col">
                   <img
-                    src={room?.image ? room.image.split("\n")[0].trim() : img1}
+                    src={
+                      room?.image
+                        ? getImageUrl(room.image.split("\n")[0].trim())
+                        : img1
+                    }
                     alt={room?.name}
                     className="room-thumbnail"
                     onError={(e) => {
@@ -505,9 +510,7 @@ const HotelDetail = () => {
                         "Ảnh lỗi, không load được link:",
                         room?.image,
                       );
-                      // Prefer a public fallback image (from /public/assets/anhHotel)
                       const fallback = getFallbackForRoom(room);
-                      // Prevent infinite loop: only set a new src if it's different
                       if (
                         e.target.src !== window.location.origin + fallback &&
                         e.target.src !== fallback
@@ -516,7 +519,7 @@ const HotelDetail = () => {
                         e.target.src = fallback;
                       } else {
                         e.target.onerror = null;
-                        e.target.src = img1; // final fallback to bundled asset
+                        e.target.src = img1;
                       }
                     }}
                     onLoad={() => console.log("Ảnh đã load OK:", room?.image)}

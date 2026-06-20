@@ -6,12 +6,7 @@ import { locationGuides } from "./locationGuides";
 import "./locationGuides.css";
 import formatCurrency from "../utils/formatCurrency";
 // Trả về URL công khai cho ảnh đã được chuyển vào `public/assets/anhHotel`
-const getImageUrl = (filePath) => {
-  if (!filePath) return "";
-  const parts = filePath.split("/");
-  const fname = parts[parts.length - 1] || filePath;
-  return `/assets/anhHotel/${fname}`;
-};
+import { getImageUrl } from "../utils/getImageUrl"; // sửa path import cho đúng vị trí file thật
 const SearchResults = () => {
   const navigate = useNavigate();
   const locationState = useLocation();

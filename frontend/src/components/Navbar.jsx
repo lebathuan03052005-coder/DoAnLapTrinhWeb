@@ -64,7 +64,7 @@ const Navbar = () => {
     <nav className="navbar">
       {/* Logo */}
       <div className="navbar-logo">
-        <Link to="/">LOGO</Link>
+        <Link to="/">3AE_BOOKIG</Link>
       </div>
 
       {/* Links - Cập nhật theo yêu cầu */}
