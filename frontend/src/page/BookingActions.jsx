@@ -1,6 +1,6 @@
 // Ví dụ dùng trong trang quản lý booking (ví dụ BookingDetail.jsx, AdminBookings.jsx...)
 
-import { confirmBooking, cancelBooking } from "/bookingAPI";
+import { confirmBooking, cancelBooking } from "./BookingActions.jsx";
 
 function BookingActions({ booking, onUpdated }) {
   const handleConfirm = async () => {
