@@ -61,7 +61,7 @@ function App() {
         <Route path="/hotelManagement" element={<HotelManagement />} />
         <Route path="/bookingAction" element={<BookingActions />} />
         <Route path="/bookingManagement" element={<BookingManagement />} />
-
+        <Footer />
         {/* --- ROUTES ADMIN --- */}
         <Route path="/login_admin" element={<LoginAdmin />} />
         <Route path="/admin" element={<AdminLayout />}>
@@ -72,8 +72,6 @@ function App() {
           <Route path="change-password" element={<ChangePassword />} />
         </Route>
       </Routes>
-
-      <Footer />
     </Router>
   );
 }

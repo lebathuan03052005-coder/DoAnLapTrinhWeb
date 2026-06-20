@@ -179,7 +179,7 @@ const ForgotPassword = () => {
           </form>
         )}
 
-        <div className="fp-back-link" onClick={() => navigate("/dang-nhap")}>
+        <div className="fp-back-link" onClick={() => navigate("/login")}>
           ← Quay lại đăng nhập
         </div>
       </div>
