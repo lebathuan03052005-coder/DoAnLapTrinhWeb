@@ -273,7 +273,7 @@ router.get("/api/room-images/:roomTypeId", async (req, res) => {
     res.status(500).send("Lỗi lấy ảnh phòng");
   }
 });
-
+// đăg nhập cho người dùng
 router.post("/customer-login", async (req, res) => {
   const { email, password } = req.body;
 

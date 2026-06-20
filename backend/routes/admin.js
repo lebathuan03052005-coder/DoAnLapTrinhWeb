@@ -113,7 +113,7 @@ router.post("/api/admin/hotels", async (req, res) => {
   }
 });
 // PUT: Cập nhật khách sạn
-app.put("/api/admin/hotels/:id", async (req, res) => {
+router.put("/api/admin/hotels/:id", async (req, res) => {
   const { id } = req.params;
   const { name, city, address, description, stars, price, status } = req.body;
   const partnerId = req.headers["x-partner-id"]; // Lấy ID đối tác từ header (hoặc từ JWT token)
