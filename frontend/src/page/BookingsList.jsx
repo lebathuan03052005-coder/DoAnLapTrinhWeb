@@ -44,25 +44,34 @@ const BookingsList = () => {
     import.meta.env.VITE_API_URL ||
     "https://doanlaptrinhweb-4n3f.onrender.com/api";
 
+  // Thay thế hàm fetchBookings cũ bằng hàm này:
   const fetchBookings = async () => {
+    const userId = localStorage.getItem("customerId"); // Lấy ID đã lưu khi đăng nhập
+
+    if (!userId) {
+      setError("Bạn cần đăng nhập để xem đơn hàng.");
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${baseUrl}/api/bookings`);
+      // Gọi route mới lọc theo userId
+      const res = await fetch(`${baseUrl}/api/my-bookings?userId=${userId}`);
       const data = await res.json();
+
       if (res.ok && data.success) {
         setBookings(data.bookings || []);
       } else {
         setError(data.message || "Không thể tải danh sách đặt phòng.");
       }
     } catch (err) {
-      console.error("Lỗi tải danh sách đặt phòng:", err);
-      setError("Lỗi kết nối tới hệ thống, vui lòng thử lại.");
+      setError("Lỗi kết nối tới hệ thống.");
     } finally {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchBookings();
   }, []);

@@ -75,6 +75,31 @@ router.post("/api/bookings", async (req, res) => {
     res.status(500).send("Lỗi đặt phòng");
   }
 });
+// Thêm vào file route backend
+router.get("/api/my-bookings", async (req, res) => {
+  const userId = req.query.userId;
+  if (!userId)
+    return res
+      .status(400)
+      .json({ success: false, message: "Thiếu ID người dùng" });
+
+  try {
+    const query = `
+      SELECT b.*, h.name AS hotel_name, h.address AS hotel_address, rt.name AS room_type_name
+      FROM bookings b
+      LEFT JOIN hotels h ON b.hotel_id = h.id
+      LEFT JOIN booking_details bd ON bd.booking_id = b.id
+      LEFT JOIN room_types rt ON bd.room_type_id = rt.id
+      WHERE b.user_id = $1
+      ORDER BY b.created_at DESC
+    `;
+    const result = await pool.query(query, [userId]);
+    res.json({ success: true, bookings: result.rows });
+  } catch (error) {
+    console.error("Lỗi lấy đơn cá nhân:", error);
+    res.status(500).json({ success: false, message: "Lỗi Server!" });
+  }
+});
 
 // LƯU ĐẶT PHÒNG ĐẦY ĐỦ (ghi đè API cũ)
 router.post("/api/bookings/create", async (req, res) => {
@@ -123,43 +148,6 @@ router.post("/api/bookings/create", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Lỗi đặt phòng");
-  }
-});
-
-// Lấy danh sách tất cả đơn đặt phòng (kèm thông tin khách sạn + loại phòng)
-router.get("/api/bookings", async (req, res) => {
-  try {
-    const result = await pool.query(`
-      SELECT 
-        b.id,
-        b.hotel_id,
-        h.name AS hotel_name,
-        h.image AS hotel_image,
-        h.address AS hotel_address,
-        b.user_id,
-        b.guest_name,
-        b.guest_phone,
-        b.guest_email,
-        b.total_amount,
-        b.status,
-        b.created_at,
-        bd.room_type_id,
-        rt.name AS room_type_name,
-        bd.quantity,
-        bd.check_in_date,
-        bd.check_out_date,
-        bd.price_at_booking
-      FROM bookings b
-      LEFT JOIN hotels h ON b.hotel_id = h.id
-      LEFT JOIN booking_details bd ON bd.booking_id = b.id
-      LEFT JOIN room_types rt ON bd.room_type_id = rt.id
-      ORDER BY b.created_at DESC
-    `);
-
-    res.json({ success: true, bookings: result.rows });
-  } catch (error) {
-    console.error("Lỗi lấy danh sách đặt phòng:", error);
-    res.status(500).json({ success: false, message: "Lỗi Server!" });
   }
 });
 
@@ -540,7 +528,6 @@ router.get("/api/bookings", async (req, res) => {
   }
 });
 
-// Route PUT /api/bookings/:id/status đã được định nghĩa đầy đủ (kèm kiểm tra quyền) ở phía trên.
 // Đã xóa bản định nghĩa trùng lặp ở đây để tránh nhầm lẫn.
 
 export default router;
