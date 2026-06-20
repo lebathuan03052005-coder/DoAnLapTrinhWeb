@@ -96,7 +96,7 @@ const LoginAdmin = () => {
             </label>
 
             {/* Thẻ Link này cần được import ở dòng 3 */}
-            <Link to="/forgot-password">Quên mật khẩu?</Link>
+            <Link to="/forgotPassword">Quên mật khẩu?</Link>
           </div>
 
           <button type="submit" className="admin-login-button">
