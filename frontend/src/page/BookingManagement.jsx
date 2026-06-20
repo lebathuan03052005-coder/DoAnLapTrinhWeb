@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { confirmBooking, cancelBooking, getAllBookings } from "./bookingAPI.js";
 import "./BookingManagement.css";
-
-const API = "https://doanlaptrinhweb-4n3f.onrender.com";
 
 const statusLabel = (s) =>
   ({
@@ -38,7 +37,8 @@ export default function BookingManagement() {
   const isAdmin = role === "admin";
 
   // Chỉ admin hoặc đúng partner_id (chủ khách sạn) của booking đó mới được duyệt/từ chối.
-  // Đây chỉ là ẩn nút cho gọn UI — quyền thật vẫn được server kiểm tra lại ở route PUT /api/bookings/:id/status
+  // Đây chỉ là ẩn nút cho gọn UI — quyền thật vẫn được server kiểm tra lại bên trong
+  // route PUT /api/bookings/:id/status (so sánh userId với hotels.partner_id).
   const canManage = (booking) =>
     isAdmin ||
     (userId &&
@@ -52,15 +52,13 @@ export default function BookingManagement() {
   const fetchBookings = async () => {
     setLoading(true);
     setError(null);
-    try {
-      const res = await fetch(`${API}/api/bookings`);
-      const data = await res.json();
-      setBookings(Array.isArray(data.bookings) ? data.bookings : []);
-    } catch {
+    const data = await getAllBookings();
+    if (data === null) {
       setError("Không thể tải danh sách đặt phòng.");
-    } finally {
-      setLoading(false);
+    } else {
+      setBookings(data);
     }
+    setLoading(false);
   };
 
   const showToast = (type, text) => {
@@ -68,22 +66,25 @@ export default function BookingManagement() {
     setTimeout(() => setActionMsg(null), 3000);
   };
 
-  // Cập nhật trạng thái booking (duyệt / từ chối)
-  // Server sẽ tự kiểm tra: chỉ chủ khách sạn (hotels.partner_id) hoặc admin mới được duyệt
-  const handleUpdateStatus = async (bookingId, newStatus) => {
+  // Cập nhật trạng thái booking (duyệt / từ chối) thông qua bookingAPI.js
+  // Server vẫn tự kiểm tra lại quyền (chỉ chủ khách sạn hoặc admin mới được duyệt)
+  const handleUpdateStatus = async (booking, newStatus) => {
     if (!userId) {
       showToast("error", "Bạn cần đăng nhập để thực hiện thao tác này!");
       return;
     }
-    setActingId(bookingId);
+    if (!canManage(booking)) {
+      showToast("error", "Bạn không có quyền duyệt đơn này!");
+      return;
+    }
+    setActingId(booking.id);
     try {
-      const res = await fetch(`${API}/api/bookings/${bookingId}/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus, userId }),
-      });
-      const data = await res.json();
-      if (data.success) {
+      const result =
+        newStatus === "CONFIRMED"
+          ? await confirmBooking(booking.id)
+          : await cancelBooking(booking.id);
+
+      if (result.success) {
         showToast(
           "success",
           newStatus === "CONFIRMED"
@@ -92,17 +93,15 @@ export default function BookingManagement() {
         );
         setBookings((prev) =>
           prev.map((b) =>
-            b.id === bookingId ? { ...b, status: newStatus } : b,
+            b.id === booking.id ? { ...b, status: newStatus } : b,
           ),
         );
-        if (selectedBooking?.id === bookingId) {
+        if (selectedBooking?.id === booking.id) {
           setSelectedBooking((prev) => ({ ...prev, status: newStatus }));
         }
-      } else {
-        showToast("error", data.message || "Thao tác thất bại!");
       }
-    } catch {
-      showToast("error", "Lỗi kết nối server!");
+      // Trường hợp thất bại: bookingAPI.js đã tự alert() message từ server,
+      // nên không cần showToast lỗi lần nữa ở đây.
     } finally {
       setActingId(null);
     }
@@ -278,7 +277,7 @@ export default function BookingManagement() {
                                   className="bm-btn bm-btn--approve"
                                   disabled={isActing}
                                   onClick={() =>
-                                    handleUpdateStatus(b.id, "CONFIRMED")
+                                    handleUpdateStatus(b, "CONFIRMED")
                                   }
                                 >
                                   {isActing ? "..." : "✓ Duyệt"}
@@ -287,7 +286,7 @@ export default function BookingManagement() {
                                   className="bm-btn bm-btn--reject"
                                   disabled={isActing}
                                   onClick={() =>
-                                    handleUpdateStatus(b.id, "CANCELLED")
+                                    handleUpdateStatus(b, "CANCELLED")
                                   }
                                 >
                                   {isActing ? "..." : "✕ Từ chối"}
@@ -371,33 +370,33 @@ export default function BookingManagement() {
 
                 {selectedBooking.status?.toUpperCase() === "PENDING" &&
                   canManage(selectedBooking) && (
-                  <div className="bm-detail-actions">
-                    <button
-                      className="bm-btn bm-btn--approve"
-                      disabled={actingId === selectedBooking.id}
-                      onClick={() =>
-                        handleUpdateStatus(selectedBooking.id, "CONFIRMED")
-                      }
-                    >
-                      ✓ Duyệt đặt phòng
-                    </button>
-                    <button
-                      className="bm-btn bm-btn--reject"
-                      disabled={actingId === selectedBooking.id}
-                      onClick={() =>
-                        handleUpdateStatus(selectedBooking.id, "CANCELLED")
-                      }
-                    >
-                      ✕ Từ chối
-                    </button>
-                  </div>
-                )}
+                    <div className="bm-detail-actions">
+                      <button
+                        className="bm-btn bm-btn--approve"
+                        disabled={actingId === selectedBooking.id}
+                        onClick={() =>
+                          handleUpdateStatus(selectedBooking, "CONFIRMED")
+                        }
+                      >
+                        ✓ Duyệt đặt phòng
+                      </button>
+                      <button
+                        className="bm-btn bm-btn--reject"
+                        disabled={actingId === selectedBooking.id}
+                        onClick={() =>
+                          handleUpdateStatus(selectedBooking, "CANCELLED")
+                        }
+                      >
+                        ✕ Từ chối
+                      </button>
+                    </div>
+                  )}
                 {selectedBooking.status?.toUpperCase() === "PENDING" &&
                   !canManage(selectedBooking) && (
-                  <p className="bm-no-action" style={{ marginTop: 10 }}>
-                    Chỉ chủ khách sạn (hoặc admin) mới có thể duyệt đơn này.
-                  </p>
-                )}
+                    <p className="bm-no-action" style={{ marginTop: 10 }}>
+                      Chỉ chủ khách sạn (hoặc admin) mới có thể duyệt đơn này.
+                    </p>
+                  )}
               </div>
             </div>
           )}

@@ -24,7 +24,7 @@ import BookingForm from "./page/booking"; // Trang đặt phòng
 import BookingSuccess from "./page/BookingSuccess";
 import MyBookings from "./page/MyBookings";
 import GuideDetail from "./page/GuideDetail";
-import ForgotPassword from "./page/ForgotPassword";
+import ForgotPassword from "./page/forgotPassword";
 import BookingsList from "./page/BookingsList";
 import MyBookings2 from "./page/MyBookings2";
 import HotelManagement from "./page/HotelManagement ";

@@ -12,12 +12,10 @@ const API_URL = (
  */
 export const updateBookingStatus = async (bookingId, status) => {
   const userId = localStorage.getItem("customerId"); // đã lưu sẵn lúc login
-
   if (!userId) {
     alert("Bạn cần đăng nhập để thực hiện thao tác này");
     return { success: false };
   }
-
   try {
     const response = await fetch(
       `${API_URL}/api/bookings/${bookingId}/status`,
@@ -29,9 +27,7 @@ export const updateBookingStatus = async (bookingId, status) => {
         body: JSON.stringify({ status, userId }),
       },
     );
-
     const data = await response.json();
-
     if (response.ok && data.success) {
       return { success: true };
     } else {
@@ -52,3 +48,18 @@ export const confirmBooking = (bookingId) =>
 // Hàm tiện dùng riêng cho nút Hủy
 export const cancelBooking = (bookingId) =>
   updateBookingStatus(bookingId, "CANCELLED");
+
+/**
+ * Lấy toàn bộ danh sách booking (dùng cho trang quản lý).
+ * Trả về null nếu lỗi kết nối, [] nếu tải được nhưng rỗng.
+ */
+export const getAllBookings = async () => {
+  try {
+    const response = await fetch(`${API_URL}/api/bookings`);
+    const data = await response.json();
+    return Array.isArray(data.bookings) ? data.bookings : [];
+  } catch (error) {
+    console.error("Lỗi tải danh sách booking:", error);
+    return null;
+  }
+};

@@ -258,7 +258,7 @@ export default function HotelManagement() {
   const statuses = ["Tất cả", "approved", "pending", "banned"];
   // 1. Lọc khách sạn theo quyền sở hữu ngay khi render
   const filtered = hotels.filter((h) => {
-    const isOwner = h.partner_id === Number(localStorage.getItem("userId"));
+    const isOwner = h.partner_id === Number(localStorage.getItem("customerId"));
     const isAdmin = localStorage.getItem("role") === "admin";
 
     // Logic hiển thị: Nếu là Admin thì thấy hết, nếu là Partner thì chỉ thấy khách sạn của mình
@@ -268,6 +268,7 @@ export default function HotelManagement() {
     return (
       h.name?.toLowerCase().includes(q) &&
       (cityFilter === "Tất cả" || h.city === cityFilter) &&
+      (statusFilter === "Tất cả" || h.status === statusFilter) &&
       matchOwnership
     );
   });
